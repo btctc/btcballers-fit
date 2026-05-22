@@ -1,0 +1,8 @@
+export const site = {
+  name: "BTC Ballers",
+  tagline: "Believe. Train. Compete.",
+  email: "overtimeincorporated@gmail.com",
+  location: "Dallas, TX",
+  coach: "Coach T",
+  coachFull: "Terrence",
+};
