@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ProgramCard from "@/components/ProgramCard";
 import CampWeekList from "@/components/CampWeekList";
+import OpenGymSignupButton from "@/components/OpenGymSignupButton";
 import TrainingScheduler from "@/components/TrainingScheduler";
 import { camp, training, openGym } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
@@ -107,6 +108,9 @@ export default function ProgramsPage() {
               </div>
             </div>
             <p className="text-btc-white/60 text-sm mt-4">{openGym.note}</p>
+            <div className="mt-6">
+              <OpenGymSignupButton />
+            </div>
           </div>
         </div>
       </div>

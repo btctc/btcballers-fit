@@ -56,5 +56,6 @@ export const openGym = {
   blurb: "Free 5-on-5 at Alcuin. Bring friends. Just hooping.",
   time: "5P to 7P, Mon and Wed",
   dates: ["Jun 15", "Jun 17", "Jun 22", "Jun 24", "Jul 6", "Jul 8"],
+  dateKeys: ["2026-06-15", "2026-06-17", "2026-06-22", "2026-06-24", "2026-07-06", "2026-07-08"],
   note: "Campers can ride with me if needed.",
 };

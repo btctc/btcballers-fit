@@ -1,4 +1,5 @@
 import Image from "next/image";
+import OpenGymSignupButton from "@/components/OpenGymSignupButton";
 import { openGym } from "@/lib/programs";
 
 export default function OpenGymCallout() {
@@ -28,6 +29,9 @@ export default function OpenGymCallout() {
             ))}
           </ul>
           <p className="text-btc-white/60 text-sm mt-5">{openGym.note}</p>
+          <div className="mt-7">
+            <OpenGymSignupButton />
+          </div>
         </div>
         <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image

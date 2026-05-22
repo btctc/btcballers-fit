@@ -96,7 +96,7 @@ export default function PlaybookPage() {
 
       <section id="connections" className="mt-24 scroll-mt-28">
         <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-8 items-start">
-          <div className="lg:sticky lg:top-28">
+          <div>
             <div className="label text-btc-orange">Connected language</div>
             <h2 className="display text-4xl md:text-6xl mt-3">The words talk.</h2>
             <p className="mt-6 text-lg leading-relaxed text-btc-white/82">

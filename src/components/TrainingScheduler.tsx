@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { openGym } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
 type Session = {
@@ -19,6 +20,7 @@ const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const weekdayTimes = ["5:30P to 7P", "6:30P to 8P"];
 const weekendTime = "Weekend by arrangement";
 const maxSessions = 12;
+const openGymDateKeys = new Set(openGym.dateKeys);
 
 function dateKey(date: Date) {
   return date.toISOString().slice(0, 10);
@@ -41,12 +43,23 @@ function isInTrainingWindow(date: Date) {
 
 function isBookable(date: Date) {
   const day = date.getDay();
-  return isInTrainingWindow(date) && day !== 5;
+  return isInTrainingWindow(date) && day !== 5 && !isOpenGymDate(date);
 }
 
 function isWeekend(date: Date) {
   const day = date.getDay();
   return day === 0 || day === 6;
+}
+
+function isOpenGymDate(date: Date) {
+  return openGymDateKeys.has(dateKey(date));
+}
+
+function blockedReason(date: Date) {
+  if (isOpenGymDate(date)) return "open gym";
+  if (!isInTrainingWindow(date)) return "";
+  if (date.getDay() === 5) return "blocked";
+  return "";
 }
 
 function monthDays(year: number, month: number) {
@@ -205,7 +218,7 @@ export default function TrainingScheduler() {
                       Tap a date to add or remove it.
                     </p>
                   </div>
-                  <div className="label">Fridays blocked</div>
+                  <div className="label">Fridays + Open Gym blocked</div>
                 </div>
 
                 <div className="mt-4 border border-white/10 bg-btc-black p-3">
@@ -225,6 +238,8 @@ export default function TrainingScheduler() {
                       const bookable = isBookable(cell.date);
                       const selected = selectedKeys.has(key);
                       const weekend = isWeekend(cell.date);
+                      const conflict = isOpenGymDate(cell.date);
+                      const reason = blockedReason(cell.date);
                       const disabled = !bookable || (!selected && selectedCount >= maxSessions);
 
                       return (
@@ -232,19 +247,31 @@ export default function TrainingScheduler() {
                           key={key}
                           type="button"
                           disabled={disabled}
+                          aria-label={`${dateLabel(cell.date)}${bookable ? " available" : reason ? ` unavailable - ${reason}` : " unavailable"}`}
                           onClick={() => toggleSession(cell.date)}
                           className={`aspect-square border p-1 text-left transition ${
                             selected
                               ? "border-btc-orange bg-btc-orange text-btc-black"
                               : bookable
                                 ? "border-white/10 bg-btc-black hover:border-btc-orange"
-                                : "border-white/5 bg-black/25 text-btc-white/25"
+                                : conflict
+                                  ? "border-btc-orange/30 bg-btc-black text-btc-orange/70"
+                                  : "border-white/5 bg-btc-black text-btc-white/25"
                           } ${disabled && !selected ? "cursor-not-allowed opacity-45" : ""}`}
                         >
                           <span className="mono block text-sm md:text-base">{day}</span>
-                          {bookable && (
-                            <span className={`mt-1 hidden text-[0.62rem] uppercase tracking-[0.12em] md:block ${selected ? "text-btc-black/75" : "text-btc-white/45"}`}>
-                              {weekend ? "arrange" : "open"}
+                          {(bookable || reason) && (
+                            <span className={`mt-1 block text-[0.5rem] uppercase tracking-[0.08em] md:text-[0.62rem] md:tracking-[0.12em] ${selected ? "text-btc-black/75" : conflict ? "text-btc-orange/75" : bookable ? "text-btc-white/45" : "text-btc-white/25"}`}>
+                              {bookable ? (
+                                weekend ? "arrange" : "open"
+                              ) : reason === "open gym" ? (
+                                <>
+                                  <span className="md:hidden">gym</span>
+                                  <span className="hidden md:inline">open gym</span>
+                                </>
+                              ) : (
+                                reason
+                              )}
                             </span>
                           )}
                         </button>
@@ -291,7 +318,7 @@ export default function TrainingScheduler() {
                 <div className="mt-4 max-h-72 space-y-2 overflow-y-auto pr-1">
                   {selectedSessions.length === 0 ? (
                     <div className="border border-dashed border-white/15 p-4 text-sm leading-relaxed text-btc-white/55">
-                      Select dates from the calendar. Fridays are blocked off. Weekends are marked for arrangement.
+                      Select dates from the calendar. Fridays and Open Gym dates are blocked off. Weekends are marked for arrangement.
                     </div>
                   ) : (
                     selectedSessions.map((session, index) => (
