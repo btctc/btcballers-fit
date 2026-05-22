@@ -46,6 +46,14 @@ export default function Hero() {
           >
             Email Coach T
           </a>
+          <a
+            href={site.storeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-btc-orange px-6 py-3 font-semibold text-btc-orange hover:bg-btc-orange hover:text-btc-black transition"
+          >
+            Shop BTC Gear
+          </a>
         </div>
       </div>
     </section>

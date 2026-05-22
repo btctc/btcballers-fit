@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { site } from "@/lib/siteConfig";
 
 export default function Nav() {
   return (
@@ -9,9 +10,10 @@ export default function Nav() {
           <Image src="/logo.png" alt="BTC Ballers" width={140} height={56} priority className="h-auto w-28 md:w-[140px]" />
         </Link>
 
-        <nav className="flex items-center gap-3 md:gap-8 text-sm md:text-base">
+        <nav className="flex items-center gap-2 md:gap-8 text-xs md:text-base">
           <Link href="/programs" className="whitespace-nowrap hover:text-btc-orange transition">Programs</Link>
           <Link href="/about" className="whitespace-nowrap hover:text-btc-orange transition">Coach T</Link>
+          <a href={site.storeUrl} target="_blank" rel="noopener noreferrer" className="whitespace-nowrap hover:text-btc-orange transition">Shop</a>
           <Link href="/contact" className="whitespace-nowrap hover:text-btc-orange transition">Contact</Link>
         </nav>
 

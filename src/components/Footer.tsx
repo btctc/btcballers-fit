@@ -12,6 +12,11 @@ export default function Footer() {
           <a href={`mailto:${site.email}`} className="hover:text-btc-orange transition">
             {site.email}
           </a>
+          <div className="mt-3">
+            <a href={site.storeUrl} target="_blank" rel="noopener noreferrer" className="hover:text-btc-orange transition">
+              Shop BTC Ballers gear
+            </a>
+          </div>
           <div className="mt-3 label">AI infrastructure by Organic AI Solutions</div>
         </div>
       </div>
