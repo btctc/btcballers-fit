@@ -46,10 +46,14 @@ export default function AboutPage() {
           </div>
           <div className="space-y-6 text-lg text-btc-white/85 leading-relaxed">
             <p>
-              Every now and then we do something we call Midnight Madness. Kids come over. We train. We eat. We play games. We hang out. Liz built the curriculum side of it - the part that&apos;s not basketball.
+              Midnight Madness is what happens when the court turns into a family room. The kids come over, we work, we eat, we compete, and then we slow down enough to talk about life.
             </p>
-            <p>Hard work. Love. Fellowship. Video games. Laughs. Sometimes tears. Growth.</p>
-            <p>That&apos;s the part that doesn&apos;t show up in box scores. That&apos;s also the part that matters most.</p>
+            <p>
+              Some nights are loud. Some nights get real. We might be playing games one minute and talking about confidence, pressure, discipline, or how to carry yourself the next. That is still coaching to me.
+            </p>
+            <p>
+              I want these kids to leave better than they came in. Better players, yes. Better teammates. Better sons and daughters. Better young people who know somebody is paying attention.
+            </p>
           </div>
         </div>
       </div>
