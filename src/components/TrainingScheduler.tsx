@@ -75,6 +75,7 @@ export default function TrainingScheduler() {
   );
   const selectedCount = sessions.length;
   const remaining = maxSessions - selectedCount;
+  const progressPercent = (selectedCount / maxSessions) * 100;
 
   const toggleSession = (date: Date) => {
     if (!isBookable(date)) return;
@@ -136,9 +137,9 @@ export default function TrainingScheduler() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="training-scheduler-title"
-            className="max-h-[92vh] w-full max-w-5xl overflow-y-auto border border-white/12 bg-btc-dim shadow-2xl"
+            className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden border border-white/12 bg-btc-black shadow-2xl"
           >
-            <div className="sticky top-0 z-10 border-b border-white/10 bg-btc-dim/95 px-5 py-4 backdrop-blur">
+            <div className="shrink-0 border-b border-white/10 bg-btc-black/95 px-5 py-4 backdrop-blur">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="label text-btc-orange">Summer Training</div>
@@ -154,14 +155,27 @@ export default function TrainingScheduler() {
                   Close
                 </button>
               </div>
-            </div>
 
-            <div className="grid gap-6 p-5 lg:grid-cols-[1.15fr_0.85fr]">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="mono text-btc-orange">
-                    {selectedCount} / {maxSessions} selected
+              <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+                <div className="min-w-0">
+                  <div className="mono flex items-center justify-between gap-4 text-sm">
+                    <span className="text-btc-orange">
+                      {selectedCount} / {maxSessions} selected
+                    </span>
+                    <span className="text-btc-white/70">
+                      {remaining > 0 ? `${remaining} left` : "Ready to email"}
+                    </span>
                   </div>
+                  <div className="mt-2 h-2 overflow-hidden border border-white/10 bg-btc-black">
+                    <div
+                      className="h-full bg-btc-orange transition-all"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="label mb-2">Month</div>
                   <div className="flex flex-wrap gap-2">
                     {months.map((month, index) => (
                       <button
@@ -171,7 +185,7 @@ export default function TrainingScheduler() {
                         className={`border px-3 py-2 text-sm font-semibold transition ${
                           activeMonth === index
                             ? "border-btc-orange bg-btc-orange text-btc-black"
-                            : "border-white/15 hover:border-btc-orange hover:text-btc-orange"
+                            : "border-white/15 text-btc-white/78 hover:border-btc-orange hover:text-btc-orange"
                         }`}
                       >
                         {month.label}
@@ -179,8 +193,22 @@ export default function TrainingScheduler() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="mt-5 border border-white/10 bg-btc-black p-3">
+            <div className="grid gap-6 overflow-y-auto p-5 lg:grid-cols-[1.15fr_0.85fr]">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <div className="label text-btc-orange">{currentMonth.label} 2026</div>
+                    <p className="mt-1 text-sm text-btc-white/62">
+                      Tap a date to add or remove it.
+                    </p>
+                  </div>
+                  <div className="label">Fridays blocked</div>
+                </div>
+
+                <div className="mt-4 border border-white/10 bg-btc-black p-3">
                   <div className="grid grid-cols-7 gap-1">
                     {dayLabels.map((day) => (
                       <div key={day} className="label px-1 py-2 text-center">
@@ -209,7 +237,7 @@ export default function TrainingScheduler() {
                             selected
                               ? "border-btc-orange bg-btc-orange text-btc-black"
                               : bookable
-                                ? "border-white/10 bg-btc-dim hover:border-btc-orange"
+                                ? "border-white/10 bg-btc-black hover:border-btc-orange"
                                 : "border-white/5 bg-black/25 text-btc-white/25"
                           } ${disabled && !selected ? "cursor-not-allowed opacity-45" : ""}`}
                         >
@@ -243,7 +271,7 @@ export default function TrainingScheduler() {
                 </div>
               </div>
 
-              <div className="min-w-0 border border-white/10 bg-btc-black p-4">
+              <div className="min-w-0 border border-white/10 bg-btc-black p-4 lg:sticky lg:top-0">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="label text-btc-orange">Email request</div>
@@ -283,7 +311,7 @@ export default function TrainingScheduler() {
                         <select
                           value={session.time}
                           onChange={(event) => updateTime(session.key, event.target.value)}
-                          className="mt-3 w-full border border-white/15 bg-btc-dim px-3 py-2 text-sm text-btc-white"
+                          className="mt-3 w-full border border-white/15 bg-btc-black px-3 py-2 text-sm text-btc-white"
                         >
                           {[...weekdayTimes, weekendTime].map((time) => (
                             <option key={time} value={time}>

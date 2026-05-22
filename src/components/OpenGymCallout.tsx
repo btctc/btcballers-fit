@@ -31,8 +31,8 @@ export default function OpenGymCallout() {
         </div>
         <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image
-            src="/images/camp.jpg"
-            alt="Kids lined up for basketball on Coach T's home court"
+            src="/images/open-gym.jpg"
+            alt="Coach T with Open Gym players after basketball"
             fill
             sizes="(min-width: 768px) 45vw, 100vw"
             className="object-cover"

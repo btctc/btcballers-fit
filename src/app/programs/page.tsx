@@ -2,7 +2,6 @@ import Image from "next/image";
 import ProgramCard from "@/components/ProgramCard";
 import CampWeekList from "@/components/CampWeekList";
 import TrainingScheduler from "@/components/TrainingScheduler";
-import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { camp, training, openGym } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
@@ -75,13 +74,6 @@ export default function ProgramsPage() {
           <div className="mb-6">
             <TrainingScheduler />
           </div>
-          <div className="mb-6 border border-white/10 bg-btc-black p-4">
-            <div className="label text-btc-orange mb-3">Training video</div>
-            <p className="mb-4 text-sm leading-relaxed text-btc-white/70">
-              A look at the kind of work this program is built around: skill, pace, conditioning, and game-speed habits.
-            </p>
-            <YouTubeEmbed videoId="X4NFJrl70TM" title="BTC Ballers training video" />
-          </div>
           <div className="label mb-2">Includes</div>
           <ul className="space-y-2">
             {training.includes.map((it, i) => (
@@ -94,7 +86,7 @@ export default function ProgramsPage() {
       <div className="mt-16 border border-white/10 bg-btc-dim p-8 md:p-10">
         <div className="grid md:grid-cols-[0.9fr_1.1fr] gap-8 items-center">
           <div className="relative aspect-[4/3] w-full overflow-hidden">
-            <Image src="/images/between-drills.jpg" alt="Kids between drills on the court" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
+            <Image src="/images/open-gym.jpg" alt="Coach T with Open Gym players after basketball" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
           </div>
           <div>
             <div className="label text-btc-orange mb-3">Free this summer</div>

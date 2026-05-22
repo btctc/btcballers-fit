@@ -12,7 +12,7 @@ export default function YouTubeEmbed({ videoId, title }: Props) {
   const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
   return (
-    <div className="aspect-video w-full overflow-hidden border border-white/10 bg-btc-dim">
+    <div className="aspect-video w-full overflow-hidden border border-white/10 bg-btc-black">
       {isPlaying ? (
         <iframe
           className="h-full w-full"

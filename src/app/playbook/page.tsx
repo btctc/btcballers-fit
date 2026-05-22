@@ -11,44 +11,44 @@ const connectionGroups = [
   {
     label: "Pressure release",
     title: "Cutting answers denial.",
-    signal: "Passer -> Cutter -> Rim",
+    signal: "Overplay -> Cut -> Finish",
     terms: ["Backcut", "Denial", "Knife", "Fill", "Relocate"],
-    read: "When a defender overplays, the ball, spacing, and cutter have to talk at the same time. The pass is the message.",
+    read: "Read the defender cheating the pass. Adjust with a hard cut behind them. Go finish or fill the open space.",
   },
   {
     label: "Two-player engine",
     title: "Screens create decisions.",
-    signal: "Screen -> Use -> Roll / Pop",
+    signal: "Screen -> Read -> Roll or Pop",
     terms: ["Ball Screen", "DHO", "Drag", "Ram", "Roll", "Pop", "Spain"],
-    read: "The screener, handler, and spacing players are all connected. One good screen can force the whole defense to communicate.",
+    read: "Read how the defense guards the screen. Adjust the angle, pace, or spacing. Go attack the advantage together.",
   },
   {
     label: "Weakside punishment",
     title: "Help opens the next pass.",
-    signal: "Drive -> Help -> Weakside",
+    signal: "Drive -> Help -> Kick",
     terms: ["Hammer", "Flare", "Corner", "Kick", "Weakside", "Strongside"],
-    read: "When the ball attacks one side, the opposite side cannot fall asleep. The best shot often comes from the second defender helping.",
+    read: "Read the help defender. Adjust by spacing where they left. Go make the pass before the defense recovers.",
   },
   {
     label: "Defensive chain",
     title: "Coverage is team language.",
-    signal: "Ball -> Help -> Recovery",
+    signal: "Ball -> Help -> Recover",
     terms: ["Closeout", "Help", "Dig", "Switch", "Drop", "Hedge", "Weakside I"],
-    read: "Defense is communication under pressure. One player contains, one helps, one covers the next pass, and everybody recovers.",
+    read: "Read the ball and your teammate. Adjust with help, a switch, or a closeout. Go back to your job after the stop.",
   },
   {
     label: "Time and score",
     title: "Situation changes the call.",
-    signal: "Clock -> Spacing -> Shot",
+    signal: "Clock -> Call -> Shot",
     terms: ["ATO", "BLOB", "SLOB", "Late Clock", "Specials", "Quick"],
-    read: "The same action feels different with six seconds left, after a timeout, or on an inbound. Smart players know the moment.",
+    read: "Read the clock and score. Adjust the spacing and pace. Go get the cleanest shot for that moment.",
   },
   {
     label: "Early offense",
     title: "Run before the defense settles.",
-    signal: "Outlet -> Advance -> Attack",
+    signal: "Rebound -> Run -> Attack",
     terms: ["Outlet", "Early", "Drag", "Double Drag", "North-South", "Crash"],
-    read: "Transition is not chaos. The first pass, first sprint, and first screen tell everybody what advantage to chase.",
+    read: "Read whether the defense is set. Adjust by running wide, advancing the ball, or screening early. Go before they match up.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function PlaybookPage() {
           </div>
         </div>
 
-        <div className="border border-white/10 bg-btc-dim p-6 scanline">
+        <div className="border border-white/10 bg-btc-black p-6 scanline">
           <div className="label text-btc-orange">Coach T teaching point</div>
           <p className="mt-4 text-base md:text-lg leading-relaxed text-btc-white/85">
             Effort matters more when it has direction. A growth mindset on the court means a missed read is not just a mistake. It is information. Learn the word, see the pattern, rep it again.
@@ -100,16 +100,21 @@ export default function PlaybookPage() {
             <div className="label text-btc-orange">Connected language</div>
             <h2 className="display text-4xl md:text-6xl mt-3">The words talk.</h2>
             <p className="mt-6 text-lg leading-relaxed text-btc-white/82">
-              Basketball terminology is not a stack of flash cards. It is a communication system. One action triggers a read, the read triggers help, and the help creates the next decision.
+              Basketball terms are not flash cards. They help players see the floor together. Read what is happening, adjust with your teammates, then go make the next play.
             </p>
-            <div className="mt-8 border border-white/10 bg-btc-dim p-5 scanline">
-              <div className="label text-btc-orange">Communication loop</div>
+            <div className="mt-8 border border-white/10 bg-btc-black p-5">
+              <div className="label text-btc-orange">RAG on the court</div>
               <div className="mt-4 grid gap-3">
-                {["Name the action", "See the coverage", "Make the next read"].map((step, index) => (
-                  <div key={step} className="grid grid-cols-[2rem_1fr] gap-3 items-center border border-white/10 bg-btc-black p-3">
+                {[
+                  { name: "Read", detail: "What is the defense giving us?" },
+                  { name: "Adjust", detail: "Where should I move for my teammate?" },
+                  { name: "Go", detail: "Make the simple play with confidence." },
+                ].map((step, index) => (
+                  <div key={step.name} className="grid grid-cols-[2rem_1fr] gap-3 items-center border border-white/10 bg-btc-black p-3">
                     <div className="mono text-btc-orange">{index + 1}</div>
                     <div>
-                      <div className="text-sm font-semibold text-btc-white">{step}</div>
+                      <div className="text-sm font-semibold text-btc-white">{step.name}</div>
+                      <p className="mt-1 text-sm leading-relaxed text-btc-white/68">{step.detail}</p>
                       <div className="signal-stream mt-2" aria-hidden="true">
                         <span />
                         <span />
@@ -155,7 +160,7 @@ export default function PlaybookPage() {
                 <h2 className="display text-5xl text-btc-orange">{section.letter}</h2>
                 <div className="label">{section.entries.length} terms</div>
               </div>
-              <dl className="mt-5 grid md:grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10">
+              <dl className="mt-5 grid md:grid-cols-2 gap-px overflow-hidden border border-white/10 bg-btc-black">
                 {section.entries.map((entry) => (
                   <div key={entry.term} className="bg-btc-black p-5">
                     <dt className="mono text-base text-btc-white">{entry.term}</dt>

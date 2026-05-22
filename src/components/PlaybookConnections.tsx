@@ -39,12 +39,12 @@ export default function PlaybookConnections({ groups }: Props) {
   const [selectedTerms, setSelectedTerms] = useState<Record<string, string>>(initialTerms);
 
   return (
-    <div className="connection-network border border-white/10 bg-btc-dim p-4 md:p-5 scanline">
+    <div className="connection-network border border-white/10 bg-btc-black p-4 md:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <div>
           <div className="label text-btc-orange">Live possession map</div>
           <p className="mt-2 text-sm text-btc-white/62">
-            Follow the signal from one concept to the next.
+            Follow how one read leads to the next play.
           </p>
         </div>
         <div className="mono flex items-center gap-2 text-sm text-btc-orange">
@@ -96,7 +96,7 @@ export default function PlaybookConnections({ groups }: Props) {
                 })}
               </div>
 
-              <div className="mt-4 border border-white/10 bg-btc-dim p-4">
+              <div className="mt-4 border border-white/10 bg-btc-black p-4">
                 <div className="label text-btc-orange">Selected concept</div>
                 <div className="mono mt-2 text-btc-white">{selectedTerm}</div>
                 <p className="mt-3 text-sm leading-relaxed text-btc-white/74">{findDefinition(selectedTerm)}</p>
