@@ -2,7 +2,7 @@ import { soundtrack } from "@/lib/soundtrack";
 
 export default function Soundtrack() {
   return (
-    <section className="max-w-6xl mx-auto px-5 py-20">
+    <section id="soundtrack" className="max-w-6xl mx-auto px-5 py-20 scroll-mt-24">
       <div className="label text-btc-orange">BTC soundtrack</div>
       <div className="mt-4 grid md:grid-cols-[0.8fr_1.2fr] gap-10">
         <div>
@@ -19,8 +19,9 @@ export default function Soundtrack() {
                 <span className="label text-btc-orange">SFW</span>
               </div>
               <video
-                className="aspect-video w-full bg-btc-black"
+                className="aspect-video w-full bg-btc-black object-cover"
                 controls
+                poster={track.poster}
                 preload="none"
                 playsInline
               >

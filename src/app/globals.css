@@ -10,6 +10,16 @@ html { scroll-behavior: smooth; }
 .label   { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.7rem; color: #9CA3AF; }
 .mono    { font-family: var(--font-mono); font-feature-settings: 'tnum'; }
 
+.scanline {
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 2px,
+    rgba(244,148,42,0.025) 3px,
+    transparent 4px
+  );
+}
+
 .grid-bg {
   background-image:
     linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
@@ -30,6 +40,20 @@ html { scroll-behavior: smooth; }
   50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
 }
 .status-pulse { animation: statusPulse 2s ease-in-out infinite; }
+
+.ticker-viewport {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  padding-inline: max(1.25rem, calc((100vw - 72rem) / 2 + 1.25rem));
+  scroll-snap-type: x mandatory;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .logo-sway,

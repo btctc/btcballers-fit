@@ -23,7 +23,10 @@ export default function AboutPage() {
       <div className="mt-16 space-y-6 text-lg text-btc-white/85 leading-relaxed max-w-2xl">
         <p>My name is Terrence. The kids call me Coach T.</p>
         <p>
-          I coach basketball in Dallas on my own court. Basketball has been part of my life as a player first. I know what it feels like to handle pressure, get shots up when your legs are tired, guard somebody who keeps coming at you, and stay locked in when the game gets physical.
+          Basketball has been part of my life as a player first. I spent five years at Oklahoma State under a Hall of Fame coach, won Big XII championships, and was part of Final Four and Sweet Sixteen teams. After college, I played professionally and trained pros, college players, and kids still learning what real confidence feels like.
+        </p>
+        <p>
+          Now I coach basketball in Dallas on my own court. I know what it feels like to handle pressure, get shots up when your legs are tired, guard somebody who keeps coming at you, and stay locked in when the game gets physical.
         </p>
         <p>
           Having my own court means I can be available in a way most trainers cannot. We can train consistently, keep the groups small, and build real relationships. Small numbers mean I see your kid. I see how they move. I see what they&apos;re working on. I see what they&apos;re avoiding.
