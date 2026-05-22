@@ -55,34 +55,10 @@ html { scroll-behavior: smooth; }
   scroll-snap-type: x mandatory;
 }
 
-.play-diagram .motion-route {
-  stroke-dasharray: 10 10;
-  animation: routeDash 1.4s linear infinite;
-}
-
-.play-diagram .pass-route {
-  stroke-dasharray: 5 8;
-  animation: routeDash 0.9s linear infinite;
-}
-
-.play-diagram .animated-layer {
-  filter: drop-shadow(0 0 8px rgba(244,148,42,0.22));
-}
-
-@keyframes routeDash {
-  to { stroke-dashoffset: -20; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .logo-sway,
-  .status-pulse,
-  .play-diagram .motion-route,
-  .play-diagram .pass-route {
+  .status-pulse {
     animation: none !important;
-  }
-
-  .play-diagram .animated-layer {
-    display: none;
   }
 }
 

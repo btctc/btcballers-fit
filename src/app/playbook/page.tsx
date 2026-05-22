@@ -1,34 +1,29 @@
 import Link from "next/link";
-import PlayDiagram from "@/components/PlayDiagram";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
 
 export const metadata = {
   title: "Playbook Terminology - BTC Ballers",
-  description: "Basketball playbook terminology, examples, and simple court diagrams from BTC Ballers.",
+  description: "Basketball playbook terminology and simple court reads from BTC Ballers.",
 };
 
 const examples = [
   {
     term: "Backcut",
-    kind: "backcut" as const,
     read: "If your defender jumps the passing lane, do not fight for the catch. Plant, cut behind them, and make them pay at the rim.",
     cue: "Pressure the defender's eyes.",
   },
   {
     term: "DHO",
-    kind: "dho" as const,
     read: "The handoff is not a casual exchange. Sprint tight off the big, brush shoulders, and turn the corner with pace.",
     cue: "Tight path. Strong hands.",
   },
   {
     term: "Hammer",
-    kind: "hammer" as const,
     read: "When the ball drives baseline, the weakside screen frees the corner shooter. The pass has to arrive on time.",
     cue: "Drive low. See weakside.",
   },
   {
     term: "Spain PnR",
-    kind: "spain" as const,
     read: "The first screen attacks the ball. The second screen attacks the roller's defender. That is how one action creates two problems.",
     cue: "Screen the helper.",
   },
@@ -81,15 +76,10 @@ export default function PlaybookPage() {
         <h2 className="display text-5xl md:text-6xl mt-3">See it. Say it. Rep it.</h2>
         <div className="mt-10 grid md:grid-cols-2 gap-5">
           {examples.map((example) => (
-            <article key={example.term} className="border border-white/10 bg-btc-dim">
-              <div className="aspect-[16/11]">
-                <PlayDiagram kind={example.kind} title={example.term} />
-              </div>
-              <div className="p-6 border-t border-white/10">
-                <div className="label text-btc-orange">{example.cue}</div>
-                <h3 className="display text-4xl mt-3">{example.term}</h3>
-                <p className="mt-4 text-base md:text-lg leading-relaxed text-btc-white/85">{example.read}</p>
-              </div>
+            <article key={example.term} className="border border-white/10 bg-btc-dim p-6 md:p-7">
+              <div className="label text-btc-orange">{example.cue}</div>
+              <h3 className="display text-4xl mt-3">{example.term}</h3>
+              <p className="mt-4 text-base md:text-lg leading-relaxed text-btc-white/85">{example.read}</p>
             </article>
           ))}
         </div>
