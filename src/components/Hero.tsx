@@ -4,7 +4,7 @@ import { site } from "@/lib/siteConfig";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="hero-section relative overflow-hidden">
       <div className="absolute inset-0">
         <Image
           src="/images/hero.jpg"
