@@ -16,7 +16,7 @@ export default function Nav() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse"></div>
+          <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse" aria-hidden="true"></div>
           <span className="label">Summer 2026 - Booking</span>
         </div>
       </div>

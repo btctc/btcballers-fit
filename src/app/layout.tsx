@@ -34,6 +34,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="bg-btc-black text-btc-white font-body antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SportsActivityLocation",
+              "name": "BTC Ballers",
+              "description": "Basketball training in Dallas with Coach T. Believe. Train. Compete.",
+              "url": "https://btcballers.fit",
+              "email": "overtimeincorporated@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Dallas",
+                "addressRegion": "TX",
+                "addressCountry": "US"
+              },
+              "sport": "Basketball",
+              "slogan": "Believe. Train. Compete."
+            })
+          }}
+        />
         <Nav />
         <main className="min-h-screen">{children}</main>
         <Footer />

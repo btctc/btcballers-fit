@@ -20,7 +20,7 @@ export default function Hero() {
 
       <div className="relative max-w-6xl mx-auto px-5 pt-24 pb-28 md:pt-36 md:pb-40">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse"></div>
+          <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse" aria-hidden="true"></div>
           <span className="label">Summer 2026 - Dallas, TX</span>
         </div>
 
