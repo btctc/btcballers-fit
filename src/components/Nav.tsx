@@ -15,10 +15,10 @@ export default function Nav() {
           <Link href="/contact" className="whitespace-nowrap hover:text-btc-orange transition">Contact</Link>
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
+        <Link href="/programs" className="hidden md:flex items-center gap-2 hover:text-btc-orange transition" aria-label="Summer 2026 booking">
           <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse" aria-hidden="true"></div>
           <span className="label">Summer 2026 - Booking</span>
-        </div>
+        </Link>
       </div>
     </header>
   );

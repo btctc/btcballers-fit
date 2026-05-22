@@ -23,10 +23,10 @@ export default function AboutPage() {
       <div className="mt-16 space-y-6 text-lg text-btc-white/85 leading-relaxed max-w-2xl">
         <p>My name is Terrence. The kids call me Coach T.</p>
         <p>
-          I coach basketball in Dallas. I played. Now I teach. My home court is where most of it happens. Sometimes we&apos;re at SandersFit. This fall there&apos;s a new facility opening up nearby and I&apos;ll be there too.
+          I coach basketball in Dallas on my own court. Basketball has been part of my life as a player first. I know what it feels like to handle pressure, get shots up when your legs are tired, guard somebody who keeps coming at you, and stay locked in when the game gets physical.
         </p>
         <p>
-          I run small groups on purpose. Four kids a week at camp. Twelve sessions in the training package. Small numbers mean I see your kid. I see how they move. I see what they&apos;re working on. I see what they&apos;re avoiding.
+          Having my own court means I can be available in a way most trainers cannot. We can train consistently, keep the groups small, and build real relationships. Small numbers mean I see your kid. I see how they move. I see what they&apos;re working on. I see what they&apos;re avoiding.
         </p>
         <p>I coach hard. I coach with love. Those are not opposites.</p>
       </div>
@@ -37,8 +37,8 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
           <div className="relative aspect-[4/3] w-full overflow-hidden">
             <Image
-              src="/images/midnight-madness.jpg"
-              alt="Midnight Madness with kids working at the dining table"
+              src="/images/about-bench.jpg"
+              alt="Coach T with players on his home court"
               fill
               sizes="(min-width: 768px) 40vw, 100vw"
               className="object-cover"
