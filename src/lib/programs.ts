@@ -17,13 +17,16 @@ export const campWeeks: CampWeek[] = [
 export const camp = {
   title: "Summer Camp",
   price: "$700 / week",
-  blurb: "Week-long basketball immersion at my home court. Small groups. Four kids per week.",
+  blurb: "Week-long basketball immersion at my home court. Small groups. Four kids per week. Camp runs 9:30A to 4P.",
+  hours: "9:30A to 4P",
+  note: "The daily flow stays fluid for weather. We adjust court time, recovery, book reads, and character development so the day still has purpose.",
   schedule: [
     { time: "9:30A", what: "Basketball training" },
     { time: "10:30A", what: "Strength and stretch (Tue and Thu at SandersFit)" },
     { time: "12P", what: "Lunch (bring your own)" },
-    { time: "1:30P", what: "Training and play" },
+    { time: "1:30P", what: "Training, play, book reads, and character development" },
     { time: "3P", what: "Recovery and snack" },
+    { time: "4P", what: "Pickup" },
   ],
   dropIn: [
     { label: "Full day (9:30A to 4P)", price: "$170" },

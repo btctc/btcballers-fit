@@ -2,6 +2,7 @@ import Image from "next/image";
 import ProgramCard from "@/components/ProgramCard";
 import CampWeekList from "@/components/CampWeekList";
 import TrainingScheduler from "@/components/TrainingScheduler";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { camp, training, openGym } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
@@ -32,6 +33,11 @@ export default function ProgramsPage() {
           blurb={camp.blurb}
           image={{ src: "/images/camp.jpg", alt: "Kids lined up for camp drills on Coach T's court" }}
         >
+          <div className="mb-6 border border-white/10 bg-btc-black p-4">
+            <div className="label text-btc-orange mb-2">Hours</div>
+            <p className="mono text-btc-white">{camp.hours}</p>
+            <p className="mt-3 text-sm leading-relaxed text-btc-white/70">{camp.note}</p>
+          </div>
           <div className="label mb-2">Daily schedule</div>
           <ul className="space-y-2 mb-6">
             {camp.schedule.map((s, i) => (
@@ -68,6 +74,13 @@ export default function ProgramsPage() {
           <p className="text-btc-white/85 mb-6">{training.availability}</p>
           <div className="mb-6">
             <TrainingScheduler />
+          </div>
+          <div className="mb-6 border border-white/10 bg-btc-black p-4">
+            <div className="label text-btc-orange mb-3">Training video</div>
+            <p className="mb-4 text-sm leading-relaxed text-btc-white/70">
+              A look at the kind of work this program is built around: skill, pace, conditioning, and game-speed habits.
+            </p>
+            <YouTubeEmbed videoId="X4NFJrl70TM" title="BTC Ballers training video" />
           </div>
           <div className="label mb-2">Includes</div>
           <ul className="space-y-2">
