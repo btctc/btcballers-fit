@@ -1,33 +1,11 @@
 import Link from "next/link";
+import PlaybookConnections from "@/components/PlaybookConnections";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
 
 export const metadata = {
   title: "Playbook Terminology - BTC Ballers",
   description: "Basketball playbook terminology and simple court reads from BTC Ballers.",
 };
-
-const examples = [
-  {
-    term: "Backcut",
-    read: "If your defender jumps the passing lane, do not fight for the catch. Plant, cut behind them, and make them pay at the rim.",
-    cue: "Pressure the defender's eyes.",
-  },
-  {
-    term: "DHO",
-    read: "The handoff is not a casual exchange. Sprint tight off the big, brush shoulders, and turn the corner with pace.",
-    cue: "Tight path. Strong hands.",
-  },
-  {
-    term: "Hammer",
-    read: "When the ball drives baseline, the weakside screen frees the corner shooter. The pass has to arrive on time.",
-    cue: "Drive low. See weakside.",
-  },
-  {
-    term: "Spain PnR",
-    read: "The first screen attacks the ball. The second screen attacks the roller's defender. That is how one action creates two problems.",
-    cue: "Screen the helper.",
-  },
-];
 
 const connectionGroups = [
   {
@@ -74,10 +52,6 @@ const connectionGroups = [
   },
 ];
 
-function glossaryHref(term: string) {
-  return `#letter-${term[0].toLowerCase()}`;
-}
-
 export default function PlaybookPage() {
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
@@ -91,9 +65,6 @@ export default function PlaybookPage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#connections" className="bg-btc-orange text-btc-black px-5 py-3 font-semibold hover:bg-btc-white transition">
               See Connections
-            </a>
-            <a href="#examples" className="border border-white/30 px-5 py-3 font-semibold hover:border-btc-orange hover:text-btc-orange transition">
-              See Examples
             </a>
             <a href="#glossary" className="border border-white/30 px-5 py-3 font-semibold hover:border-btc-orange hover:text-btc-orange transition">
               Jump to Glossary
@@ -151,67 +122,7 @@ export default function PlaybookPage() {
             </div>
           </div>
 
-          <div className="border border-white/10 bg-btc-dim p-4 md:p-5 scanline">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-              <div>
-                <div className="label text-btc-orange">Live possession map</div>
-                <p className="mt-2 text-sm text-btc-white/62">
-                  Follow the signal from one concept to the next.
-                </p>
-              </div>
-              <div className="mono flex items-center gap-2 text-sm text-btc-orange">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 status-pulse" aria-hidden="true" />
-                Connected
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-4">
-              {connectionGroups.map((group) => (
-                <article key={group.label} className="border border-white/10 bg-btc-black p-4 md:p-5">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <div className="label text-btc-orange">{group.label}</div>
-                      <h3 className="mt-2 text-2xl font-bold tracking-tight text-btc-white">{group.title}</h3>
-                    </div>
-                    <div className="mono text-sm text-btc-white/62">{group.signal}</div>
-                  </div>
-
-                  <div className="signal-stream mt-4" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-
-                  <p className="mt-4 text-base leading-relaxed text-btc-white/78">{group.read}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {group.terms.map((term) => (
-                      <a
-                        key={term}
-                        href={glossaryHref(term)}
-                        className="mono border border-white/12 px-3 py-2 text-xs text-btc-white/78 hover:border-btc-orange hover:text-btc-orange transition"
-                      >
-                        {term}
-                      </a>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="examples" className="mt-24 scroll-mt-28">
-        <div className="label text-btc-orange">Simple court reads</div>
-        <h2 className="display text-5xl md:text-6xl mt-3">See it. Say it. Rep it.</h2>
-        <div className="mt-10 grid md:grid-cols-2 gap-5">
-          {examples.map((example) => (
-            <article key={example.term} className="border border-white/10 bg-btc-dim p-6 md:p-7">
-              <div className="label text-btc-orange">{example.cue}</div>
-              <h3 className="display text-4xl mt-3">{example.term}</h3>
-              <p className="mt-4 text-base md:text-lg leading-relaxed text-btc-white/85">{example.read}</p>
-            </article>
-          ))}
+          <PlaybookConnections groups={connectionGroups} />
         </div>
       </section>
 
