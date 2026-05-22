@@ -1,17 +1,20 @@
 import Image from "next/image";
 import ProgramCard from "@/components/ProgramCard";
 import CampWeekList from "@/components/CampWeekList";
+import TrainingScheduler from "@/components/TrainingScheduler";
 import { camp, training, openGym } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
 export const metadata = { title: "Programs - BTC Ballers" };
 
 export default function ProgramsPage() {
-  const trainingSubject = encodeURIComponent("Summer Training inquiry");
-  const trainingBody = encodeURIComponent(
-    `Hi Coach T,\n\nI'm interested in Summer Training for my kid.\n\nKid's name:\nKid's age:\nProposed dates and times:\nWhat we want to work on:\n\nThanks.`
-  );
-  const trainingHref = `mailto:${site.email}?subject=${trainingSubject}&body=${trainingBody}`;
+  const buildTrainingHref = (preference: string) => {
+    const trainingSubject = encodeURIComponent("Summer Training approval request");
+    const trainingBody = encodeURIComponent(
+      `Hi Coach T,\n\nI'd like to request Summer Training approval.\n\nPackage: 12 sessions, 90 minutes each ($1,000)\nPreferred training time: ${preference}\n\nKid's name:\nKid's age:\nBest days:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
+    );
+    return `mailto:${site.email}?subject=${trainingSubject}&body=${trainingBody}`;
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
@@ -57,12 +60,15 @@ export default function ProgramsPage() {
           price={training.price}
           blurb={training.blurb}
           image={{ src: "/images/training.jpg", alt: "Young player training on Coach T's court" }}
-          cta={{ href: trainingHref, text: "Reserve Training" }}
+          cta={{ href: buildTrainingHref("Custom schedule request"), text: "Request Custom Schedule" }}
         >
           <div className="label mb-2">Window</div>
           <p className="text-btc-white/85 mb-4">{training.window}</p>
           <div className="label mb-2">Availability</div>
           <p className="text-btc-white/85 mb-6">{training.availability}</p>
+          <div className="mb-6">
+            <TrainingScheduler />
+          </div>
           <div className="label mb-2">Includes</div>
           <ul className="space-y-2">
             {training.includes.map((it, i) => (
