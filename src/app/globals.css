@@ -55,10 +55,44 @@ html { scroll-behavior: smooth; }
   scroll-snap-type: x mandatory;
 }
 
+.signal-stream {
+  position: relative;
+  height: 1.125rem;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background:
+    linear-gradient(90deg, rgba(244,148,42,0.18), transparent 22%, transparent 78%, rgba(244,148,42,0.18)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3.5rem);
+}
+
+.signal-stream span {
+  position: absolute;
+  top: 50%;
+  left: -42%;
+  width: 42%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, transparent, rgba(244,148,42,0.9), #FFFFFF, transparent);
+  animation: signalSweep 2.8s linear infinite;
+}
+
+.signal-stream span:nth-child(2) { animation-delay: 0.7s; opacity: 0.7; }
+.signal-stream span:nth-child(3) { animation-delay: 1.4s; opacity: 0.5; }
+
+@keyframes signalSweep {
+  to { left: 100%; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .logo-sway,
-  .status-pulse {
+  .status-pulse,
+  .signal-stream span {
     animation: none !important;
+  }
+
+  .signal-stream span {
+    left: 30%;
   }
 }
 

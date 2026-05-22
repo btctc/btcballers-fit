@@ -31,7 +31,7 @@ export default function AboutPage() {
         <p>
           Having my own court means I can be available in a way most trainers cannot. We can train consistently, keep the groups small, and build real relationships. Small numbers mean I see your kid. I see how they move. I see what they&apos;re working on. I see what they&apos;re avoiding.
         </p>
-        <p>I coach hard. I coach with love. Those are not opposites.</p>
+        <p>I coach with passion. I coach with intentionality. The details are how kids learn to trust the work.</p>
       </div>
 
       <div className="mt-16 border-y border-white/10 py-12">

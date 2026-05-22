@@ -16,7 +16,7 @@ export default function BiggerThanBasketball() {
         <div>
           <div className="label text-btc-orange mb-5">It&apos;s bigger than basketball</div>
           <h2 className="display text-5xl md:text-6xl mb-8">
-            I coach hard.<br />I coach with love.
+            I coach with passion.<br />I coach with intentionality.
           </h2>
           <p className="text-btc-white/80 text-lg leading-relaxed">
             The court is where we start. It&apos;s not where we stop.
