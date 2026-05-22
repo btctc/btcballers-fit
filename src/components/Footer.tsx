@@ -17,7 +17,14 @@ export default function Footer() {
               Shop BTC Ballers gear
             </a>
           </div>
-          <div className="mt-3 label">AI infrastructure by Organic AI Solutions</div>
+          <a
+            href="https://organicaisolutions.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 block label hover:text-btc-orange transition"
+          >
+            AI infrastructure by Organic AI Solutions
+          </a>
         </div>
       </div>
     </footer>
