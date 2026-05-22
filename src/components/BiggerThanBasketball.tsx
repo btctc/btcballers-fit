@@ -4,13 +4,13 @@ export default function BiggerThanBasketball() {
   return (
     <section className="border-y border-white/5">
       <div className="max-w-6xl mx-auto px-5 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
-        <div className="relative aspect-[4/3] w-full">
+        <div className="relative aspect-[4/3] w-full bg-btc-black">
           <Image
             src="/images/about-bench.jpg"
             alt="Coach T with players on his home court"
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="object-contain"
           />
         </div>
         <div>

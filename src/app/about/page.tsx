@@ -9,13 +9,13 @@ export default function AboutPage() {
       <div className="label text-btc-orange">About</div>
       <h1 className="display text-6xl md:text-8xl mt-3">Coach T.</h1>
 
-      <div className="mt-12 relative aspect-[4/3] w-full">
+      <div className="mt-12 relative aspect-[4/3] w-full bg-btc-black">
         <Image
           src="/images/coach-t.jpg"
           alt="Coach T 1-on-1 with a kid on the court"
           fill
           sizes="(min-width: 768px) 896px, 100vw"
-          className="object-cover"
+          className="object-contain"
           priority
         />
       </div>
@@ -38,13 +38,13 @@ export default function AboutPage() {
         <div className="label text-btc-orange mb-5">Midnight Madness</div>
         <h2 className="display text-4xl md:text-5xl mb-6">It&apos;s bigger than basketball.</h2>
         <div className="grid md:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
-          <div className="relative aspect-[4/3] w-full overflow-hidden">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-btc-black">
             <Image
               src="/images/about-bench.jpg"
               alt="Coach T with players on his home court"
               fill
               sizes="(min-width: 768px) 40vw, 100vw"
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <div className="space-y-6 text-lg text-btc-white/85 leading-relaxed">

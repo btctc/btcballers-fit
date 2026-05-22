@@ -33,13 +33,13 @@ export default function OpenGymCallout() {
             <OpenGymSignupButton />
           </div>
         </div>
-        <div className="relative aspect-[4/3] w-full overflow-hidden">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-btc-black">
           <Image
             src="/images/open-gym.jpg"
             alt="Coach T with Open Gym players after basketball"
             fill
             sizes="(min-width: 768px) 45vw, 100vw"
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       </div>

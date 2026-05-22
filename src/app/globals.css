@@ -27,6 +27,81 @@ html { scroll-behavior: smooth; }
   background-size: 32px 32px;
 }
 
+.hero-title {
+  font-size: 4.6rem;
+}
+
+.hero-bg {
+  object-position: center top;
+}
+
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 5.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 8rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 4.15rem;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .site-nav-inner {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .site-logo {
+    width: 7rem !important;
+  }
+
+  .site-nav-status {
+    display: none !important;
+  }
+
+  .hero-content {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  .hero-kicker {
+    display: none !important;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    line-height: 0.88;
+  }
+
+  .hero-bg {
+    object-fit: contain !important;
+    object-position: center top;
+  }
+
+  .hero-copy {
+    margin-top: 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .hero-actions {
+    margin-top: 0.9rem !important;
+  }
+
+  .hero-action {
+    padding: 0.65rem 1rem !important;
+    font-size: 0.95rem;
+  }
+}
+
 @keyframes logoSway {
   0%, 100% { transform: translateX(-3px); }
   50%      { transform: translateX(3px); }

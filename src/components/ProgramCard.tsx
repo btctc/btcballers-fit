@@ -5,7 +5,7 @@ type Props = {
   title: string;
   price: string;
   blurb: string;
-  image?: { src: string; alt: string };
+  image?: { src: string; alt: string; compact?: boolean };
   children?: React.ReactNode;
   cta?: { href: string; text: string } | null;
 };
@@ -14,8 +14,8 @@ export default function ProgramCard({ label, title, price, blurb, image, childre
   return (
     <article className="border border-white/10 bg-btc-dim p-8 flex flex-col h-full">
       {image && (
-        <div className="relative mb-7 aspect-[4/3] w-full overflow-hidden">
-          <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+        <div className={`relative mb-7 w-full overflow-hidden bg-btc-black ${image.compact ? "aspect-[16/9]" : "aspect-[4/3]"}`}>
+          <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-contain" />
         </div>
       )}
       <div className="label text-btc-orange">{label}</div>
