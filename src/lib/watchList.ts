@@ -10,15 +10,6 @@ export type WatchItem = {
 
 export const watchList: WatchItem[] = [
   {
-    date: "May 22-25",
-    title: "Nike EYBL Session III",
-    location: "Kansas City, MO",
-    note: "Four-day session. Pay attention to endurance, defensive habits, and who can execute late in games.",
-    circuit: "Nike EYBL",
-    watch: "Nike EYBL schedule / streams",
-    href: "https://nikeeyb.com/schedule",
-  },
-  {
     date: "Jun 23-24",
     title: "NBA Draft",
     location: "Brooklyn, NY",

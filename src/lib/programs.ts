@@ -6,10 +6,10 @@ export type CampWeek = {
 };
 
 export const campWeeks: CampWeek[] = [
-  { id: "jun-08", dates: "Jun 8 - 12", spotsLeft: 4, spotsTotal: 4 },
+  { id: "jun-08", dates: "Jun 8 - 12", spotsLeft: 3, spotsTotal: 4 },
   { id: "jun-15", dates: "Jun 15 - 19", spotsLeft: 3, spotsTotal: 4 },
   { id: "jun-22", dates: "Jun 22 - 26", spotsLeft: 3, spotsTotal: 4 },
-  { id: "jul-06", dates: "Jul 6 - 10", spotsLeft: 3, spotsTotal: 4 },
+  { id: "jul-06", dates: "Jul 6 - 10", spotsLeft: 1, spotsTotal: 4 },
   { id: "jul-27", dates: "Jul 27 - 31", spotsLeft: 3, spotsTotal: 4 },
   { id: "aug-03", dates: "Aug 3 - 7", spotsLeft: 4, spotsTotal: 4 },
 ];
