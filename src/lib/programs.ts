@@ -76,6 +76,47 @@ export const midnightMadness = {
   note: "Both nights are included in every package.",
 };
 
+export type FallSession = {
+  dateKey: string; // YYYY-MM-DD
+  label: string; // e.g. "Sat, Aug 22"
+  time: string;
+  where: "Home court" | "SandersFit";
+  yemi?: boolean;
+};
+
+export const fallSessions: FallSession[] = [
+  { dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
+  { dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-09-01", label: "Tue, Sep 1", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-08", label: "Tue, Sep 8", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-10", label: "Thu, Sep 10", time: "5:15P - 7:00P", where: "Home court" },
+  { dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-09-15", label: "Tue, Sep 15", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-16", label: "Wed, Sep 16", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-20", label: "Sun, Sep 20", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
+  { dateKey: "2026-09-22", label: "Tue, Sep 22", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
+  { dateKey: "2026-09-26", label: "Sat, Sep 26", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-10-06", label: "Tue, Oct 6", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-10-14", label: "Wed, Oct 14", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
+  { dateKey: "2026-10-20", label: "Tue, Oct 20", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
+  { dateKey: "2026-10-24", label: "Sat, Oct 24", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-10-27", label: "Tue, Oct 27", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-10-28", label: "Wed, Oct 28", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-01", label: "Sun, Nov 1", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
+  { dateKey: "2026-11-03", label: "Tue, Nov 3", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-10", label: "Tue, Nov 10", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-11", label: "Wed, Nov 11", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-14", label: "Sat, Nov 14", time: "10:00A - 11:45A", where: "Home court" },
+  { dateKey: "2026-11-17", label: "Tue, Nov 17", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
+  { dateKey: "2026-12-02", label: "Wed, Dec 2", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-12-03", label: "Thu, Dec 3", time: "5:15P - 7:00P", where: "Home court" },
+];
+
 export const privateTraining = {
   title: "Private & Semi-Private",
   blurb:

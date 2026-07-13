@@ -1,4 +1,5 @@
 import ProgramCard from "@/components/ProgramCard";
+import SeasonPlanner from "@/components/SeasonPlanner";
 import { fallSeason, fallPackages, midnightMadness, privateTraining } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
@@ -41,25 +42,8 @@ export default function ProgramsPage() {
         ))}
       </div>
 
-      <div className="mt-16 border border-white/10 bg-btc-dim p-8 md:p-10">
-        <div className="label text-btc-orange mb-3">Included in every package</div>
-        <h3 className="display text-4xl mb-3">{midnightMadness.title}.</h3>
-        <p className="text-btc-white/85 max-w-2xl">{midnightMadness.blurb}</p>
-        <div className="mt-5 flex flex-wrap gap-6">
-          <div>
-            <div className="label">Nights</div>
-            <ul className="mt-1 flex flex-wrap gap-2">
-              {midnightMadness.nights.map((n) => (
-                <li key={n} className="mono text-sm border border-white/15 px-3 py-1">{n}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="label">Time</div>
-            <div className="mt-1 mono text-btc-white/85">{midnightMadness.time}</div>
-          </div>
-        </div>
-        <p className="text-btc-white/60 text-sm mt-4">{midnightMadness.note}</p>
+      <div className="mt-16">
+        <SeasonPlanner />
       </div>
 
       <div className="mt-16 grid md:grid-cols-2 gap-6">
@@ -92,6 +76,27 @@ export default function ProgramsPage() {
             <p className="text-sm text-btc-white/70 mt-3">{privateTraining.walkIn}</p>
           </div>
         </div>
+      </div>
+
+      <div className="mt-16 border border-white/10 bg-btc-dim p-8 md:p-10">
+        <div className="label text-btc-orange mb-3">Included in every package</div>
+        <h3 className="display text-4xl mb-3">{midnightMadness.title}.</h3>
+        <p className="text-btc-white/85 max-w-2xl">{midnightMadness.blurb}</p>
+        <div className="mt-5 flex flex-wrap gap-6">
+          <div>
+            <div className="label">Nights</div>
+            <ul className="mt-1 flex flex-wrap gap-2">
+              {midnightMadness.nights.map((n) => (
+                <li key={n} className="mono text-sm border border-white/15 px-3 py-1">{n}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="label">Time</div>
+            <div className="mt-1 mono text-btc-white/85">{midnightMadness.time}</div>
+          </div>
+        </div>
+        <p className="text-btc-white/60 text-sm mt-4">{midnightMadness.note}</p>
       </div>
     </div>
   );
