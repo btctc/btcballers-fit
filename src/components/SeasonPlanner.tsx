@@ -18,7 +18,8 @@ type QuickGroup = { label: string; match: (s: FallSession) => boolean };
 const QUICK_GROUPS: QuickGroup[] = [
   { label: "Weeknights", match: (s) => !s.mm && ["Tue", "Wed", "Thu"].some((d) => s.label.startsWith(d)) },
   { label: "Saturdays", match: (s) => s.label.startsWith("Sat") },
-  { label: "Sundays", match: (s) => s.label.startsWith("Sun") },
+  { label: "Sun - SandersFit", match: (s) => s.label.startsWith("Sun") && !s.yemi },
+  { label: "Sun - Yemi", match: (s) => !!s.yemi },
   { label: "Midnight Madness", match: (s) => !!s.mm },
 ];
 
