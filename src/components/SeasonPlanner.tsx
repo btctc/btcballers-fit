@@ -13,16 +13,16 @@ const MONTH_NAMES: Record<string, string> = {
   "12": "December",
 };
 
-type QuickGroup = { label: string; match: (s: FallSession) => boolean };
+type QuickGroup = { label: string; detail: string; match: (s: FallSession) => boolean };
 
 const QUICK_GROUPS: QuickGroup[] = [
-  { label: "Tuesdays", match: (s) => s.label.startsWith("Tue") },
-  { label: "Wednesdays", match: (s) => s.label.startsWith("Wed") },
-  { label: "Thursdays", match: (s) => !s.mm && s.label.startsWith("Thu") },
-  { label: "Saturdays", match: (s) => s.label.startsWith("Sat") },
-  { label: "Sun - SandersFit", match: (s) => s.label.startsWith("Sun") && !s.yemi },
-  { label: "Sun - Yemi", match: (s) => !!s.yemi },
-  { label: "Midnight Madness", match: (s) => !!s.mm },
+  { label: "Tuesdays", detail: "4:00-5:45P · Home", match: (s) => s.label.startsWith("Tue") },
+  { label: "Wednesdays", detail: "4:00-5:45P · Home", match: (s) => s.label.startsWith("Wed") },
+  { label: "Thursdays", detail: "5:15-7:00P · Home", match: (s) => !s.mm && s.label.startsWith("Thu") },
+  { label: "Saturdays", detail: "10:00-11:45A · Home", match: (s) => s.label.startsWith("Sat") },
+  { label: "Sun - SandersFit", detail: "11:15A-12:45P", match: (s) => s.label.startsWith("Sun") && !s.yemi },
+  { label: "Sun - Yemi", detail: "1:00-2:30P · Life School OC", match: (s) => !!s.yemi },
+  { label: "Midnight Madness", detail: "Fri 4:00-9:00P · Home", match: (s) => !!s.mm },
 ];
 
 function groupByMonth(sessions: FallSession[]) {
@@ -166,13 +166,14 @@ export default function SeasonPlanner() {
               type="button"
               onClick={() => toggleGroup(g)}
               aria-pressed={allOn}
-              className={`px-3 py-1.5 text-sm border transition ${
+              className={`px-3 py-1.5 text-left border transition ${
                 allOn
                   ? "border-btc-orange bg-btc-orange/15 text-btc-white"
                   : "border-white/20 text-btc-white/70 hover:border-btc-orange/60 hover:text-btc-white"
               }`}
             >
-              {g.label}
+              <span className="block text-sm font-semibold">{g.label}</span>
+              <span className="block text-xs text-btc-white/50">{g.detail}</span>
             </button>
           );
         })}
