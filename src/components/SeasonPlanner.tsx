@@ -36,9 +36,7 @@ export default function SeasonPlanner() {
   };
 
   const pickedSessions = fallSessions.filter((s) => picked.has(s.dateKey));
-  const pickedTraining = pickedSessions.filter((s) => !s.mm);
-  const pickedMM = pickedSessions.filter((s) => s.mm);
-  const count = pickedTraining.length;
+  const count = pickedSessions.length;
 
   const fits =
     count === 0
@@ -52,16 +50,12 @@ export default function SeasonPlanner() {
   const overCap = fits ? count > fits.sessions : false;
 
   const mailFor = (pkg: FallPackage) => {
-    const dateLines = pickedTraining.map((s) => `- ${s.label} (${s.time}, ${s.where})`).join("\n");
-    const mmLines =
-      pickedMM.length > 0
-        ? `\nMidnight Madness nights we're coming to (included):\n${pickedMM
-            .map((s) => `- ${s.label} (${s.time})`)
-            .join("\n")}\n`
-        : "";
+    const dateLines = pickedSessions
+      .map((s) => `- ${s.label} (${s.time}, ${s.where})${s.mm ? " - Midnight Madness" : ""}`)
+      .join("\n");
     const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
     const body = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n${mmLines}\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
+      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
     );
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };
@@ -72,8 +66,8 @@ export default function SeasonPlanner() {
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
         Tap the sessions your kid can make. The counter tells you which package fits. You&apos;re
-        not locked to these dates - packages work for any session on the calendar. Midnight
-        Madness nights are included with every package and don&apos;t count toward your sessions.
+        not locked to these dates - packages work for any session on the calendar, and Midnight
+        Madness nights count as sessions.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -111,7 +105,6 @@ export default function SeasonPlanner() {
                         <span className="block text-xs text-btc-white/60 mt-0.5">
                           {s.time} &middot; {s.where}
                           {s.yemi ? " + Yemi (1:00P-2:30P, Life School Oak Cliff)" : ""}
-                          {s.mm ? " · Included with every package" : ""}
                         </span>
                       </button>
                     </li>
@@ -127,12 +120,6 @@ export default function SeasonPlanner() {
         <div>
           <div className="mono text-btc-orange text-lg">
             {count} {count === 1 ? "session" : "sessions"} selected
-            {pickedMM.length > 0 ? (
-              <span className="text-btc-white/60 text-sm">
-                {" "}
-                + {pickedMM.length} Midnight Madness (included)
-              </span>
-            ) : null}
           </div>
           {fits ? (
             <p className="text-btc-white/85 mt-1">

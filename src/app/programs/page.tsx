@@ -27,7 +27,7 @@ export default function ProgramsPage() {
             label={pkg.badge ?? "Fall 2026"}
             title={pkg.label}
             price={pkg.price}
-            blurb={`${pkg.sessions} sessions. Come to any session on the calendar. Both Midnight Madness nights included.`}
+            blurb={`${pkg.sessions} sessions. Come to any session on the calendar, including Midnight Madness nights.`}
             cta={{ href: buildRegisterHref(pkg.label), text: "Register" }}
             highlight={pkg.highlight}
           >
@@ -80,7 +80,7 @@ export default function ProgramsPage() {
       </div>
 
       <div className="mt-16 border border-white/10 bg-btc-dim p-8 md:p-10">
-        <div className="label text-btc-orange mb-3">Included in every package</div>
+        <div className="label text-btc-orange mb-3">Two nights a season</div>
         <h3 className="display text-4xl mb-3">{midnightMadness.title}.</h3>
         <p className="text-btc-white/85 max-w-2xl">{midnightMadness.blurb}</p>
         <div className="mt-5 flex flex-wrap gap-6">

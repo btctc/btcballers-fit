@@ -12,9 +12,9 @@ export type FallPackage = {
 export const fallSeason = {
   name: "Fall 2026",
   window: "Aug 22 - Dec 3, 2026",
-  sessionsOffered: 30,
+  sessionsOffered: 32,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 30 offered. Every package includes both Midnight Madness nights.",
+    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 32 offered, including both Midnight Madness nights.",
   schedule: [
     { day: "Tuesdays & Wednesdays", time: "4:00P - 5:45P", where: "Home court" },
     { day: "Thursdays", time: "5:15P - 7:00P", where: "Home court" },
@@ -76,7 +76,7 @@ export const midnightMadness = {
   time: "4:00P - 9:00P",
   blurb:
     "Small-group training, dinner together, film, books, board games, and competitive play. We train. We compete. We hang out. Family style.",
-  note: "Both nights are included in every package.",
+  note: "Midnight Madness nights count as sessions from your package.",
 };
 
 export type FallSession = {
@@ -85,7 +85,7 @@ export type FallSession = {
   time: string;
   where: "Home court" | "SandersFit";
   yemi?: boolean;
-  mm?: boolean; // Midnight Madness - included in every package, doesn't count toward sessions
+  mm?: boolean; // Midnight Madness - counts as a session from your package
 };
 
 export const fallSessions: FallSession[] = [
