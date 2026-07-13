@@ -36,9 +36,7 @@ export default function SeasonPlanner() {
   };
 
   const pickedSessions = fallSessions.filter((s) => picked.has(s.key));
-  // SandersFit + Yemi on the same Sunday count as ONE session
-  const count = new Set(pickedSessions.map((s) => s.dateKey)).size;
-  const pairedSundays = pickedSessions.length - count;
+  const count = pickedSessions.length;
 
   const fits =
     count === 0
@@ -52,20 +50,11 @@ export default function SeasonPlanner() {
   const overCap = fits ? count > fits.sessions : false;
 
   const mailFor = (pkg: FallPackage) => {
-    const byDay = new Map<string, FallSession[]>();
-    for (const s of pickedSessions) {
-      const arr = byDay.get(s.dateKey) ?? [];
-      arr.push(s);
-      byDay.set(s.dateKey, arr);
-    }
-    const dateLines = Array.from(byDay.values())
-      .map((daySessions) => {
-        const parts = daySessions
-          .map((s) => `${s.time} ${s.where}${s.mm ? " (Midnight Madness)" : ""}`)
-          .join(" + ");
-        const suffix = daySessions.length > 1 ? " (counts as 1 session)" : "";
-        return `- ${daySessions[0].label}: ${parts}${suffix}`;
-      })
+    const dateLines = pickedSessions
+      .map(
+        (s) =>
+          `- ${s.label}: ${s.time} ${s.where}${s.mm ? " (Midnight Madness)" : ""}${s.yemi ? " (Coach Yemi)" : ""}`
+      )
       .join("\n");
     const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
     const body = encodeURIComponent(
@@ -81,8 +70,8 @@ export default function SeasonPlanner() {
       <p className="text-btc-white/85 max-w-2xl">
         Tap the sessions your kid can make. The counter tells you which package fits. You&apos;re
         not locked to these dates - packages work for any session on the calendar. Sundays have
-        two workouts: SandersFit, then Coach Yemi at Life School Oak Cliff. Do one or both -
-        both on the same Sunday count as one session.
+        two workouts: SandersFit, then Coach Yemi at Life School Oak Cliff. Each counts as its
+        own session. SandersFit players can ride with Coach T to Yemi&apos;s - limited space.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -123,7 +112,7 @@ export default function SeasonPlanner() {
                         </span>
                         <span className="block text-xs text-btc-white/60 mt-0.5">
                           {s.time} &middot; {s.where}
-                          {s.yemi ? " · With SandersFit same day = 1 session" : ""}
+                          {s.yemi ? " · Ride with Coach T from SandersFit - limited space" : ""}
                         </span>
                       </button>
                     </li>
@@ -135,16 +124,10 @@ export default function SeasonPlanner() {
         })}
       </div>
 
-      <div className="mt-10 border-t border-white/10 pt-6 flex flex-col md:flex-row md:items-center gap-5 md:justify-between">
+      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 px-8 md:px-10 py-5 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40 flex flex-col md:flex-row md:items-center gap-5 md:justify-between">
         <div>
           <div className="mono text-btc-orange text-lg">
             {count} {count === 1 ? "session" : "sessions"} selected
-            {pairedSundays > 0 ? (
-              <span className="text-btc-white/60 text-sm">
-                {" "}
-                ({pairedSundays} double Sunday{pairedSundays === 1 ? "" : "s"} counted once)
-              </span>
-            ) : null}
           </div>
           {fits ? (
             <p className="text-btc-white/85 mt-1">

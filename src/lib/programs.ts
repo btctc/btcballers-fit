@@ -11,10 +11,10 @@ export type FallPackage = {
 
 export const fallSeason = {
   name: "Fall 2026",
-  window: "Aug 22 - Dec 13, 2026",
-  sessionsOffered: 33,
+  window: "Aug 20 - Dec 13, 2026",
+  sessionsOffered: 40,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 33 offered, including both Midnight Madness nights.",
+    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 40 offered, including both Midnight Madness nights. Every workout counts as one session.",
   schedule: [
     { day: "Tuesdays & Wednesdays", time: "4:00P - 5:45P", where: "Home court" },
     { day: "Thursdays", time: "5:15P - 7:00P", where: "Home court" },
@@ -22,7 +22,7 @@ export const fallSeason = {
     {
       day: "Sundays",
       time: "11:00A - 12:45P at SandersFit / 1:00P - 2:30P with Coach Yemi",
-      where: "SandersFit and/or Life School Oak Cliff - do both on the same Sunday and it counts as one session",
+      where: "SandersFit and/or Coach Yemi at Life School Oak Cliff - each counts as its own session. SandersFit players can ride with Coach T to Yemi's (limited space).",
     },
   ],
   noTraining:
@@ -81,7 +81,7 @@ export const midnightMadness = {
 
 export type FallSession = {
   key: string; // unique id
-  dateKey: string; // YYYY-MM-DD - Sunday SandersFit + Yemi share a dateKey and count as one session
+  dateKey: string; // YYYY-MM-DD - every workout counts as its own session
   label: string; // e.g. "Sat, Aug 22"
   time: string;
   where: "Home court" | "SandersFit" | "Life School Oak Cliff";
@@ -90,6 +90,7 @@ export type FallSession = {
 };
 
 export const fallSessions: FallSession[] = [
+  { key: "2026-08-20", dateKey: "2026-08-20", label: "Thu, Aug 20", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:00A - 12:45P", where: "SandersFit" },
   { key: "2026-08-23-yemi", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
