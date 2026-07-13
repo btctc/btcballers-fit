@@ -12,9 +12,9 @@ export type FallPackage = {
 export const fallSeason = {
   name: "Fall 2026",
   window: "Aug 22 - Dec 13, 2026",
-  sessionsOffered: 34,
+  sessionsOffered: 33,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 34 offered, including both Midnight Madness nights.",
+    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 33 offered, including both Midnight Madness nights.",
   schedule: [
     { day: "Tuesdays & Wednesdays", time: "4:00P - 5:45P", where: "Home court" },
     { day: "Thursdays", time: "5:15P - 7:00P", where: "Home court" },
@@ -126,7 +126,6 @@ export const fallSessions: FallSession[] = [
   { key: "2026-11-29-sf", dateKey: "2026-11-29", label: "Sun, Nov 29", time: "11:00A - 12:45P", where: "SandersFit" },
   { key: "2026-11-29-yemi", dateKey: "2026-11-29", label: "Sun, Nov 29", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
   { key: "2026-12-02", dateKey: "2026-12-02", label: "Wed, Dec 2", time: "4:00P - 5:45P", where: "Home court" },
-  { key: "2026-12-03", dateKey: "2026-12-03", label: "Thu, Dec 3", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-12-12", dateKey: "2026-12-12", label: "Sat, Dec 12", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-12-13-sf", dateKey: "2026-12-13", label: "Sun, Dec 13", time: "11:00A - 12:45P", where: "SandersFit" },
   { key: "2026-12-13-yemi", dateKey: "2026-12-13", label: "Sun, Dec 13", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
