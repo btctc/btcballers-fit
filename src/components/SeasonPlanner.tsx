@@ -49,6 +49,63 @@ export default function SeasonPlanner() {
   const secondary: FallPackage | null = fits && fits.id === "14" ? fits : null;
   const overCap = fits ? count > fits.sessions : false;
 
+  const to24h = (t: string) => {
+    const m = t.match(/(\d+):(\d+)(A|P)/);
+    if (!m) return "0000";
+    let h = Number(m[1]);
+    if (m[3] === "P" && h !== 12) h += 12;
+    if (m[3] === "A" && h === 12) h = 0;
+    return `${String(h).padStart(2, "0")}${m[2]}`;
+  };
+
+  const downloadICS = () => {
+    const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+    const events = pickedSessions
+      .map((s) => {
+        const [startRaw, endRaw] = s.time.split(" - ");
+        const d = s.dateKey.replace(/-/g, "");
+        const title = s.mm
+          ? "BTC Ballers - Midnight Madness"
+          : s.yemi
+            ? "BTC Ballers - Coach Yemi Training"
+            : "BTC Ballers Training";
+        const desc = s.mm
+          ? "Small-group training, dinner, film, books, and competitive play."
+          : s.yemi
+            ? "Ride with Coach T from SandersFit - limited space."
+            : "Believe. Train. Compete.";
+        return [
+          "BEGIN:VEVENT",
+          `UID:btc-${s.key}@btcballers.training`,
+          `DTSTAMP:${stamp}`,
+          `DTSTART:${d}T${to24h(startRaw)}00`,
+          `DTEND:${d}T${to24h(endRaw)}00`,
+          `SUMMARY:${title}`,
+          `LOCATION:${s.where.replace(/,/g, "\\,")}`,
+          `DESCRIPTION:${desc}`,
+          "END:VEVENT",
+        ].join("\r\n");
+      })
+      .join("\r\n");
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//BTC Ballers//Fall 2026//EN",
+      "CALSCALE:GREGORIAN",
+      events,
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "BTC_Ballers_Fall_2026.ics";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const mailFor = (pkg: FallPackage) => {
     const dateLines = pickedSessions
       .map(
@@ -155,6 +212,15 @@ export default function SeasonPlanner() {
           )}
         </div>
         <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          {count > 0 ? (
+            <button
+              type="button"
+              onClick={downloadICS}
+              className="inline-block border border-white/30 px-6 py-3 font-semibold text-center hover:border-btc-orange hover:text-btc-orange transition"
+            >
+              Add dates to my calendar
+            </button>
+          ) : null}
           {primary ? (
             <a
               href={mailFor(primary)}
