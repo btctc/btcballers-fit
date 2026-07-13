@@ -13,6 +13,15 @@ const MONTH_NAMES: Record<string, string> = {
   "12": "December",
 };
 
+type QuickGroup = { label: string; match: (s: FallSession) => boolean };
+
+const QUICK_GROUPS: QuickGroup[] = [
+  { label: "Weeknights", match: (s) => !s.mm && ["Tue", "Wed", "Thu"].some((d) => s.label.startsWith(d)) },
+  { label: "Saturdays", match: (s) => s.label.startsWith("Sat") },
+  { label: "Sundays", match: (s) => s.label.startsWith("Sun") },
+  { label: "Midnight Madness", match: (s) => !!s.mm },
+];
+
 function groupByMonth(sessions: FallSession[]) {
   const groups: Record<string, FallSession[]> = {};
   for (const s of sessions) {
@@ -31,6 +40,16 @@ export default function SeasonPlanner() {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
       else next.add(key);
+      return next;
+    });
+  };
+
+  const toggleGroup = (g: QuickGroup) => {
+    const keys = fallSessions.filter(g.match).map((s) => s.key);
+    setPicked((prev) => {
+      const next = new Set(prev);
+      const allOn = keys.every((k) => next.has(k));
+      keys.forEach((k) => (allOn ? next.delete(k) : next.add(k)));
       return next;
     });
   };
@@ -120,24 +139,64 @@ export default function SeasonPlanner() {
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };
 
+  const progressPct = Math.min(count / 25, 1) * 100;
+
   return (
     <div className="border border-white/10 bg-btc-dim p-8 md:p-10">
       <div className="label text-btc-orange mb-3">Plan your fall</div>
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
-        Tap the sessions your kid can make. The counter tells you which package fits. You&apos;re
-        not locked to these dates - packages work for any session on the calendar. Sundays have
-        two workouts: SandersFit, then Coach Yemi at Life School Oak Cliff. Each counts as its
-        own session. SandersFit players can ride with Coach T to Yemi&apos;s - limited space.
+        Tap the sessions your kid can make - the counter shows which package fits. You&apos;re not
+        locked to your picks. Sundays have two workouts (SandersFit, then Coach Yemi at Life
+        School Oak Cliff); each counts as its own session, and SandersFit players can ride with
+        Coach T to Yemi&apos;s - limited space.
       </p>
+
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        <span className="label text-btc-white/50 mr-1">Quick pick:</span>
+        {QUICK_GROUPS.map((g) => {
+          const keys = fallSessions.filter(g.match).map((s) => s.key);
+          const allOn = keys.length > 0 && keys.every((k) => picked.has(k));
+          return (
+            <button
+              key={g.label}
+              type="button"
+              onClick={() => toggleGroup(g)}
+              aria-pressed={allOn}
+              className={`px-3 py-1.5 text-sm border transition ${
+                allOn
+                  ? "border-btc-orange bg-btc-orange/15 text-btc-white"
+                  : "border-white/20 text-btc-white/70 hover:border-btc-orange/60 hover:text-btc-white"
+              }`}
+            >
+              {g.label}
+            </button>
+          );
+        })}
+        {count > 0 ? (
+          <button
+            type="button"
+            onClick={() => setPicked(new Set())}
+            className="px-3 py-1.5 text-sm text-btc-white/50 hover:text-btc-orange transition"
+          >
+            Clear all
+          </button>
+        ) : null}
+      </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {MONTH_ORDER.map((m) => {
           const sessions = groups[m];
           if (!sessions?.length) return null;
+          const monthPicked = sessions.filter((s) => picked.has(s.key)).length;
           return (
             <div key={m}>
-              <div className="label mb-3">{MONTH_NAMES[m]}</div>
+              <div className="label mb-3 flex items-baseline justify-between">
+                <span>{MONTH_NAMES[m]}</span>
+                {monthPicked > 0 ? (
+                  <span className="mono text-btc-orange normal-case">{monthPicked} picked</span>
+                ) : null}
+              </div>
               <ul className="space-y-2">
                 {sessions.map((s) => {
                   const on = picked.has(s.key);
@@ -158,18 +217,22 @@ export default function SeasonPlanner() {
                         aria-pressed={on}
                         className={`${base} ${cls}`}
                       >
-                        <span className="mono text-sm">
+                        <span className="mono text-sm flex items-center gap-2">
+                          <span
+                            aria-hidden="true"
+                            className={`inline-block w-3 h-3 border shrink-0 ${
+                              on ? "bg-btc-orange border-btc-orange" : "border-white/30"
+                            }`}
+                          />
                           {s.label}
                           {s.mm ? (
-                            <span className="label text-btc-orange ml-2">Midnight Madness</span>
+                            <span className="label text-btc-orange">Midnight Madness</span>
                           ) : null}
-                          {s.yemi ? (
-                            <span className="label text-btc-orange ml-2">Coach Yemi</span>
-                          ) : null}
+                          {s.yemi ? <span className="label text-btc-orange">Coach Yemi</span> : null}
                         </span>
-                        <span className="block text-xs text-btc-white/60 mt-0.5">
+                        <span className="block text-xs text-btc-white/60 mt-0.5 pl-5">
                           {s.time} &middot; {s.where}
-                          {s.yemi ? " · Ride with Coach T from SandersFit - limited space" : ""}
+                          {s.yemi ? " · Ride available - limited space" : ""}
                         </span>
                       </button>
                     </li>
@@ -181,49 +244,64 @@ export default function SeasonPlanner() {
         })}
       </div>
 
-      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 px-8 md:px-10 py-3 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
-          <span className="mono text-btc-orange whitespace-nowrap">{count} selected</span>
-          <span className="text-sm text-btc-white/70 truncate">
-            {!fits
-              ? "Pick days to see your package."
-              : overCap
-                ? `${fits.label} (${fits.price}) + $125 walk-ins`
-                : secondary
-                  ? `${secondary.label} fits - most go 18 (+4 for $300)`
-                  : `${fits.label} fits - ${fits.price}`}
-          </span>
+      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40">
+        <div className="relative h-1 bg-white/10" aria-hidden="true">
+          <div
+            className="absolute inset-y-0 left-0 bg-btc-orange transition-all"
+            style={{ width: `${progressPct}%` }}
+          />
+          {fallPackages.map((p) => (
+            <span
+              key={p.id}
+              className={`absolute top-0 h-full w-px ${count >= p.sessions ? "bg-btc-black" : "bg-white/40"}`}
+              style={{ left: `${(p.sessions / 25) * 100}%` }}
+            />
+          ))}
         </div>
-        <div className="flex flex-wrap gap-2 shrink-0">
-          {count > 0 ? (
-            <button
-              type="button"
-              onClick={downloadICS}
-              className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
-            >
-              Add to calendar
-            </button>
-          ) : null}
-          {primary ? (
-            <a
-              href={mailFor(primary)}
-              className="bg-btc-orange text-btc-black px-4 py-2 text-sm font-semibold hover:bg-btc-white transition"
-            >
-              Register {primary.sessions}
-            </a>
-          ) : (
-            <span className="border border-white/20 text-btc-white/50 px-4 py-2 text-sm font-semibold">
-              Register
+        <div className="px-8 md:px-10 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
+            <span className="mono text-btc-orange whitespace-nowrap">{count} selected</span>
+            <span className="text-sm text-btc-white/70 truncate">
+              {!fits
+                ? "Pick days to see your package."
+                : overCap
+                  ? `${fits.label} (${fits.price}) + $125 walk-ins`
+                  : secondary
+                    ? `${secondary.label} fits - most go 18 (+4 for $300)`
+                    : `${fits.label} fits - ${fits.price}`}
             </span>
-          )}
-          {secondary ? (
-            <a
-              href={mailFor(secondary)}
-              className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
-            >
-              Register {secondary.sessions}
-            </a>
-          ) : null}
+          </div>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            {count > 0 ? (
+              <button
+                type="button"
+                onClick={downloadICS}
+                className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
+              >
+                Add to calendar
+              </button>
+            ) : null}
+            {primary ? (
+              <a
+                href={mailFor(primary)}
+                className="bg-btc-orange text-btc-black px-4 py-2 text-sm font-semibold hover:bg-btc-white transition"
+              >
+                Register {primary.sessions}
+              </a>
+            ) : (
+              <span className="border border-white/20 text-btc-white/50 px-4 py-2 text-sm font-semibold">
+                Register
+              </span>
+            )}
+            {secondary ? (
+              <a
+                href={mailFor(secondary)}
+                className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
+              >
+                Register {secondary.sessions}
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
