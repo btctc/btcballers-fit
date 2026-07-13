@@ -1,7 +1,6 @@
 import ProgramCard from "@/components/ProgramCard";
 import SeasonPlanner from "@/components/SeasonPlanner";
 import { fallSeason, fallPackages, midnightMadness, privateTraining } from "@/lib/programs";
-import { site } from "@/lib/siteConfig";
 
 export const metadata = { title: "Programs - BTC Ballers" };
 
