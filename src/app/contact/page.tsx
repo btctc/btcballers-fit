@@ -29,16 +29,16 @@ export default function ContactPage() {
 
       <div className="mt-12 grid md:grid-cols-3 gap-6 text-sm">
         <div className="border border-white/10 p-5">
-          <div className="label text-btc-orange mb-2">Summer Camp</div>
-          <p className="text-btc-white/80">Tell me which week and how old your kid is.</p>
+          <div className="label text-btc-orange mb-2">Fall Packages</div>
+          <p className="text-btc-white/80">Tell me which package and how old your kid is.</p>
         </div>
         <div className="border border-white/10 p-5">
-          <div className="label text-btc-orange mb-2">Summer Training</div>
-          <p className="text-btc-white/80">Tell me proposed dates and what they want to work on.</p>
+          <div className="label text-btc-orange mb-2">Private Training</div>
+          <p className="text-btc-white/80">1-3 players at the home court. Tell me what they want to work on.</p>
         </div>
         <div className="border border-white/10 p-5">
-          <div className="label text-btc-orange mb-2">Open Gym</div>
-          <p className="text-btc-white/80">Just show up. Free. Bring friends.</p>
+          <div className="label text-btc-orange mb-2">Walk-Ins</div>
+          <p className="text-btc-white/80">$125 a session, subject to availability. Package members come first.</p>
         </div>
       </div>
     </div>

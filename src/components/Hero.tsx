@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="hero-content relative max-w-6xl mx-auto px-5 pt-20 pb-20 sm:pt-24 sm:pb-28 md:pt-36 md:pb-40">
         <div className="hero-kicker flex items-center gap-3 mb-6 md:mb-8">
           <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse" aria-hidden="true"></div>
-          <span className="label">Summer 2026 - Dallas, TX</span>
+          <span className="label">Fall 2026 - Dallas, TX</span>
         </div>
 
         <h1 className="hero-title display">
@@ -38,7 +38,7 @@ export default function Hero() {
             href="/programs"
             className="hero-action col-span-2 bg-btc-orange text-btc-black px-6 py-3 text-center font-semibold tracking-tight hover:bg-btc-white transition sm:col-auto"
           >
-            See Summer 2026
+            See Fall 2026
           </Link>
           <a
             href={`mailto:${site.email}`}

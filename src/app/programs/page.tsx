@@ -1,116 +1,95 @@
-import Image from "next/image";
 import ProgramCard from "@/components/ProgramCard";
-import CampWeekList from "@/components/CampWeekList";
-import OpenGymSignupButton from "@/components/OpenGymSignupButton";
-import TrainingScheduler from "@/components/TrainingScheduler";
-import { camp, training, openGym } from "@/lib/programs";
+import { fallSeason, fallPackages, midnightMadness, privateTraining } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
 export const metadata = { title: "Programs - BTC Ballers" };
 
 export default function ProgramsPage() {
-  const buildTrainingHref = (preference: string) => {
-    const trainingSubject = encodeURIComponent("Summer Training approval request");
-    const trainingBody = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to request Summer Training approval.\n\nPackage: 12 sessions, 90 minutes each ($1,000)\nPreferred training time: ${preference}\n\nKid's name:\nKid's age:\nBest days:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
+  const buildRegisterHref = (pkg: string) => {
+    const subject = encodeURIComponent(`Fall 2026 registration - ${pkg}`);
+    const body = encodeURIComponent(
+      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
     );
-    return `mailto:${site.email}?subject=${trainingSubject}&body=${trainingBody}`;
+    return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };
 
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
-      <div className="label text-btc-orange">Summer 2026</div>
+      <div className="label text-btc-orange">{fallSeason.name} &middot; {fallSeason.window}</div>
       <h1 className="display text-6xl md:text-8xl mt-3">Programs.</h1>
-      <p className="mt-6 text-lg text-btc-white/80 max-w-2xl">
-        Three ways in this summer. Pick the one that fits your kid.
-      </p>
+      <p className="mt-6 text-lg text-btc-white/80 max-w-2xl">{fallSeason.intro}</p>
 
-      <div className="mt-16 grid md:grid-cols-2 gap-6">
-        <ProgramCard
-          label="Week-long immersion"
-          title={camp.title}
-          price={camp.price}
-          blurb={camp.blurb}
-          image={{ src: "/images/training.jpg", alt: "Young player training on Coach T's court", compact: true }}
-        >
-          <div className="mb-6 border border-white/10 bg-btc-black p-4">
-            <div className="label text-btc-orange mb-2">Hours</div>
-            <p className="mono text-btc-white">{camp.hours}</p>
-            <p className="mt-3 text-sm leading-relaxed text-btc-white/70">{camp.note}</p>
-          </div>
-          <div className="label mb-2">Daily schedule</div>
-          <ul className="space-y-2 mb-6">
-            {camp.schedule.map((s, i) => (
-              <li key={i} className="flex gap-4 text-sm">
-                <span className="mono text-btc-orange w-16 shrink-0">{s.time}</span>
-                <span className="text-btc-white/85">{s.what}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="label mb-2">Pricing</div>
-          <ul className="space-y-2 mb-6">
-            {camp.dropIn.map((d, i) => (
-              <li key={i} className="flex justify-between gap-4 text-sm border-b border-white/5 pb-2">
-                <span className="text-btc-white/85">{d.label}</span>
-                <span className="mono text-btc-orange">{d.price}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="label mb-3">Pick a week</div>
-          <CampWeekList />
-        </ProgramCard>
-
-        <ProgramCard
-          label="12-session package"
-          title={training.title}
-          price={training.price}
-          blurb={training.blurb}
-          image={{ src: "/images/camp.jpg", alt: "Kids lined up for training drills on Coach T's court" }}
-          cta={{ href: buildTrainingHref("Custom schedule request"), text: "Request Custom Schedule" }}
-        >
-          <div className="label mb-2">Window</div>
-          <p className="text-btc-white/85 mb-4">{training.window}</p>
-          <div className="label mb-2">Availability</div>
-          <p className="text-btc-white/85 mb-6">{training.availability}</p>
-          <div className="mb-6">
-            <TrainingScheduler />
-          </div>
-          <div className="label mb-2">Includes</div>
-          <ul className="space-y-2">
-            {training.includes.map((it, i) => (
-              <li key={i} className="text-sm text-btc-white/85">- {it}</li>
-            ))}
-          </ul>
-        </ProgramCard>
+      <div className="mt-16 grid md:grid-cols-3 gap-6">
+        {fallPackages.map((pkg) => (
+          <ProgramCard
+            key={pkg.id}
+            label={pkg.bestValue ? "Best value" : "Fall 2026"}
+            title={pkg.label}
+            price={pkg.price}
+            blurb={`${pkg.sessions} sessions. Come to any session on the calendar. Both Midnight Madness nights included.`}
+            cta={{ href: buildRegisterHref(pkg.label), text: "Register" }}
+          >
+            <div className="label mb-2">Per session</div>
+            <p className="mono text-btc-orange mb-4">{pkg.perSession}</p>
+            <div className="label mb-2">Payment</div>
+            <ul className="space-y-2">
+              {pkg.terms.map((t, i) => (
+                <li key={i} className="text-sm text-btc-white/85">{t}</li>
+              ))}
+            </ul>
+          </ProgramCard>
+        ))}
       </div>
 
       <div className="mt-16 border border-white/10 bg-btc-dim p-8 md:p-10">
-        <div className="grid md:grid-cols-[0.9fr_1.1fr] gap-8 items-center">
-          <div className="relative aspect-[4/3] w-full overflow-hidden bg-btc-black">
-            <Image src="/images/open-gym.jpg" alt="Coach T with Open Gym players after basketball" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-contain" />
+        <div className="label text-btc-orange mb-3">Included in every package</div>
+        <h3 className="display text-4xl mb-3">{midnightMadness.title}.</h3>
+        <p className="text-btc-white/85 max-w-2xl">{midnightMadness.blurb}</p>
+        <div className="mt-5 flex flex-wrap gap-6">
+          <div>
+            <div className="label">Nights</div>
+            <ul className="mt-1 flex flex-wrap gap-2">
+              {midnightMadness.nights.map((n) => (
+                <li key={n} className="mono text-sm border border-white/15 px-3 py-1">{n}</li>
+              ))}
+            </ul>
           </div>
           <div>
-            <div className="label text-btc-orange mb-3">Free this summer</div>
-            <h3 className="display text-4xl mb-3">{openGym.title}</h3>
-            <p className="text-btc-white/85 max-w-2xl">{openGym.blurb}</p>
-            <div className="mt-5 flex flex-wrap gap-6">
-              <div>
-                <div className="label">When</div>
-                <div className="mt-1 text-btc-white/85">{openGym.time}</div>
-              </div>
-              <div>
-                <div className="label">Dates</div>
-                <ul className="mt-1 flex flex-wrap gap-2">
-                  {openGym.dates.map((d) => (
-                    <li key={d} className="mono text-sm border border-white/15 px-3 py-1">{d}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <p className="text-btc-white/60 text-sm mt-4">{openGym.note}</p>
-            <div className="mt-6">
-              <OpenGymSignupButton />
-            </div>
+            <div className="label">Time</div>
+            <div className="mt-1 mono text-btc-white/85">{midnightMadness.time}</div>
+          </div>
+        </div>
+        <p className="text-btc-white/60 text-sm mt-4">{midnightMadness.note}</p>
+      </div>
+
+      <div className="mt-16 grid md:grid-cols-2 gap-6">
+        <div className="border border-white/10 bg-btc-dim p-8">
+          <div className="label text-btc-orange mb-3">Days, times & locations</div>
+          <p className="text-btc-white/85 mb-6">
+            Every session is on the season calendar. If it&apos;s on the calendar, you can come.
+          </p>
+          <ul className="space-y-4">
+            {fallSeason.schedule.map((s, i) => (
+              <li key={i} className="text-sm">
+                <div className="font-semibold text-btc-white">{s.day}</div>
+                <div className="mono text-btc-orange mt-1">{s.time}</div>
+                <div className="text-btc-white/70 mt-1">{s.where}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="border border-white/10 bg-btc-dim p-8">
+          <div className="label text-btc-orange mb-3">Season details</div>
+          <ul className="space-y-4 text-sm text-btc-white/85 leading-relaxed">
+            <li>{fallSeason.locations}</li>
+            <li>{fallSeason.noTraining}</li>
+            <li>{fallSeason.weather}</li>
+            <li>{fallSeason.policy}</li>
+          </ul>
+          <div className="mt-8 border-t border-white/10 pt-6">
+            <div className="label text-btc-orange mb-2">{privateTraining.title}</div>
+            <p className="text-sm text-btc-white/85 leading-relaxed">{privateTraining.blurb}</p>
+            <p className="text-sm text-btc-white/70 mt-3">{privateTraining.walkIn}</p>
           </div>
         </div>
       </div>

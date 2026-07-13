@@ -1,61 +1,84 @@
-export type CampWeek = {
+export type FallPackage = {
   id: string;
-  dates: string;
-  spotsLeft: number;
-  spotsTotal: number;
+  sessions: number;
+  price: string;
+  perSession: string;
+  label: string;
+  terms: string[];
+  bestValue?: boolean;
 };
 
-export const campWeeks: CampWeek[] = [
-  { id: "jun-08", dates: "Jun 8 - 12", spotsLeft: 3, spotsTotal: 4 },
-  { id: "jun-15", dates: "Jun 15 - 19", spotsLeft: 3, spotsTotal: 4 },
-  { id: "jun-22", dates: "Jun 22 - 26", spotsLeft: 3, spotsTotal: 4 },
-  { id: "jul-06", dates: "Jul 6 - 10", spotsLeft: 1, spotsTotal: 4 },
-  { id: "jul-27", dates: "Jul 27 - 31", spotsLeft: 3, spotsTotal: 4 },
-  { id: "aug-03", dates: "Aug 3 - 7", spotsLeft: 4, spotsTotal: 4 },
+export const fallSeason = {
+  name: "Fall 2026",
+  window: "Aug 22 - Dec 3, 2026",
+  sessionsOffered: 30,
+  intro:
+    "Every package is the same training. Pick your number of sessions and come to any session on the calendar - 30 offered. Every package includes both Midnight Madness nights.",
+  schedule: [
+    { day: "Tuesdays & Wednesdays", time: "4:00P - 5:45P", where: "Home court" },
+    { day: "Thursdays", time: "5:15P - 7:00P", where: "Home court" },
+    { day: "Saturdays", time: "10:00A - 11:45A", where: "Home court" },
+    {
+      day: "Sundays",
+      time: "11:00A - 12:45P",
+      where: "SandersFit, plus an optional session with Coach Yemi at Life School Oak Cliff, 1:00P - 2:30P (included)",
+    },
+  ],
+  noTraining:
+    "No training: Labor Day weekend (Sep 5-7), Oct 3-11 (fall break), Halloween (Oct 31), Nov 7-8, and Thanksgiving Break (Nov 23-29).",
+  weather:
+    "If weather delays, we wait until clear or reschedule. If that's not possible, we use the time for film, discussion, or SandersFit.",
+  policy: "No refunds - packages may be upgraded at any time by paying the difference.",
+  locations:
+    "Private home court (address shared at registration), SandersFit, and Life School Oak Cliff.",
+};
+
+export const fallPackages: FallPackage[] = [
+  {
+    id: "12",
+    sessions: 12,
+    price: "$1,200",
+    perSession: "$100 / session",
+    label: "12-Session Package",
+    terms: ["Paid in full at registration."],
+  },
+  {
+    id: "18",
+    sessions: 18,
+    price: "$1,700",
+    perSession: "$94 / session",
+    label: "18-Session Package",
+    terms: [
+      "Pay upfront, or half ($850) at registration + $425/month for 2 months.",
+      "Payments due by the 12th (Oct 12 & Nov 12).",
+    ],
+  },
+  {
+    id: "25",
+    sessions: 25,
+    price: "$2,200",
+    perSession: "$88 / session",
+    label: "25-Session Package",
+    bestValue: true,
+    terms: [
+      "Pay upfront, or half ($1,100) at registration + $275/month for 4 months.",
+      "Payments due by the 12th of each month (Sep 12 - Dec 12).",
+    ],
+  },
 ];
 
-export const camp = {
-  title: "Summer Camp",
-  price: "$700 / week",
-  blurb: "Week-long basketball immersion at my home court. Small groups. Four kids per week. Camp runs 9:30A to 4P.",
-  hours: "9:30A to 4P",
-  note: "The daily flow stays fluid for weather. We adjust court time, recovery, book reads, and character development so the day still has purpose.",
-  schedule: [
-    { time: "9:30A", what: "Basketball training" },
-    { time: "10:30A", what: "Strength and stretch (Tue and Thu at SandersFit)" },
-    { time: "12P", what: "Lunch (bring your own)" },
-    { time: "1:30P", what: "Training, play, book reads, and character development" },
-    { time: "3P", what: "Recovery and snack" },
-    { time: "4P", what: "Pickup" },
-  ],
-  dropIn: [
-    { label: "Full day (9:30A to 4P)", price: "$170" },
-    { label: "Half day (9:30A to 12P)", price: "$100" },
-    { label: "Half day (1:30P to 4P)", price: "$100" },
-    { label: "Full week", price: "$700" },
-  ],
+export const midnightMadness = {
+  title: "Midnight Madness",
+  nights: ["Friday, Sep 18", "Friday, Nov 13"],
+  time: "4:00P - 9:00P",
+  blurb:
+    "Small-group training, dinner together, film, books, board games, and competitive play. We train. We compete. We hang out. Family style.",
+  note: "Both nights are included in every package.",
 };
 
-export const training = {
-  title: "Summer Training",
-  price: "$1,000",
-  blurb: "Twelve sessions. Ninety minutes each. Basketball, strength, recovery. Built around your kid.",
-  window: "Jun 8 to Aug 6",
-  availability: "Mon to Thu 5:30P to 8P. Sat and Sun by arrangement.",
-  includes: [
-    "Skill work and ball handling",
-    "Shooting mechanics and reps",
-    "Strength and conditioning",
-    "Stretching and recovery",
-  ],
-};
-
-export const openGym = {
-  title: "Open Gym",
-  price: "Free",
-  blurb: "Free 5-on-5 at Alcuin. Bring friends. Just hooping.",
-  time: "5P to 7P, Mon and Wed",
-  dates: ["Jun 15", "Jun 17", "Jun 22", "Jun 24", "Jul 6", "Jul 8"],
-  dateKeys: ["2026-06-15", "2026-06-17", "2026-06-22", "2026-06-24", "2026-07-06", "2026-07-08"],
-  note: "Campers can ride with me if needed.",
+export const privateTraining = {
+  title: "Private & Semi-Private",
+  blurb:
+    "Private and semi-private sessions (1-3 players) at the home court. Reach out to Coach T for availability and details.",
+  walkIn: "Single group session (walk-in): $125, subject to availability. Package members receive priority.",
 };
