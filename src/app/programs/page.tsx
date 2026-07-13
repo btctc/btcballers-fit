@@ -6,14 +6,6 @@ import { site } from "@/lib/siteConfig";
 export const metadata = { title: "Programs - BTC Ballers" };
 
 export default function ProgramsPage() {
-  const buildRegisterHref = (pkg: string) => {
-    const subject = encodeURIComponent(`Fall 2026 registration - ${pkg}`);
-    const body = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
-    );
-    return `mailto:${site.email}?subject=${subject}&body=${body}`;
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
       <div className="label text-btc-orange">{fallSeason.name} &middot; {fallSeason.window}</div>
@@ -28,7 +20,7 @@ export default function ProgramsPage() {
             title={pkg.label}
             price={pkg.price}
             blurb={`${pkg.sessions} sessions. Come to any session on the calendar, including Midnight Madness nights.`}
-            cta={{ href: buildRegisterHref(pkg.label), text: "Register" }}
+            cta={{ href: "#plan", text: "Pick your days to register" }}
             highlight={pkg.highlight}
           >
             <div className="label mb-2">Per session</div>
@@ -43,7 +35,7 @@ export default function ProgramsPage() {
         ))}
       </div>
 
-      <div className="mt-16">
+      <div className="mt-16 scroll-mt-24" id="plan">
         <SeasonPlanner />
       </div>
 
