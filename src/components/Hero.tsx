@@ -12,9 +12,9 @@ export default function Hero() {
           fill
           quality={55}
           sizes="100vw"
-          className="hero-bg bg-btc-black object-contain opacity-35 md:object-cover"
+          className="hero-bg bg-btc-black object-contain opacity-65 md:object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-btc-black/30 via-btc-black/75 to-btc-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-btc-black/20 via-btc-black/45 to-btc-black" />
         <div className="absolute inset-0 grid-bg opacity-60" />
       </div>
 
