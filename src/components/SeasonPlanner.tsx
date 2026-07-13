@@ -181,64 +181,47 @@ export default function SeasonPlanner() {
         })}
       </div>
 
-      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 px-8 md:px-10 py-5 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40 flex flex-col md:flex-row md:items-center gap-5 md:justify-between">
-        <div>
-          <div className="mono text-btc-orange text-lg">
-            {count} {count === 1 ? "session" : "sessions"} selected
-          </div>
-          {fits ? (
-            <p className="text-btc-white/85 mt-1">
-              {overCap ? (
-                <>
-                  That&apos;s more than the biggest package - the{" "}
-                  <span className="font-semibold">{fits.label}</span> ({fits.price}) is your best
-                  value. Extra days are $125 walk-ins.
-                </>
-              ) : secondary ? (
-                <>
-                  The {secondary.label} ({secondary.price}) covers your picks, but most families go{" "}
-                  <span className="font-semibold">{eighteen.label}</span> ({eighteen.price}) - 4
-                  more sessions for $300, and the season usually fills in as you go.
-                </>
-              ) : (
-                <>
-                  The <span className="font-semibold">{fits.label}</span> ({fits.price}) covers
-                  you.
-                </>
-              )}
-            </p>
-          ) : (
-            <p className="text-btc-white/60 mt-1">Pick a few days to see which package fits.</p>
-          )}
+      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 px-8 md:px-10 py-3 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
+          <span className="mono text-btc-orange whitespace-nowrap">{count} selected</span>
+          <span className="text-sm text-btc-white/70 truncate">
+            {!fits
+              ? "Pick days to see your package."
+              : overCap
+                ? `${fits.label} (${fits.price}) + $125 walk-ins`
+                : secondary
+                  ? `${secondary.label} fits - most go 18 (+4 for $300)`
+                  : `${fits.label} fits - ${fits.price}`}
+          </span>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+        <div className="flex flex-wrap gap-2 shrink-0">
           {count > 0 ? (
             <button
               type="button"
               onClick={downloadICS}
-              className="inline-block border border-white/30 px-6 py-3 font-semibold text-center hover:border-btc-orange hover:text-btc-orange transition"
+              className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
             >
-              Add dates to my calendar
+              Add to calendar
             </button>
           ) : null}
           {primary ? (
             <a
               href={mailFor(primary)}
-              className="inline-block bg-btc-orange text-btc-black px-6 py-3 font-semibold text-center hover:bg-btc-white transition"
+              className="bg-btc-orange text-btc-black px-4 py-2 text-sm font-semibold hover:bg-btc-white transition"
             >
-              Register - {primary.label}
+              Register {primary.sessions}
             </a>
           ) : (
-            <span className="inline-block border border-white/20 text-btc-white/50 px-6 py-3 font-semibold text-center">
+            <span className="border border-white/20 text-btc-white/50 px-4 py-2 text-sm font-semibold">
               Register
             </span>
           )}
           {secondary ? (
             <a
               href={mailFor(secondary)}
-              className="inline-block border border-white/30 px-6 py-3 font-semibold text-center hover:border-btc-orange hover:text-btc-orange transition"
+              className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
             >
-              Register - {secondary.label}
+              Register {secondary.sessions}
             </a>
           ) : null}
         </div>
