@@ -166,8 +166,8 @@ export default function SeasonPlanner() {
         calendar, From URL, paste btcballers.training/calendar.ics
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-2">
-        <span className="label text-btc-white/50 mr-1">Quick pick:</span>
+      <div className="mt-6 flex items-center gap-2 overflow-x-auto pb-2">
+        <span className="label text-btc-white/50 mr-1 shrink-0">Quick pick:</span>
         {QUICK_GROUPS.map((g) => {
           const keys = fallSessions.filter(g.match).map((s) => s.key);
           const allOn = keys.length > 0 && keys.every((k) => picked.has(k));
@@ -177,7 +177,7 @@ export default function SeasonPlanner() {
               type="button"
               onClick={() => toggleGroup(g)}
               aria-pressed={allOn}
-              className={`px-3 py-1.5 text-left border transition ${
+              className={`px-3 py-1.5 text-left border transition shrink-0 whitespace-nowrap ${
                 allOn
                   ? "border-btc-orange bg-btc-orange/15 text-btc-white"
                   : "border-white/20 text-btc-white/70 hover:border-btc-orange/60 hover:text-btc-white"
@@ -192,7 +192,7 @@ export default function SeasonPlanner() {
           <button
             type="button"
             onClick={() => setPicked(new Set())}
-            className="px-3 py-1.5 text-sm text-btc-white/50 hover:text-btc-orange transition"
+            className="px-3 py-1.5 text-sm text-btc-white/50 hover:text-btc-orange transition shrink-0 whitespace-nowrap"
           >
             Clear all
           </button>
