@@ -8,11 +8,12 @@ type Props = {
   image?: { src: string; alt: string; compact?: boolean };
   children?: React.ReactNode;
   cta?: { href: string; text: string } | null;
+  highlight?: boolean;
 };
 
-export default function ProgramCard({ label, title, price, blurb, image, children, cta }: Props) {
+export default function ProgramCard({ label, title, price, blurb, image, children, cta, highlight }: Props) {
   return (
-    <article className="border border-white/10 bg-btc-dim p-8 flex flex-col h-full">
+    <article className={`border bg-btc-dim p-8 flex flex-col h-full ${highlight ? "border-btc-orange" : "border-white/10"}`}>
       {image && (
         <div className={`relative mb-7 w-full overflow-hidden bg-btc-black ${image.compact ? "aspect-[16/9]" : "aspect-[4/3]"}`}>
           <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-contain" />

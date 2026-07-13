@@ -24,11 +24,12 @@ export default function ProgramsPage() {
         {fallPackages.map((pkg) => (
           <ProgramCard
             key={pkg.id}
-            label={pkg.bestValue ? "Best value" : "Fall 2026"}
+            label={pkg.badge ?? "Fall 2026"}
             title={pkg.label}
             price={pkg.price}
             blurb={`${pkg.sessions} sessions. Come to any session on the calendar. Both Midnight Madness nights included.`}
             cta={{ href: buildRegisterHref(pkg.label), text: "Register" }}
+            highlight={pkg.highlight}
           >
             <div className="label mb-2">Per session</div>
             <p className="mono text-btc-orange mb-4">{pkg.perSession}</p>

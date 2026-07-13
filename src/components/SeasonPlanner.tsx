@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { fallSessions, fallPackages, type FallSession } from "@/lib/programs";
+import { fallSessions, fallPackages, type FallSession, type FallPackage } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
 const MONTH_ORDER = ["08", "09", "10", "11", "12"] as const;
@@ -35,30 +35,36 @@ export default function SeasonPlanner() {
     });
   };
 
-  const count = picked.size;
+  const pickedSessions = fallSessions.filter((s) => picked.has(s.dateKey));
+  const pickedTraining = pickedSessions.filter((s) => !s.mm);
+  const pickedMM = pickedSessions.filter((s) => s.mm);
+  const count = pickedTraining.length;
 
-  const recommended =
+  const fits =
     count === 0
       ? null
       : fallPackages.find((p) => count <= p.sessions) ?? fallPackages[fallPackages.length - 1];
 
-  const nextTier = recommended
-    ? fallPackages[fallPackages.findIndex((p) => p.id === recommended.id) + 1]
-    : null;
+  const eighteen = fallPackages.find((p) => p.id === "18")!;
+  // When the 12-pack technically covers them, lead with the 18 - it's the most popular.
+  const primary: FallPackage | null = fits ? (fits.id === "12" ? eighteen : fits) : null;
+  const secondary: FallPackage | null = fits && fits.id === "12" ? fits : null;
+  const overCap = fits ? count > fits.sessions : false;
 
-  const overCap = recommended ? count > recommended.sessions : false;
-
-  const pickedSessions = fallSessions.filter((s) => picked.has(s.dateKey));
-
-  const mailHref = useMemo(() => {
-    if (!recommended) return `mailto:${site.email}`;
-    const dateLines = pickedSessions.map((s) => `- ${s.label} (${s.time}, ${s.where})`).join("\n");
-    const subject = encodeURIComponent(`Fall 2026 registration - ${recommended.label}`);
+  const mailFor = (pkg: FallPackage) => {
+    const dateLines = pickedTraining.map((s) => `- ${s.label} (${s.time}, ${s.where})`).join("\n");
+    const mmLines =
+      pickedMM.length > 0
+        ? `\nMidnight Madness nights we're coming to (included):\n${pickedMM
+            .map((s) => `- ${s.label} (${s.time})`)
+            .join("\n")}\n`
+        : "";
+    const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
     const body = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${recommended.label} (${recommended.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
+      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n${mmLines}\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
     );
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
-  }, [recommended, pickedSessions, count]);
+  };
 
   return (
     <div className="border border-white/10 bg-btc-dim p-8 md:p-10">
@@ -66,7 +72,8 @@ export default function SeasonPlanner() {
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
         Tap the sessions your kid can make. The counter tells you which package fits. You&apos;re
-        not locked to these dates - packages work for any session on the calendar.
+        not locked to these dates - packages work for any session on the calendar. Midnight
+        Madness nights are included with every package and don&apos;t count toward your sessions.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -79,22 +86,32 @@ export default function SeasonPlanner() {
               <ul className="space-y-2">
                 {sessions.map((s) => {
                   const on = picked.has(s.dateKey);
+                  const base = "w-full text-left border px-3 py-2 transition";
+                  const cls = s.mm
+                    ? on
+                      ? "border-btc-orange bg-btc-orange/20 text-btc-white"
+                      : "border-btc-orange/50 text-btc-white/80 hover:border-btc-orange"
+                    : on
+                      ? "border-btc-orange bg-btc-orange/10 text-btc-white"
+                      : "border-white/15 text-btc-white/75 hover:border-btc-orange/60";
                   return (
                     <li key={s.dateKey}>
                       <button
                         type="button"
                         onClick={() => toggle(s.dateKey)}
                         aria-pressed={on}
-                        className={`w-full text-left border px-3 py-2 transition ${
-                          on
-                            ? "border-btc-orange bg-btc-orange/10 text-btc-white"
-                            : "border-white/15 text-btc-white/75 hover:border-btc-orange/60"
-                        }`}
+                        className={`${base} ${cls}`}
                       >
-                        <span className="mono text-sm">{s.label}</span>
+                        <span className="mono text-sm">
+                          {s.label}
+                          {s.mm ? (
+                            <span className="label text-btc-orange ml-2">Midnight Madness</span>
+                          ) : null}
+                        </span>
                         <span className="block text-xs text-btc-white/60 mt-0.5">
                           {s.time} &middot; {s.where}
                           {s.yemi ? " + Yemi (1:00P-2:30P, Life School Oak Cliff)" : ""}
+                          {s.mm ? " · Included with every package" : ""}
                         </span>
                       </button>
                     </li>
@@ -110,26 +127,31 @@ export default function SeasonPlanner() {
         <div>
           <div className="mono text-btc-orange text-lg">
             {count} {count === 1 ? "session" : "sessions"} selected
+            {pickedMM.length > 0 ? (
+              <span className="text-btc-white/60 text-sm">
+                {" "}
+                + {pickedMM.length} Midnight Madness (included)
+              </span>
+            ) : null}
           </div>
-          {recommended ? (
+          {fits ? (
             <p className="text-btc-white/85 mt-1">
               {overCap ? (
                 <>
                   That&apos;s more than the biggest package - the{" "}
-                  <span className="font-semibold">{recommended.label}</span> ({recommended.price})
-                  is your best value. Extra days are $125 walk-ins.
+                  <span className="font-semibold">{fits.label}</span> ({fits.price}) is your best
+                  value. Extra days are $125 walk-ins.
+                </>
+              ) : secondary ? (
+                <>
+                  The {secondary.label} ({secondary.price}) covers your picks, but most families go{" "}
+                  <span className="font-semibold">{eighteen.label}</span> ({eighteen.price}) - 6
+                  more sessions for $500, and the season usually fills in as you go.
                 </>
               ) : (
                 <>
-                  The <span className="font-semibold">{recommended.label}</span> (
-                  {recommended.price}) covers you.
-                  {nextTier && recommended.sessions - count <= 2 && count >= recommended.sessions - 2 ? (
-                    <span className="text-btc-white/60">
-                      {" "}
-                      {nextTier.label} adds {nextTier.sessions - recommended.sessions} more for the
-                      season.
-                    </span>
-                  ) : null}
+                  The <span className="font-semibold">{fits.label}</span> ({fits.price}) covers
+                  you.
                 </>
               )}
             </p>
@@ -137,17 +159,28 @@ export default function SeasonPlanner() {
             <p className="text-btc-white/60 mt-1">Pick a few days to see which package fits.</p>
           )}
         </div>
-        <a
-          href={mailHref}
-          className={`inline-block px-6 py-3 font-semibold text-center transition ${
-            recommended
-              ? "bg-btc-orange text-btc-black hover:bg-btc-white"
-              : "border border-white/20 text-btc-white/50 pointer-events-none"
-          }`}
-          aria-disabled={!recommended}
-        >
-          {recommended ? `Register - ${recommended.label}` : "Register"}
-        </a>
+        <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          {primary ? (
+            <a
+              href={mailFor(primary)}
+              className="inline-block bg-btc-orange text-btc-black px-6 py-3 font-semibold text-center hover:bg-btc-white transition"
+            >
+              Register - {primary.label}
+            </a>
+          ) : (
+            <span className="inline-block border border-white/20 text-btc-white/50 px-6 py-3 font-semibold text-center">
+              Register
+            </span>
+          )}
+          {secondary ? (
+            <a
+              href={mailFor(secondary)}
+              className="inline-block border border-white/30 px-6 py-3 font-semibold text-center hover:border-btc-orange hover:text-btc-orange transition"
+            >
+              Register - {secondary.label}
+            </a>
+          ) : null}
+        </div>
       </div>
     </div>
   );

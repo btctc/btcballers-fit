@@ -5,7 +5,8 @@ export type FallPackage = {
   perSession: string;
   label: string;
   terms: string[];
-  bestValue?: boolean;
+  badge?: string;
+  highlight?: boolean;
 };
 
 export const fallSeason = {
@@ -48,6 +49,8 @@ export const fallPackages: FallPackage[] = [
     price: "$1,700",
     perSession: "$94 / session",
     label: "18-Session Package",
+    badge: "Most popular",
+    highlight: true,
     terms: [
       "Pay upfront, or half ($850) at registration + $425/month for 2 months.",
       "Payments due by the 12th (Oct 12 & Nov 12).",
@@ -59,7 +62,7 @@ export const fallPackages: FallPackage[] = [
     price: "$2,200",
     perSession: "$88 / session",
     label: "25-Session Package",
-    bestValue: true,
+    badge: "Best value",
     terms: [
       "Pay upfront, or half ($1,100) at registration + $275/month for 4 months.",
       "Payments due by the 12th of each month (Sep 12 - Dec 12).",
@@ -82,6 +85,7 @@ export type FallSession = {
   time: string;
   where: "Home court" | "SandersFit";
   yemi?: boolean;
+  mm?: boolean; // Midnight Madness - included in every package, doesn't count toward sessions
 };
 
 export const fallSessions: FallSession[] = [
@@ -94,6 +98,7 @@ export const fallSessions: FallSession[] = [
   { dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
   { dateKey: "2026-09-15", label: "Tue, Sep 15", time: "4:00P - 5:45P", where: "Home court" },
   { dateKey: "2026-09-16", label: "Wed, Sep 16", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-09-18", label: "Fri, Sep 18", time: "4:00P - 9:00P", where: "Home court", mm: true },
   { dateKey: "2026-09-20", label: "Sun, Sep 20", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
   { dateKey: "2026-09-22", label: "Tue, Sep 22", time: "4:00P - 5:45P", where: "Home court" },
   { dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
@@ -110,6 +115,7 @@ export const fallSessions: FallSession[] = [
   { dateKey: "2026-11-03", label: "Tue, Nov 3", time: "4:00P - 5:45P", where: "Home court" },
   { dateKey: "2026-11-10", label: "Tue, Nov 10", time: "4:00P - 5:45P", where: "Home court" },
   { dateKey: "2026-11-11", label: "Wed, Nov 11", time: "4:00P - 5:45P", where: "Home court" },
+  { dateKey: "2026-11-13", label: "Fri, Nov 13", time: "4:00P - 9:00P", where: "Home court", mm: true },
   { dateKey: "2026-11-14", label: "Sat, Nov 14", time: "10:00A - 11:45A", where: "Home court" },
   { dateKey: "2026-11-17", label: "Tue, Nov 17", time: "4:00P - 5:45P", where: "Home court" },
   { dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
