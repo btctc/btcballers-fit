@@ -11,10 +11,10 @@ export type FallPackage = {
 
 export const fallSeason = {
   name: "Fall 2026",
-  window: "Aug 20 - Dec 13, 2026",
-  sessionsOffered: 38,
+  window: "Aug 18 - Dec 13, 2026",
+  sessionsOffered: 40,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 38 offered, including both Midnight Madness nights. Every workout counts as one session.",
+    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 40 offered, including both Midnight Madness nights. Every workout counts as one session.",
   schedule: [
     { day: "Tuesdays", time: "5:15P - 7:00P", where: "Home court" },
     { day: "Wednesdays", time: "4:00P - 5:45P", where: "Home court" },
@@ -91,10 +91,12 @@ export type FallSession = {
 };
 
 export const fallSessions: FallSession[] = [
-  { key: "2026-08-20", dateKey: "2026-08-20", label: "Thu, Aug 20", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-08-18", dateKey: "2026-08-18", label: "Tue, Aug 18", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:15A - 12:45P", where: "SandersFit" },
   { key: "2026-08-23-yemi", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-08-26", dateKey: "2026-08-26", label: "Wed, Aug 26", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-08-27", dateKey: "2026-08-27", label: "Thu, Aug 27", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-29", dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-09-01", dateKey: "2026-09-01", label: "Tue, Sep 1", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-08", dateKey: "2026-09-08", label: "Tue, Sep 8", time: "5:15P - 7:00P", where: "Home court" },
