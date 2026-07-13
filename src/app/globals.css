@@ -6,7 +6,7 @@ html, body { background: #0A0A0A; color: #FFFFFF; }
 html { scroll-behavior: smooth; }
 ::selection { background: #F4942A; color: #0A0A0A; }
 
-.display { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 0.92; }
+.display { font-family: var(--font-display); letter-spacing: 0.015em; line-height: 0.98; }
 .label   { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.7rem; color: #9CA3AF; }
 .mono    { font-family: var(--font-mono); font-feature-settings: 'tnum'; }
 
@@ -73,13 +73,13 @@ html { scroll-behavior: smooth; }
   .hero-title {
     font-size: 4.25rem;
     line-height: 1 !important;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.015em;
   }
 
   .bigger-heading {
     font-size: 3.35rem !important;
     line-height: 1.03 !important;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.015em;
   }
 }
 
