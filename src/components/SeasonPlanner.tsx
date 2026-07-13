@@ -35,8 +35,10 @@ export default function SeasonPlanner() {
     });
   };
 
-  const pickedSessions = fallSessions.filter((s) => picked.has(s.dateKey));
-  const count = pickedSessions.length;
+  const pickedSessions = fallSessions.filter((s) => picked.has(s.key));
+  // SandersFit + Yemi on the same Sunday count as ONE session
+  const count = new Set(pickedSessions.map((s) => s.dateKey)).size;
+  const pairedSundays = pickedSessions.length - count;
 
   const fits =
     count === 0
@@ -50,8 +52,20 @@ export default function SeasonPlanner() {
   const overCap = fits ? count > fits.sessions : false;
 
   const mailFor = (pkg: FallPackage) => {
-    const dateLines = pickedSessions
-      .map((s) => `- ${s.label} (${s.time}, ${s.where})${s.mm ? " - Midnight Madness" : ""}`)
+    const byDay = new Map<string, FallSession[]>();
+    for (const s of pickedSessions) {
+      const arr = byDay.get(s.dateKey) ?? [];
+      arr.push(s);
+      byDay.set(s.dateKey, arr);
+    }
+    const dateLines = Array.from(byDay.values())
+      .map((daySessions) => {
+        const parts = daySessions
+          .map((s) => `${s.time} ${s.where}${s.mm ? " (Midnight Madness)" : ""}`)
+          .join(" + ");
+        const suffix = daySessions.length > 1 ? " (counts as 1 session)" : "";
+        return `- ${daySessions[0].label}: ${parts}${suffix}`;
+      })
       .join("\n");
     const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
     const body = encodeURIComponent(
@@ -66,8 +80,9 @@ export default function SeasonPlanner() {
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
         Tap the sessions your kid can make. The counter tells you which package fits. You&apos;re
-        not locked to these dates - packages work for any session on the calendar, and Midnight
-        Madness nights count as sessions.
+        not locked to these dates - packages work for any session on the calendar. Sundays have
+        two workouts: SandersFit, then Coach Yemi at Life School Oak Cliff. Do one or both -
+        both on the same Sunday count as one session.
       </p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -79,20 +94,21 @@ export default function SeasonPlanner() {
               <div className="label mb-3">{MONTH_NAMES[m]}</div>
               <ul className="space-y-2">
                 {sessions.map((s) => {
-                  const on = picked.has(s.dateKey);
+                  const on = picked.has(s.key);
                   const base = "w-full text-left border px-3 py-2 transition";
-                  const cls = s.mm
-                    ? on
-                      ? "border-btc-orange bg-btc-orange/20 text-btc-white"
-                      : "border-btc-orange/50 text-btc-white/80 hover:border-btc-orange"
-                    : on
-                      ? "border-btc-orange bg-btc-orange/10 text-btc-white"
-                      : "border-white/15 text-btc-white/75 hover:border-btc-orange/60";
+                  const cls =
+                    s.mm || s.yemi
+                      ? on
+                        ? "border-btc-orange bg-btc-orange/20 text-btc-white"
+                        : "border-btc-orange/50 text-btc-white/80 hover:border-btc-orange"
+                      : on
+                        ? "border-btc-orange bg-btc-orange/10 text-btc-white"
+                        : "border-white/15 text-btc-white/75 hover:border-btc-orange/60";
                   return (
-                    <li key={s.dateKey}>
+                    <li key={s.key}>
                       <button
                         type="button"
-                        onClick={() => toggle(s.dateKey)}
+                        onClick={() => toggle(s.key)}
                         aria-pressed={on}
                         className={`${base} ${cls}`}
                       >
@@ -101,10 +117,13 @@ export default function SeasonPlanner() {
                           {s.mm ? (
                             <span className="label text-btc-orange ml-2">Midnight Madness</span>
                           ) : null}
+                          {s.yemi ? (
+                            <span className="label text-btc-orange ml-2">Coach Yemi</span>
+                          ) : null}
                         </span>
                         <span className="block text-xs text-btc-white/60 mt-0.5">
                           {s.time} &middot; {s.where}
-                          {s.yemi ? " + Yemi (1:00P-2:30P, Life School Oak Cliff)" : ""}
+                          {s.yemi ? " · With SandersFit same day = 1 session" : ""}
                         </span>
                       </button>
                     </li>
@@ -120,6 +139,12 @@ export default function SeasonPlanner() {
         <div>
           <div className="mono text-btc-orange text-lg">
             {count} {count === 1 ? "session" : "sessions"} selected
+            {pairedSundays > 0 ? (
+              <span className="text-btc-white/60 text-sm">
+                {" "}
+                ({pairedSundays} double Sunday{pairedSundays === 1 ? "" : "s"} counted once)
+              </span>
+            ) : null}
           </div>
           {fits ? (
             <p className="text-btc-white/85 mt-1">

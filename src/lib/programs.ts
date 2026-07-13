@@ -21,8 +21,8 @@ export const fallSeason = {
     { day: "Saturdays", time: "10:00A - 11:45A", where: "Home court" },
     {
       day: "Sundays",
-      time: "11:00A - 12:45P",
-      where: "SandersFit, plus an optional session with Coach Yemi at Life School Oak Cliff, 1:00P - 2:30P (included)",
+      time: "11:00A - 12:45P at SandersFit / 1:00P - 2:30P with Coach Yemi",
+      where: "SandersFit and/or Life School Oak Cliff - do both on the same Sunday and it counts as one session",
     },
   ],
   noTraining:
@@ -80,47 +80,52 @@ export const midnightMadness = {
 };
 
 export type FallSession = {
-  dateKey: string; // YYYY-MM-DD
+  key: string; // unique id
+  dateKey: string; // YYYY-MM-DD - Sunday SandersFit + Yemi share a dateKey and count as one session
   label: string; // e.g. "Sat, Aug 22"
   time: string;
-  where: "Home court" | "SandersFit";
+  where: "Home court" | "SandersFit" | "Life School Oak Cliff";
   yemi?: boolean;
   mm?: boolean; // Midnight Madness - counts as a session from your package
 };
 
 export const fallSessions: FallSession[] = [
-  { dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
-  { dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-09-01", label: "Tue, Sep 1", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-09-08", label: "Tue, Sep 8", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-09-10", label: "Thu, Sep 10", time: "5:15P - 7:00P", where: "Home court" },
-  { dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-09-15", label: "Tue, Sep 15", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-09-16", label: "Wed, Sep 16", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-09-18", label: "Fri, Sep 18", time: "4:00P - 9:00P", where: "Home court", mm: true },
-  { dateKey: "2026-09-20", label: "Sun, Sep 20", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
-  { dateKey: "2026-09-22", label: "Tue, Sep 22", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
-  { dateKey: "2026-09-26", label: "Sat, Sep 26", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-10-06", label: "Tue, Oct 6", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-10-14", label: "Wed, Oct 14", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
-  { dateKey: "2026-10-20", label: "Tue, Oct 20", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
-  { dateKey: "2026-10-24", label: "Sat, Oct 24", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-10-27", label: "Tue, Oct 27", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-10-28", label: "Wed, Oct 28", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-11-01", label: "Sun, Nov 1", time: "11:00A - 12:45P", where: "SandersFit", yemi: true },
-  { dateKey: "2026-11-03", label: "Tue, Nov 3", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-11-10", label: "Tue, Nov 10", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-11-11", label: "Wed, Nov 11", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-11-13", label: "Fri, Nov 13", time: "4:00P - 9:00P", where: "Home court", mm: true },
-  { dateKey: "2026-11-14", label: "Sat, Nov 14", time: "10:00A - 11:45A", where: "Home court" },
-  { dateKey: "2026-11-17", label: "Tue, Nov 17", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
-  { dateKey: "2026-12-02", label: "Wed, Dec 2", time: "4:00P - 5:45P", where: "Home court" },
-  { dateKey: "2026-12-03", label: "Thu, Dec 3", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:00A - 12:45P", where: "SandersFit" },
+  { key: "2026-08-23-yemi", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-08-29", dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-09-01", dateKey: "2026-09-01", label: "Tue, Sep 1", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-09-08", dateKey: "2026-09-08", label: "Tue, Sep 8", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-09-10", dateKey: "2026-09-10", label: "Thu, Sep 10", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-09-12", dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-09-15", dateKey: "2026-09-15", label: "Tue, Sep 15", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-09-16", dateKey: "2026-09-16", label: "Wed, Sep 16", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-09-18", dateKey: "2026-09-18", label: "Fri, Sep 18", time: "4:00P - 9:00P", where: "Home court", mm: true },
+  { key: "2026-09-20-sf", dateKey: "2026-09-20", label: "Sun, Sep 20", time: "11:00A - 12:45P", where: "SandersFit" },
+  { key: "2026-09-20-yemi", dateKey: "2026-09-20", label: "Sun, Sep 20", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-09-22", dateKey: "2026-09-22", label: "Tue, Sep 22", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-09-24", dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-09-26", dateKey: "2026-09-26", label: "Sat, Sep 26", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-10-06", dateKey: "2026-10-06", label: "Tue, Oct 6", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-10-14", dateKey: "2026-10-14", label: "Wed, Oct 14", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-10-18-sf", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:00A - 12:45P", where: "SandersFit" },
+  { key: "2026-10-18-yemi", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-10-20", dateKey: "2026-10-20", label: "Tue, Oct 20", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-10-22", dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-10-24", dateKey: "2026-10-24", label: "Sat, Oct 24", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-10-27", dateKey: "2026-10-27", label: "Tue, Oct 27", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-10-28", dateKey: "2026-10-28", label: "Wed, Oct 28", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-11-01-sf", dateKey: "2026-11-01", label: "Sun, Nov 1", time: "11:00A - 12:45P", where: "SandersFit" },
+  { key: "2026-11-01-yemi", dateKey: "2026-11-01", label: "Sun, Nov 1", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-11-03", dateKey: "2026-11-03", label: "Tue, Nov 3", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-11-10", dateKey: "2026-11-10", label: "Tue, Nov 10", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-11-11", dateKey: "2026-11-11", label: "Wed, Nov 11", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-11-13", dateKey: "2026-11-13", label: "Fri, Nov 13", time: "4:00P - 9:00P", where: "Home court", mm: true },
+  { key: "2026-11-14", dateKey: "2026-11-14", label: "Sat, Nov 14", time: "10:00A - 11:45A", where: "Home court" },
+  { key: "2026-11-17", dateKey: "2026-11-17", label: "Tue, Nov 17", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-11-19", dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-12-02", dateKey: "2026-12-02", label: "Wed, Dec 2", time: "4:00P - 5:45P", where: "Home court" },
+  { key: "2026-12-03", dateKey: "2026-12-03", label: "Thu, Dec 3", time: "5:15P - 7:00P", where: "Home court" },
 ];
 
 export const privateTraining = {
