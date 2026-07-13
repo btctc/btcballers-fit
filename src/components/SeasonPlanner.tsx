@@ -16,9 +16,9 @@ const MONTH_NAMES: Record<string, string> = {
 type QuickGroup = { label: string; detail: string; match: (s: FallSession) => boolean };
 
 const QUICK_GROUPS: QuickGroup[] = [
-  { label: "Tuesdays", detail: "4:45-6:30P · Home", match: (s) => s.label.startsWith("Tue") },
+  { label: "Tuesdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Tue") },
   { label: "Wednesdays", detail: "4:00-5:45P · Home", match: (s) => s.label.startsWith("Wed") },
-  { label: "Thursdays", detail: "4:45-6:30P · Home", match: (s) => !s.mm && s.label.startsWith("Thu") },
+  { label: "Thursdays", detail: "5:15-7:00P · Home", match: (s) => !s.mm && s.label.startsWith("Thu") },
   { label: "Saturdays", detail: "10:00-11:45A · Home", match: (s) => s.label.startsWith("Sat") },
   { label: "Sun - SandersFit", detail: "11:15A-12:45P", match: (s) => s.label.startsWith("Sun") && !s.yemi },
   { label: "Sun - Yemi", detail: "1:00-2:30P · Life School OC", match: (s) => !!s.yemi },
