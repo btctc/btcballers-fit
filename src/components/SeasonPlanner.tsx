@@ -154,20 +154,35 @@ export default function SeasonPlanner() {
         School Oak Cliff); each counts as its own session, and SandersFit players can ride with
         Coach T to Yemi&apos;s - limited space.
       </p>
-      <p className="mt-3 text-sm text-btc-white/60 max-w-2xl">
-        Want your calendar to stay in sync all season?{" "}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-btc-white/60 mr-1">Sync the season to your calendar:</span>
+        <a
+          href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fbtcballers.training%2Fcalendar.ics"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
+        >
+          Google
+        </a>
         <a
           href="webcal://btcballers.training/calendar.ics"
-          className="text-btc-orange hover:text-btc-white underline underline-offset-2 transition"
+          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
         >
-          Subscribe to the season calendar
-        </a>{" "}
-        - it updates automatically if anything changes. On Google Calendar: Settings, Add
-        calendar, From URL, paste btcballers.training/calendar.ics
-      </p>
+          Apple
+        </a>
+        <a
+          href="https://outlook.live.com/calendar/0/addfromweb?url=webcal%3A%2F%2Fbtcballers.training%2Fcalendar.ics&name=BTC%20Ballers"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
+        >
+          Outlook
+        </a>
+        <span className="text-xs text-btc-white/40">Auto-updates if anything changes.</span>
+      </div>
 
-      <div className="mt-6 flex items-center gap-2 overflow-x-auto pb-2">
-        <span className="label text-btc-white/50 mr-1 shrink-0">Quick pick:</span>
+      <div className="mt-6 label text-btc-white/50">Quick pick</div>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         {QUICK_GROUPS.map((g) => {
           const keys = fallSessions.filter(g.match).map((s) => s.key);
           const allOn = keys.length > 0 && keys.every((k) => picked.has(k));
@@ -177,7 +192,7 @@ export default function SeasonPlanner() {
               type="button"
               onClick={() => toggleGroup(g)}
               aria-pressed={allOn}
-              className={`px-3 py-1.5 text-left border transition shrink-0 whitespace-nowrap ${
+              className={`px-3 py-1.5 text-left border transition ${
                 allOn
                   ? "border-btc-orange bg-btc-orange/15 text-btc-white"
                   : "border-white/20 text-btc-white/70 hover:border-btc-orange/60 hover:text-btc-white"
@@ -192,7 +207,7 @@ export default function SeasonPlanner() {
           <button
             type="button"
             onClick={() => setPicked(new Set())}
-            className="px-3 py-1.5 text-sm text-btc-white/50 hover:text-btc-orange transition shrink-0 whitespace-nowrap"
+            className="px-3 py-1.5 text-sm text-btc-white/50 hover:text-btc-orange transition"
           >
             Clear all
           </button>
