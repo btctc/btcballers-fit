@@ -36,11 +36,11 @@ export const fallSeason = {
 
 export const fallPackages: FallPackage[] = [
   {
-    id: "12",
-    sessions: 12,
-    price: "$1,200",
+    id: "14",
+    sessions: 14,
+    price: "$1,400",
     perSession: "$100 / session",
-    label: "12-Session Package",
+    label: "14-Session Package",
     terms: ["Paid in full at registration."],
   },
   {

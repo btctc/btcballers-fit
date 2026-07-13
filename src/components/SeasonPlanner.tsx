@@ -44,9 +44,9 @@ export default function SeasonPlanner() {
       : fallPackages.find((p) => count <= p.sessions) ?? fallPackages[fallPackages.length - 1];
 
   const eighteen = fallPackages.find((p) => p.id === "18")!;
-  // When the 12-pack technically covers them, lead with the 18 - it's the most popular.
-  const primary: FallPackage | null = fits ? (fits.id === "12" ? eighteen : fits) : null;
-  const secondary: FallPackage | null = fits && fits.id === "12" ? fits : null;
+  // When the 14-pack technically covers them, lead with the 18 - it's the most popular.
+  const primary: FallPackage | null = fits ? (fits.id === "14" ? eighteen : fits) : null;
+  const secondary: FallPackage | null = fits && fits.id === "14" ? fits : null;
   const overCap = fits ? count > fits.sessions : false;
 
   const mailFor = (pkg: FallPackage) => {
@@ -132,8 +132,8 @@ export default function SeasonPlanner() {
               ) : secondary ? (
                 <>
                   The {secondary.label} ({secondary.price}) covers your picks, but most families go{" "}
-                  <span className="font-semibold">{eighteen.label}</span> ({eighteen.price}) - 6
-                  more sessions for $500, and the season usually fills in as you go.
+                  <span className="font-semibold">{eighteen.label}</span> ({eighteen.price}) - 4
+                  more sessions for $300, and the season usually fills in as you go.
                 </>
               ) : (
                 <>
