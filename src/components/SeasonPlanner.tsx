@@ -154,6 +154,17 @@ export default function SeasonPlanner() {
         School Oak Cliff); each counts as its own session, and SandersFit players can ride with
         Coach T to Yemi&apos;s - limited space.
       </p>
+      <p className="mt-3 text-sm text-btc-white/60 max-w-2xl">
+        Want your calendar to stay in sync all season?{" "}
+        <a
+          href="webcal://btcballers.training/calendar.ics"
+          className="text-btc-orange hover:text-btc-white underline underline-offset-2 transition"
+        >
+          Subscribe to the season calendar
+        </a>{" "}
+        - it updates automatically if anything changes. On Google Calendar: Settings, Add
+        calendar, From URL, paste btcballers.training/calendar.ics
+      </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <span className="label text-btc-white/50 mr-1">Quick pick:</span>
