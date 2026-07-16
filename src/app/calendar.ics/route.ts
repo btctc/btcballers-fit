@@ -23,7 +23,7 @@ export function GET() {
           : "BTC Ballers Training";
       const desc = s.mm
         ? "Small-group training, dinner, film, books, and competitive play."
-        : s.yemi
+        : s.yemi && s.label.startsWith("Sun")
           ? "Ride with Coach T from SandersFit - limited space."
           : "Believe. Train. Compete.";
       return [
