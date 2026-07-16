@@ -37,11 +37,11 @@ export const fallSeason = {
 
 export const fallPackages: FallPackage[] = [
   {
-    id: "14",
-    sessions: 14,
-    price: "$1,400",
-    perSession: "$100 / session",
-    label: "14-Session Package",
+    id: "15",
+    sessions: 15,
+    price: "$1,450",
+    perSession: "$97 / session",
+    label: "15-Session Package",
     terms: ["Paid in full at registration."],
   },
   {
@@ -58,15 +58,15 @@ export const fallPackages: FallPackage[] = [
     ],
   },
   {
-    id: "25",
-    sessions: 25,
+    id: "24",
+    sessions: 24,
     price: "$2,200",
-    perSession: "$88 / session",
-    label: "25-Session Package",
+    perSession: "$92 / session",
+    label: "24-Session Package",
     badge: "Best value",
     terms: [
-      "Pay upfront, or half ($1,100) at registration + $275/month for 4 months.",
-      "Payments due by the 12th of each month (Sep 12 - Dec 12).",
+      "Pay upfront, or half ($1,100) at registration + $550/month for 2 months.",
+      "Payments due by the 12th (Oct 12 & Nov 12).",
     ],
   },
 ];

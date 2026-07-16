@@ -66,9 +66,9 @@ export default function SeasonPlanner() {
       : fallPackages.find((p) => count <= p.sessions) ?? fallPackages[fallPackages.length - 1];
 
   const eighteen = fallPackages.find((p) => p.id === "18")!;
-  // When the 14-pack technically covers them, lead with the 18 - it's the most popular.
-  const primary: FallPackage | null = fits ? (fits.id === "14" ? eighteen : fits) : null;
-  const secondary: FallPackage | null = fits && fits.id === "14" ? fits : null;
+  // When the 15-pack technically covers them, lead with the 18 - it's the most popular.
+  const primary: FallPackage | null = fits ? (fits.id === "15" ? eighteen : fits) : null;
+  const secondary: FallPackage | null = fits && fits.id === "15" ? fits : null;
   const overCap = fits ? count > fits.sessions : false;
 
   const to24h = (t: string) => {
@@ -142,7 +142,7 @@ export default function SeasonPlanner() {
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };
 
-  const progressPct = Math.min(count / 25, 1) * 100;
+  const progressPct = Math.min(count / 24, 1) * 100;
 
   return (
     <div className="border border-white/10 bg-btc-dim p-8 md:p-10">
@@ -284,7 +284,7 @@ export default function SeasonPlanner() {
             <span
               key={p.id}
               className={`absolute top-0 h-full w-px ${count >= p.sessions ? "bg-btc-black" : "bg-white/40"}`}
-              style={{ left: `${(p.sessions / 25) * 100}%` }}
+              style={{ left: `${(p.sessions / 24) * 100}%` }}
             />
           ))}
         </div>
@@ -297,7 +297,7 @@ export default function SeasonPlanner() {
                 : overCap
                   ? `${fits.label} (${fits.price}) + $125 walk-ins`
                   : secondary
-                    ? `${secondary.label} fits - most go 18 (+4 for $300)`
+                    ? `${secondary.label} fits - most go 18 (+3 for $250)`
                     : `${fits.label} fits - ${fits.price}`}
             </span>
           </div>
