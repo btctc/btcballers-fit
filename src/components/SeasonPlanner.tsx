@@ -136,7 +136,7 @@ export default function SeasonPlanner() {
       .join("\n");
     const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
     const body = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nThanks.`
+      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nWhat we want to work on:\nAnything Coach T should know:\n\nI understand all sales are final (no refunds) and packages can be upgraded at any time.\n\nThanks.`
     );
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };

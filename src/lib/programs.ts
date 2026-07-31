@@ -23,7 +23,7 @@ export const fallSeason = {
   noTraining:
     "No training: Labor Day weekend (Sep 5-7), Oct 3-11 (fall break), Oct 24-25, Halloween (Oct 31), Nov 7-8, Nov 14-15, and Thanksgiving Break (Nov 23-28).",
   weather:
-    "If weather delays, we wait until clear or reschedule. If that's not possible, we use the time for film, discussion, or SandersFit.",
+    "Weather issue? That session gets a makeup day - you never lose a session you paid for.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
   locations:
     "Private home court (address shared at registration) and SandersFit.",
