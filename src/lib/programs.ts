@@ -11,20 +11,14 @@ export type FallPackage = {
 
 export const fallSeason = {
   name: "Fall 2026",
-  window: "Aug 18 - Dec 13, 2026",
-  sessionsOffered: 36,
+  window: "Aug 18 - Nov 19, 2026",
+  sessionsOffered: 32,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 36 offered, including both Midnight Madness nights. Every workout counts as one session.",
+    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 32 offered, including both Midnight Madness nights. Every workout counts as one session.",
   schedule: [
-    { day: "Tuesdays", time: "5:15P - 7:00P", where: "Home court" },
-    { day: "Wednesdays (select)", time: "6:30P - 8:00P", where: "Coach Yemi's gym - Life School Oak Cliff" },
-    { day: "Thursdays", time: "5:15P - 7:00P", where: "Home court" },
+    { day: "Tuesdays, Wednesdays & Thursdays", time: "5:15P - 7:00P", where: "Home court" },
     { day: "Saturdays", time: "10:00A - 11:45A", where: "Home court" },
-    {
-      day: "Sundays",
-      time: "11:15A - 12:45P at SandersFit / 1:00P - 2:30P with Coach Yemi",
-      where: "SandersFit and/or Coach Yemi at Life School Oak Cliff - each counts as its own session. SandersFit players can ride with Coach T to Yemi's (limited space).",
-    },
+    { day: "Sundays", time: "11:15A - 12:45P", where: "SandersFit" },
   ],
   noTraining:
     "No training: Labor Day weekend (Sep 5-7), Oct 3-11 (fall break), Oct 24-25, Halloween (Oct 31), Nov 7-8, Nov 14-15, and Thanksgiving Break (Nov 23-28).",
@@ -32,7 +26,7 @@ export const fallSeason = {
     "If weather delays, we wait until clear or reschedule. If that's not possible, we use the time for film, discussion, or SandersFit.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
   locations:
-    "Private home court (address shared at registration), SandersFit, and Life School Oak Cliff.",
+    "Private home court (address shared at registration) and SandersFit.",
 };
 
 export const fallPackages: FallPackage[] = [
@@ -95,38 +89,34 @@ export const fallSessions: FallSession[] = [
   { key: "2026-08-20", dateKey: "2026-08-20", label: "Thu, Aug 20", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-08-23-yemi", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
   { key: "2026-08-27", dateKey: "2026-08-27", label: "Thu, Aug 27", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-29", dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-09-01", dateKey: "2026-09-01", label: "Tue, Sep 1", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-02", dateKey: "2026-09-02", label: "Wed, Sep 2", time: "6:30P - 8:00P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-09-02", dateKey: "2026-09-02", label: "Wed, Sep 2", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-10", dateKey: "2026-09-10", label: "Thu, Sep 10", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-12", dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-09-15", dateKey: "2026-09-15", label: "Tue, Sep 15", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-16", dateKey: "2026-09-16", label: "Wed, Sep 16", time: "6:30P - 8:00P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-09-16", dateKey: "2026-09-16", label: "Wed, Sep 16", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-18", dateKey: "2026-09-18", label: "Fri, Sep 18", time: "4:00P - 9:00P", where: "Home court", mm: true },
   { key: "2026-09-22", dateKey: "2026-09-22", label: "Tue, Sep 22", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-24", dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-09-26", dateKey: "2026-09-26", label: "Sat, Sep 26", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-10-06", dateKey: "2026-10-06", label: "Tue, Oct 6", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-07", dateKey: "2026-10-07", label: "Wed, Oct 7", time: "6:30P - 8:00P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-10-07", dateKey: "2026-10-07", label: "Wed, Oct 7", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-10-14", dateKey: "2026-10-14", label: "Wed, Oct 14", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-15", dateKey: "2026-10-15", label: "Thu, Oct 15", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-18-sf", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-10-18-yemi", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
   { key: "2026-10-20", dateKey: "2026-10-20", label: "Tue, Oct 20", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-22", dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-27", dateKey: "2026-10-27", label: "Tue, Oct 27", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-28", dateKey: "2026-10-28", label: "Wed, Oct 28", time: "6:30P - 8:00P", where: "Life School Oak Cliff", yemi: true },
+  { key: "2026-10-28", dateKey: "2026-10-28", label: "Wed, Oct 28", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-11-01-sf", dateKey: "2026-11-01", label: "Sun, Nov 1", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-11-01-yemi", dateKey: "2026-11-01", label: "Sun, Nov 1", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
   { key: "2026-11-03", dateKey: "2026-11-03", label: "Tue, Nov 3", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-11-04", dateKey: "2026-11-04", label: "Wed, Nov 4", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-11-12", dateKey: "2026-11-12", label: "Thu, Nov 12", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-11-13", dateKey: "2026-11-13", label: "Fri, Nov 13", time: "4:00P - 9:00P", where: "Home court", mm: true },
   { key: "2026-11-17", dateKey: "2026-11-17", label: "Tue, Nov 17", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-11-19", dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-12-12", dateKey: "2026-12-12", label: "Sat, Dec 12", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-12-13-sf", dateKey: "2026-12-13", label: "Sun, Dec 13", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-12-13-yemi", dateKey: "2026-12-13", label: "Sun, Dec 13", time: "1:00P - 2:30P", where: "Life School Oak Cliff", yemi: true },
 ];
 
 export const privateTraining = {

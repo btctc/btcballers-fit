@@ -17,11 +17,10 @@ type QuickGroup = { label: string; detail: string; match: (s: FallSession) => bo
 
 const QUICK_GROUPS: QuickGroup[] = [
   { label: "Tuesdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Tue") },
-  { label: "Wed - Yemi", detail: "6:30-8:00P · Life School OC", match: (s) => s.label.startsWith("Wed") },
+  { label: "Wednesdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Wed") },
   { label: "Thursdays", detail: "5:15-7:00P · Home", match: (s) => !s.mm && s.label.startsWith("Thu") },
   { label: "Saturdays", detail: "10:00-11:45A · Home", match: (s) => s.label.startsWith("Sat") },
-  { label: "Sun - SandersFit", detail: "11:15A-12:45P", match: (s) => s.label.startsWith("Sun") && !s.yemi },
-  { label: "Sun - Yemi", detail: "1:00-2:30P · Life School OC", match: (s) => !!s.yemi && s.label.startsWith("Sun") },
+  { label: "Sundays", detail: "11:15A-12:45P · SandersFit", match: (s) => s.label.startsWith("Sun") },
   { label: "Midnight Madness", detail: "Fri 4:00-9:00P · Home", match: (s) => !!s.mm },
 ];
 
@@ -150,9 +149,7 @@ export default function SeasonPlanner() {
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
         Tap the sessions your kid can make - the counter shows which package fits. You&apos;re not
-        locked to your picks. Sundays have two workouts (SandersFit, then Coach Yemi at Life
-        School Oak Cliff); each counts as its own session, and SandersFit players can ride with
-        Coach T to Yemi&apos;s - limited space.
+        locked to your picks - packages work for any session on the calendar.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="text-sm text-btc-white/60 mr-1">Sync the season to your calendar:</span>
