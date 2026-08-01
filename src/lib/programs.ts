@@ -25,6 +25,7 @@ export const fallSeason = {
   weather:
     "Weather issue? That session gets a makeup day - you never lose a session you paid for.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
+  payments: "Pay by Zelle or check. Zelle: overtimeincorporated@gmail.com.",
   locations:
     "Private home court (address shared at registration) and SandersFit.",
 };
@@ -44,8 +45,6 @@ export const fallPackages: FallPackage[] = [
     price: "$1,700",
     perSession: "$94 / session",
     label: "18-Session Package",
-    badge: "Most popular",
-    highlight: true,
     terms: [
       "Pay in full, or half ($850) at registration + two payments of $425.",
       "Payments due Sep 12 and Oct 12.",
@@ -57,7 +56,6 @@ export const fallPackages: FallPackage[] = [
     price: "$2,200",
     perSession: "$92 / session",
     label: "24-Session Package",
-    badge: "Best value",
     terms: [
       "Pay in full, or half ($1,100) at registration + two payments of $550.",
       "Payments due Sep 12 and Oct 12.",

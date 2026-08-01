@@ -60,6 +60,7 @@ export default function ProgramsPage() {
             <li>{fallSeason.locations}</li>
             <li>{fallSeason.noTraining}</li>
             <li>{fallSeason.weather}</li>
+            <li>{fallSeason.payments}</li>
             <li>{fallSeason.policy}</li>
           </ul>
           <div className="mt-8 border-t border-white/10 pt-6">
