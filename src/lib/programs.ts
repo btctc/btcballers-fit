@@ -47,8 +47,8 @@ export const fallPackages: FallPackage[] = [
     badge: "Most popular",
     highlight: true,
     terms: [
-      "Pay upfront, or half ($850) at registration + $425/month for 2 months.",
-      "Payments due by the 12th (Oct 12 & Nov 12).",
+      "Pay in full, or half ($850) at registration + two payments of $425.",
+      "Payments due Sep 12 and Oct 12.",
     ],
   },
   {
@@ -59,8 +59,8 @@ export const fallPackages: FallPackage[] = [
     label: "24-Session Package",
     badge: "Best value",
     terms: [
-      "Pay upfront, or half ($1,100) at registration + $550/month for 2 months.",
-      "Payments due by the 12th (Oct 12 & Nov 12).",
+      "Pay in full, or half ($1,100) at registration + two payments of $550.",
+      "Payments due Sep 12 and Oct 12.",
     ],
   },
 ];
