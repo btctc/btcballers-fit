@@ -25,7 +25,7 @@ export const fallSeason = {
   weather:
     "Weather issue? That session gets a makeup day - you never lose a session you paid for.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
-  payments: "Pay by Zelle or check. Zelle: overtimeincorporated@gmail.com.",
+  payments: "Pay by Zelle or check. Need my Zelle info? Email overtimeincorporated@gmail.com.",
   locations:
     "Private home court (address shared at registration) and SandersFit.",
 };
