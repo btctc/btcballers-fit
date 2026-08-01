@@ -86,7 +86,6 @@ export type FallSession = {
 
 export const fallSessions: FallSession[] = [
   { key: "2026-08-18", dateKey: "2026-08-18", label: "Tue, Aug 18", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-08-20", dateKey: "2026-08-20", label: "Thu, Aug 20", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:15A - 12:45P", where: "SandersFit" },
   { key: "2026-08-27", dateKey: "2026-08-27", label: "Thu, Aug 27", time: "5:15P - 7:00P", where: "Home court" },
@@ -105,6 +104,7 @@ export const fallSessions: FallSession[] = [
   { key: "2026-10-07", dateKey: "2026-10-07", label: "Wed, Oct 7", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-14", dateKey: "2026-10-14", label: "Wed, Oct 14", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-15", dateKey: "2026-10-15", label: "Thu, Oct 15", time: "5:15P - 7:00P", where: "Home court" },
+  { key: "2026-10-17", dateKey: "2026-10-17", label: "Sat, Oct 17", time: "10:00A - 11:45A", where: "Home court" },
   { key: "2026-10-18-sf", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:15A - 12:45P", where: "SandersFit" },
   { key: "2026-10-20", dateKey: "2026-10-20", label: "Tue, Oct 20", time: "5:15P - 7:00P", where: "Home court" },
   { key: "2026-10-22", dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
