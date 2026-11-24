@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { sayings, voices } from "@/lib/sayings";
 
-// One slim orange bar at the bottom of the screen, on every page. It drifts on
+// One slim light gray bar at the bottom of the screen, on every page. It drifts on
 // its own and picks up speed as the page scrolls. The page reserves room for it
 // (see --ticker-h in globals.css), so it never sits on top of other content.
 
@@ -92,9 +92,9 @@ export default function QuoteTicker() {
         {item.by ? <>&ldquo;{item.text}&rdquo;</> : item.text}
       </span>
       {item.by ? (
-        <span className="mono ml-3 text-[0.65rem] uppercase tracking-[0.18em] text-btc-black/70">{item.by}</span>
+        <span className="mono ml-3 text-[0.65rem] uppercase tracking-[0.18em] text-btc-black/60">{item.by}</span>
       ) : null}
-      <span className="mx-6 md:mx-8 block h-1.5 w-1.5 rotate-45 bg-btc-black" />
+      <span className="mx-6 md:mx-8 block h-1.5 w-1.5 rotate-45 bg-btc-orange" />
     </span>
   ));
 
