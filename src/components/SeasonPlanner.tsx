@@ -237,7 +237,7 @@ export default function SeasonPlanner() {
         })}
       </div>
 
-      <div className="sticky bottom-0 mt-10 -mx-5 sm:-mx-8 md:-mx-10 -mb-5 sm:-mb-8 md:-mb-10 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40">
+      <div className="sticky above-ticker mt-10 -mx-5 sm:-mx-8 md:-mx-10 -mb-5 sm:-mb-8 md:-mb-10 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40">
         <div className="relative h-1 bg-white/10" aria-hidden="true">
           <div
             className="absolute inset-y-0 left-0 bg-btc-orange transition-all"

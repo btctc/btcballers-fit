@@ -3,6 +3,7 @@ import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import QuoteTicker from "@/components/QuoteTicker";
 
 const display = Anton({ subsets: ["latin"], weight: "400", variable: "--font-display", display: "optional" });
 const body = Inter({ subsets: ["latin"], variable: "--font-body", display: "optional" });
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <QuoteTicker />
       </body>
     </html>
   );
