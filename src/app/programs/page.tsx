@@ -1,21 +1,36 @@
 import ProgramCard from "@/components/ProgramCard";
 import SeasonPlanner from "@/components/SeasonPlanner";
-import { fallSeason, fallPackages, midnightMadness, privateTraining } from "@/lib/programs";
+import { season, packages, midnightMadness, privateTraining } from "@/lib/programs";
 
 export const metadata = { title: "Programs - BTC Ballers" };
 
 export default function ProgramsPage() {
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
-      <div className="label text-btc-orange">{fallSeason.name} &middot; {fallSeason.window}</div>
+      <div className="label text-btc-orange">{season.name} &middot; {season.window}</div>
       <h1 className="display text-6xl md:text-8xl mt-3">Programs.</h1>
-      <p className="mt-6 text-lg text-btc-white/80 max-w-2xl">{fallSeason.intro}</p>
+      <p className="mt-6 text-lg text-btc-white/80 max-w-2xl">{season.intro}</p>
+
+      <div className="mt-8 flex flex-col sm:flex-row gap-3">
+        <a
+          href="#plan"
+          className="bg-btc-orange text-btc-black px-6 py-3 text-center font-semibold hover:bg-btc-white transition"
+        >
+          See the calendar
+        </a>
+        <a
+          href="webcal://btcballers.training/calendar.ics"
+          className="border border-white/30 px-6 py-3 text-center font-semibold hover:border-btc-orange hover:text-btc-orange transition"
+        >
+          Add the season to my iPhone
+        </a>
+      </div>
 
       <div className="mt-16 grid md:grid-cols-3 gap-6">
-        {fallPackages.map((pkg) => (
+        {packages.map((pkg) => (
           <ProgramCard
             key={pkg.id}
-            label={pkg.badge ?? "Fall 2026"}
+            label={pkg.badge ?? season.name}
             title={pkg.label}
             price={pkg.price}
             blurb={`${pkg.sessions} sessions. Come to any session on the calendar, including Midnight Madness nights.`}
@@ -45,7 +60,7 @@ export default function ProgramsPage() {
             Every session is on the season calendar. If it&apos;s on the calendar, you can come.
           </p>
           <ul className="space-y-4">
-            {fallSeason.schedule.map((s, i) => (
+            {season.schedule.map((s, i) => (
               <li key={i} className="text-sm">
                 <div className="font-semibold text-btc-white">{s.day}</div>
                 <div className="mono text-btc-orange mt-1">{s.time}</div>
@@ -57,11 +72,12 @@ export default function ProgramsPage() {
         <div className="border border-white/10 bg-btc-dim p-8">
           <div className="label text-btc-orange mb-3">Season details</div>
           <ul className="space-y-4 text-sm text-btc-white/85 leading-relaxed">
-            <li>{fallSeason.locations}</li>
-            <li>{fallSeason.noTraining}</li>
-            <li>{fallSeason.weather}</li>
-            <li>{fallSeason.payments}</li>
-            <li>{fallSeason.policy}</li>
+            <li>{season.locations}</li>
+            <li>{season.noTraining}</li>
+            <li>{season.finale}</li>
+            <li>{season.weather}</li>
+            <li>{season.payments}</li>
+            <li>{season.policy}</li>
           </ul>
           <div className="mt-8 border-t border-white/10 pt-6">
             <div className="label text-btc-orange mb-2">{privateTraining.title}</div>

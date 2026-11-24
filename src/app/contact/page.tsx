@@ -29,7 +29,7 @@ export default function ContactPage() {
 
       <div className="mt-12 grid md:grid-cols-3 gap-6 text-sm">
         <div className="border border-white/10 p-5">
-          <div className="label text-btc-orange mb-2">Fall Packages</div>
+          <div className="label text-btc-orange mb-2">Spring Packages</div>
           <p className="text-btc-white/80">Tell me which package and how old your kid is.</p>
         </div>
         <div className="border border-white/10 p-5">

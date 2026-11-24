@@ -1,11 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { fallSessions, fallPackages, type FallSession, type FallPackage } from "@/lib/programs";
+import { sessions, packages, season, type Session, type Package } from "@/lib/programs";
 import { site } from "@/lib/siteConfig";
 
-const MONTH_ORDER = ["08", "09", "10", "11", "12"] as const;
 const MONTH_NAMES: Record<string, string> = {
+  "01": "January",
+  "02": "February",
+  "03": "March",
+  "04": "April",
+  "05": "May",
+  "06": "June",
+  "07": "July",
   "08": "August",
   "09": "September",
   "10": "October",
@@ -13,29 +19,37 @@ const MONTH_NAMES: Record<string, string> = {
   "12": "December",
 };
 
-type QuickGroup = { label: string; detail: string; match: (s: FallSession) => boolean };
+// The season feed. Phones that subscribe to it get every workout and any changes.
+const FEED = "btcballers.training/calendar.ics";
+const FEED_ENCODED = encodeURIComponent(`webcal://${FEED}`);
+
+type QuickGroup = { label: string; detail: string; match: (s: Session) => boolean };
 
 const QUICK_GROUPS: QuickGroup[] = [
   { label: "Tuesdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Tue") },
-  { label: "Wednesdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Wed") },
-  { label: "Thursdays", detail: "5:15-7:00P · Home", match: (s) => !s.mm && s.label.startsWith("Thu") },
+  { label: "Thursdays", detail: "5:15-7:00P · Home", match: (s) => s.label.startsWith("Thu") },
   { label: "Saturdays", detail: "10:00-11:45A · Home", match: (s) => s.label.startsWith("Sat") },
-  { label: "Sundays", detail: "11:15A-12:45P · SandersFit", match: (s) => s.label.startsWith("Sun") },
+  { label: "Sundays", detail: "12:00-1:30P · Faith Family", match: (s) => s.label.startsWith("Sun") },
   { label: "Midnight Madness", detail: "Fri 4:00-9:00P · Home", match: (s) => !!s.mm },
 ];
 
-function groupByMonth(sessions: FallSession[]) {
-  const groups: Record<string, FallSession[]> = {};
-  for (const s of sessions) {
+// Months come from the schedule itself, so a new season never shows up blank.
+function groupByMonth(list: Session[]) {
+  const groups: { month: string; sessions: Session[] }[] = [];
+  for (const s of list) {
     const m = s.dateKey.slice(5, 7);
-    (groups[m] ||= []).push(s);
+    const last = groups[groups.length - 1];
+    if (last && last.month === m) last.sessions.push(s);
+    else groups.push({ month: m, sessions: [s] });
   }
   return groups;
 }
 
+const biggest = packages[packages.length - 1];
+
 export default function SeasonPlanner() {
   const [picked, setPicked] = useState<Set<string>>(new Set());
-  const groups = useMemo(() => groupByMonth(fallSessions), []);
+  const groups = useMemo(() => groupByMonth(sessions), []);
 
   const toggle = (key: string) => {
     setPicked((prev) => {
@@ -47,7 +61,7 @@ export default function SeasonPlanner() {
   };
 
   const toggleGroup = (g: QuickGroup) => {
-    const keys = fallSessions.filter(g.match).map((s) => s.key);
+    const keys = sessions.filter(g.match).map((s) => s.key);
     setPicked((prev) => {
       const next = new Set(prev);
       const allOn = keys.every((k) => next.has(k));
@@ -56,133 +70,83 @@ export default function SeasonPlanner() {
     });
   };
 
-  const pickedSessions = fallSessions.filter((s) => picked.has(s.key));
+  const pickedSessions = sessions.filter((s) => picked.has(s.key));
   const count = pickedSessions.length;
 
-  const fits =
-    count === 0
-      ? null
-      : fallPackages.find((p) => count <= p.sessions) ?? fallPackages[fallPackages.length - 1];
-
-  const eighteen = fallPackages.find((p) => p.id === "18")!;
-  // When the 15-pack technically covers them, lead with the 18 - it's the most popular.
-  const primary: FallPackage | null = fits ? (fits.id === "15" ? eighteen : fits) : null;
-  const secondary: FallPackage | null = fits && fits.id === "15" ? fits : null;
+  const fits: Package | null =
+    count === 0 ? null : packages.find((p) => count <= p.sessions) ?? biggest;
   const overCap = fits ? count > fits.sessions : false;
 
-  const to24h = (t: string) => {
-    const m = t.match(/(\d+):(\d+)(A|P)/);
-    if (!m) return "0000";
-    let h = Number(m[1]);
-    if (m[3] === "P" && h !== 12) h += 12;
-    if (m[3] === "A" && h === 12) h = 0;
-    return `${String(h).padStart(2, "0")}${m[2]}`;
-  };
+  // A normal link (not a generated file) so iPhone opens it straight in Calendar.
+  const myDaysHref = `/my-calendar.ics?s=${pickedSessions.map((s) => s.key).join(",")}`;
 
-  const downloadICS = () => {
-    const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
-    const events = pickedSessions
-      .map((s) => {
-        const [startRaw, endRaw] = s.time.split(" - ");
-        const d = s.dateKey.replace(/-/g, "");
-        const title = s.mm
-          ? "BTC Ballers - Midnight Madness"
-          : s.yemi
-            ? "BTC Ballers - Coach Yemi Training"
-            : "BTC Ballers Training";
-        const desc = s.mm
-          ? "Small-group training, dinner, film, books, and competitive play."
-          : s.yemi && s.label.startsWith("Sun")
-            ? "Ride with Coach T from SandersFit - limited space."
-            : "Believe. Train. Compete.";
-        return [
-          "BEGIN:VEVENT",
-          `UID:btc-${s.key}@btcballers.training`,
-          `DTSTAMP:${stamp}`,
-          `DTSTART:${d}T${to24h(startRaw)}00`,
-          `DTEND:${d}T${to24h(endRaw)}00`,
-          `SUMMARY:${title}`,
-          `LOCATION:${s.where.replace(/,/g, "\\,")}`,
-          `DESCRIPTION:${desc}`,
-          "END:VEVENT",
-        ].join("\r\n");
-      })
-      .join("\r\n");
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//BTC Ballers//Fall 2026//EN",
-      "CALSCALE:GREGORIAN",
-      events,
-      "END:VCALENDAR",
-    ].join("\r\n");
-    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "BTC_Ballers_Fall_2026.ics";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  const mailFor = (pkg: FallPackage) => {
+  const mailFor = (pkg: Package) => {
     const dateLines = pickedSessions
       .map(
         (s) =>
-          `- ${s.label}: ${s.time} ${s.where}${s.mm ? " (Midnight Madness)" : ""}${s.yemi ? " (Coach Yemi)" : ""}`
+          `- ${s.label}: ${s.time} ${s.where}${s.mm ? " (Midnight Madness)" : ""}${s.partyUntil ? " (End of Year Party after)" : ""}`
       )
       .join("\n");
-    const subject = encodeURIComponent(`Fall 2026 registration - ${pkg.label}`);
+    const subject = encodeURIComponent(`${season.name} registration - ${pkg.label}`);
     const body = encodeURIComponent(
-      `Hi Coach T,\n\nI'd like to register for Fall 2026.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nHow we'll pay (Zelle or check):\nWhat we want to work on:\nAnything Coach T should know:\n\nI understand all sales are final (no refunds) and packages can be upgraded at any time.\n\nThanks.`
+      `Hi Coach T,\n\nI'd like to register for ${season.name}.\n\nPackage: ${pkg.label} (${pkg.price})\n\nDays we're planning to come (${count}):\n${dateLines}\n\nKid's name:\nKid's age:\nHow we'll pay (Zelle or check):\nWhat we want to work on:\nAnything Coach T should know:\n\nI understand packages are paid in full at registration, all sales are final (no refunds), and packages can be upgraded at any time.\n\nThanks.`
     );
     return `mailto:${site.email}?subject=${subject}&body=${body}`;
   };
 
-  const progressPct = Math.min(count / 24, 1) * 100;
+  const progressPct = Math.min(count / biggest.sessions, 1) * 100;
 
   return (
-    <div className="border border-white/10 bg-btc-dim p-8 md:p-10">
-      <div className="label text-btc-orange mb-3">Plan your fall</div>
+    <div className="border border-white/10 bg-btc-dim p-5 sm:p-8 md:p-10">
+      <div className="label text-btc-orange mb-3">Plan your spring</div>
       <h3 className="display text-4xl mb-3">Pick your days.</h3>
       <p className="text-btc-white/85 max-w-2xl">
-        Tap the sessions your kid can make - the counter shows which package fits. You&apos;re not
-        locked to your picks - packages work for any session on the calendar.
+        Tap the sessions your kid can make and the counter shows which package fits. You&apos;re not
+        locked to your picks. Packages work for any session on the calendar.
       </p>
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="text-sm text-btc-white/60 mr-1">Sync the season to your calendar:</span>
-        <a
-          href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fbtcballers.training%2Fcalendar.ics"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
-        >
-          Google
-        </a>
-        <a
-          href="webcal://btcballers.training/calendar.ics"
-          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
-        >
-          Apple
-        </a>
-        <a
-          href="https://outlook.live.com/calendar/0/addfromweb?url=webcal%3A%2F%2Fbtcballers.training%2Fcalendar.ics&name=BTC%20Ballers"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border border-white/25 px-3 py-1 text-sm hover:border-btc-orange hover:text-btc-orange transition"
-        >
-          Outlook
-        </a>
-        <span className="text-xs text-btc-white/40">Auto-updates if anything changes.</span>
+
+      <div id="calendar" className="mt-6 scroll-mt-24 border border-btc-orange/40 bg-btc-black/40 p-5">
+        <div className="label text-btc-orange mb-2">Don&apos;t forget: put the season on your phone</div>
+        <p className="text-sm text-btc-white/85 max-w-xl">
+          One tap adds every workout to your calendar. It updates on its own if a day moves, so you
+          never have to come back here to check.
+        </p>
+        <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
+          <a
+            href={`webcal://${FEED}`}
+            className="bg-btc-orange text-btc-black px-5 py-3 text-center font-semibold hover:bg-btc-white transition"
+          >
+            Add to iPhone Calendar
+          </a>
+          <a
+            href={`https://calendar.google.com/calendar/render?cid=${FEED_ENCODED}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-white/25 px-5 py-3 text-center font-semibold hover:border-btc-orange hover:text-btc-orange transition"
+          >
+            Google Calendar
+          </a>
+          <a
+            href={`https://outlook.live.com/calendar/0/addfromweb?url=${FEED_ENCODED}&name=BTC%20Ballers`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-white/25 px-5 py-3 text-center font-semibold hover:border-btc-orange hover:text-btc-orange transition"
+          >
+            Outlook
+          </a>
+        </div>
+        <p className="mt-3 text-xs text-btc-white/60">
+          On iPhone: tap the orange button, tap Subscribe, then tap Add. If nothing happens, open
+          this page in Safari and try again.
+        </p>
       </div>
 
-      <div className="mt-6 label text-btc-white/50">Quick pick</div>
+      <div className="mt-8 label text-btc-white/50">Quick pick</div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         {QUICK_GROUPS.map((g) => {
-          const keys = fallSessions.filter(g.match).map((s) => s.key);
-          const allOn = keys.length > 0 && keys.every((k) => picked.has(k));
+          const keys = sessions.filter(g.match).map((s) => s.key);
+          if (keys.length === 0) return null;
+          const allOn = keys.every((k) => picked.has(k));
           return (
             <button
               key={g.label}
@@ -195,7 +159,9 @@ export default function SeasonPlanner() {
                   : "border-white/20 text-btc-white/70 hover:border-btc-orange/60 hover:text-btc-white"
               }`}
             >
-              <span className="block text-sm font-semibold">{g.label}</span>
+              <span className="block text-sm font-semibold">
+                {g.label} <span className="mono text-btc-orange">{keys.length}</span>
+              </span>
               <span className="block text-xs text-btc-white/50">{g.detail}</span>
             </button>
           );
@@ -212,30 +178,28 @@ export default function SeasonPlanner() {
       </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {MONTH_ORDER.map((m) => {
-          const sessions = groups[m];
-          if (!sessions?.length) return null;
-          const monthPicked = sessions.filter((s) => picked.has(s.key)).length;
+        {groups.map(({ month, sessions: monthSessions }) => {
+          const monthPicked = monthSessions.filter((s) => picked.has(s.key)).length;
           return (
-            <div key={m}>
+            <div key={month}>
               <div className="label mb-3 flex items-baseline justify-between">
-                <span>{MONTH_NAMES[m]}</span>
+                <span>{MONTH_NAMES[month]}</span>
                 {monthPicked > 0 ? (
                   <span className="mono text-btc-orange normal-case">{monthPicked} picked</span>
                 ) : null}
               </div>
               <ul className="space-y-2">
-                {sessions.map((s) => {
+                {monthSessions.map((s) => {
                   const on = picked.has(s.key);
+                  const special = s.mm || !!s.partyUntil;
                   const base = "w-full text-left border px-3 py-2 transition";
-                  const cls =
-                    s.mm || s.yemi
-                      ? on
-                        ? "border-btc-orange bg-btc-orange/20 text-btc-white"
-                        : "border-btc-orange/50 text-btc-white/80 hover:border-btc-orange"
-                      : on
-                        ? "border-btc-orange bg-btc-orange/10 text-btc-white"
-                        : "border-white/15 text-btc-white/75 hover:border-btc-orange/60";
+                  const cls = special
+                    ? on
+                      ? "border-btc-orange bg-btc-orange/20 text-btc-white"
+                      : "border-btc-orange/50 text-btc-white/80 hover:border-btc-orange"
+                    : on
+                      ? "border-btc-orange bg-btc-orange/10 text-btc-white"
+                      : "border-white/15 text-btc-white/75 hover:border-btc-orange/60";
                   return (
                     <li key={s.key}>
                       <button
@@ -244,7 +208,7 @@ export default function SeasonPlanner() {
                         aria-pressed={on}
                         className={`${base} ${cls}`}
                       >
-                        <span className="mono text-sm flex items-center gap-2">
+                        <span className="mono text-sm flex flex-wrap items-center gap-x-2 gap-y-1">
                           <span
                             aria-hidden="true"
                             className={`inline-block w-3 h-3 border shrink-0 ${
@@ -255,11 +219,13 @@ export default function SeasonPlanner() {
                           {s.mm ? (
                             <span className="label text-btc-orange">Midnight Madness</span>
                           ) : null}
-                          {s.yemi ? <span className="label text-btc-orange">Coach Yemi</span> : null}
+                          {s.partyUntil ? (
+                            <span className="label text-btc-orange">End of Year Party</span>
+                          ) : null}
                         </span>
                         <span className="block text-xs text-btc-white/60 mt-0.5 pl-5">
                           {s.time} &middot; {s.where}
-                          {s.yemi && s.label.startsWith("Sun") ? " · Ride available - limited space" : ""}
+                          {s.partyUntil ? ` · Party after, until ${s.partyUntil}` : ""}
                         </span>
                       </button>
                     </li>
@@ -271,63 +237,52 @@ export default function SeasonPlanner() {
         })}
       </div>
 
-      <div className="sticky bottom-0 mt-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40">
+      <div className="sticky bottom-0 mt-10 -mx-5 sm:-mx-8 md:-mx-10 -mb-5 sm:-mb-8 md:-mb-10 bg-btc-black/95 backdrop-blur border-t border-btc-orange/40">
         <div className="relative h-1 bg-white/10" aria-hidden="true">
           <div
             className="absolute inset-y-0 left-0 bg-btc-orange transition-all"
             style={{ width: `${progressPct}%` }}
           />
-          {fallPackages.map((p) => (
+          {packages.map((p) => (
             <span
               key={p.id}
               className={`absolute top-0 h-full w-px ${count >= p.sessions ? "bg-btc-black" : "bg-white/40"}`}
-              style={{ left: `${(p.sessions / 24) * 100}%` }}
+              style={{ left: `${(p.sessions / biggest.sessions) * 100}%` }}
             />
           ))}
         </div>
-        <div className="px-8 md:px-10 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
+        <div className="px-5 sm:px-8 md:px-10 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 justify-between">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
             <span className="mono text-btc-orange whitespace-nowrap">{count} selected</span>
-            <span className="text-sm text-btc-white/70 truncate">
+            <span className="text-sm text-btc-white/70">
               {!fits
                 ? "Pick days to see your package."
                 : overCap
                   ? `${fits.label} (${fits.price}) + $125 walk-ins`
-                  : secondary
-                    ? `${secondary.label} fits - most go 18 (+3 for $250)`
-                    : `${fits.label} fits - ${fits.price}`}
+                  : `${fits.label} fits - ${fits.price}`}
             </span>
           </div>
           <div className="flex flex-wrap gap-2 shrink-0">
             {count > 0 ? (
-              <button
-                type="button"
-                onClick={downloadICS}
+              <a
+                href={myDaysHref}
                 className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
               >
-                Add to calendar
-              </button>
+                Add my days to calendar
+              </a>
             ) : null}
-            {primary ? (
+            {fits ? (
               <a
-                href={mailFor(primary)}
+                href={mailFor(fits)}
                 className="bg-btc-orange text-btc-black px-4 py-2 text-sm font-semibold hover:bg-btc-white transition"
               >
-                Register {primary.sessions}
+                Register {fits.sessions}
               </a>
             ) : (
               <span className="border border-white/20 text-btc-white/50 px-4 py-2 text-sm font-semibold">
                 Register
               </span>
             )}
-            {secondary ? (
-              <a
-                href={mailFor(secondary)}
-                className="border border-white/30 px-4 py-2 text-sm font-semibold hover:border-btc-orange hover:text-btc-orange transition"
-              >
-                Register {secondary.sessions}
-              </a>
-            ) : null}
           </div>
         </div>
       </div>

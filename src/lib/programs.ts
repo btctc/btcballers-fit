@@ -1,4 +1,4 @@
-export type FallPackage = {
+export type Package = {
   id: string;
   sessions: number;
   price: string;
@@ -9,112 +9,110 @@ export type FallPackage = {
   highlight?: boolean;
 };
 
-export const fallSeason = {
-  name: "Fall 2026",
-  window: "Aug 18 - Nov 19, 2026",
-  sessionsOffered: 32,
+export const season = {
+  name: "Spring 2027",
+  window: "Jan 10 - May 1, 2027",
+  sessionsOffered: 25,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 32 offered, including both Midnight Madness nights. Every workout counts as one session.",
+    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 25 offered, including both Midnight Madness nights. Every workout counts as one session.",
   schedule: [
-    { day: "Tuesdays, Wednesdays & Thursdays", time: "5:15P - 7:00P", where: "Home court" },
-    { day: "Saturdays", time: "10:00A - 11:45A", where: "Home court" },
-    { day: "Sundays", time: "11:15A - 12:45P", where: "SandersFit" },
+    { day: "Tuesdays", time: "5:15P - 7:00P", where: "Home court" },
+    { day: "Select Thursdays", time: "5:15P - 7:00P", where: "Home court" },
+    { day: "Select Saturdays", time: "10:00A - 11:45A", where: "Home court" },
+    { day: "Sundays (Jan 10, Jan 24, Feb 7)", time: "12:00P - 1:30P", where: "Faith Family" },
   ],
   noTraining:
-    "No training: Labor Day weekend (Sep 5-7), Oct 3-11 (fall break), Oct 24-25, Halloween (Oct 31), Nov 7-8, Nov 14-15, and Thanksgiving Break (Nov 23-28).",
+    "No training: MLK weekend (Jan 15-18), Feb 12-15, spring break (Mar 12-22), and Easter weekend (Mar 26-29).",
+  finale:
+    "Season finale: Sat, May 1. Training 10:00A - 11:45A, then the End of Year Party until 3:30P. The party is free for package families.",
   weather:
     "Weather issue? That session gets a makeup day - you never lose a session you paid for.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
-  payments: "Pay by Zelle or check. Need my Zelle info? Email overtimeincorporated@gmail.com.",
+  payments:
+    "Packages are paid in full at registration by Zelle or check. Need to split it up? Contact Coach T. Need my Zelle info? Email overtimeincorporated@gmail.com.",
   locations:
-    "Private home court (address shared at registration) and SandersFit.",
+    "Private home court (address shared at registration) and Faith Family.",
 };
 
-export const fallPackages: FallPackage[] = [
+const payUpFront = ["Paid in full at registration.", "Need to split it up? Contact Coach T."];
+
+export const packages: Package[] = [
   {
-    id: "15",
-    sessions: 15,
-    price: "$1,450",
-    perSession: "$97 / session",
-    label: "15-Session Package",
-    terms: ["Paid in full at registration."],
+    id: "12",
+    sessions: 12,
+    price: "$1,200",
+    perSession: "$100 / session",
+    label: "12-Session Package",
+    terms: payUpFront,
   },
   {
-    id: "18",
-    sessions: 18,
-    price: "$1,700",
+    id: "16",
+    sessions: 16,
+    price: "$1,500",
     perSession: "$94 / session",
-    label: "18-Session Package",
-    terms: [
-      "Pay in full, or half ($850) at registration + two payments of $425.",
-      "Payments due Sep 12 and Oct 12.",
-    ],
+    label: "16-Session Package",
+    terms: payUpFront,
   },
   {
-    id: "24",
-    sessions: 24,
-    price: "$2,200",
-    perSession: "$92 / session",
-    label: "24-Session Package",
-    terms: [
-      "Pay in full, or half ($1,100) at registration + two payments of $550.",
-      "Payments due Sep 12 and Oct 12.",
-    ],
+    id: "20",
+    sessions: 20,
+    price: "$1,850",
+    perSession: "$93 / session",
+    label: "20-Session Package",
+    terms: payUpFront,
   },
 ];
 
 export const midnightMadness = {
   title: "Midnight Madness",
-  nights: ["Friday, Sep 18", "Friday, Nov 13"],
+  nights: ["Friday, Mar 5", "Friday, Apr 9"],
   time: "4:00P - 9:00P",
   blurb:
     "Small-group training, dinner together, film, books, board games, and competitive play. We train. We compete. We hang out. Family style.",
   note: "Midnight Madness nights count as sessions from your package.",
 };
 
-export type FallSession = {
+export type Session = {
   key: string; // unique id
   dateKey: string; // YYYY-MM-DD - every workout counts as its own session
-  label: string; // e.g. "Sat, Aug 22"
+  label: string; // e.g. "Tue, Jan 26"
   time: string;
-  where: "Home court" | "SandersFit" | "Life School Oak Cliff";
-  yemi?: boolean;
+  where: "Home court" | "Faith Family";
   mm?: boolean; // Midnight Madness - counts as a session from your package
+  partyUntil?: string; // End of Year Party runs after training until this time
 };
 
-export const fallSessions: FallSession[] = [
-  { key: "2026-08-18", dateKey: "2026-08-18", label: "Tue, Aug 18", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-08-22", dateKey: "2026-08-22", label: "Sat, Aug 22", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-08-23-sf", dateKey: "2026-08-23", label: "Sun, Aug 23", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-08-27", dateKey: "2026-08-27", label: "Thu, Aug 27", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-08-29", dateKey: "2026-08-29", label: "Sat, Aug 29", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-09-01", dateKey: "2026-09-01", label: "Tue, Sep 1", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-02", dateKey: "2026-09-02", label: "Wed, Sep 2", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-10", dateKey: "2026-09-10", label: "Thu, Sep 10", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-12", dateKey: "2026-09-12", label: "Sat, Sep 12", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-09-15", dateKey: "2026-09-15", label: "Tue, Sep 15", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-16", dateKey: "2026-09-16", label: "Wed, Sep 16", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-18", dateKey: "2026-09-18", label: "Fri, Sep 18", time: "4:00P - 9:00P", where: "Home court", mm: true },
-  { key: "2026-09-22", dateKey: "2026-09-22", label: "Tue, Sep 22", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-24", dateKey: "2026-09-24", label: "Thu, Sep 24", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-09-26", dateKey: "2026-09-26", label: "Sat, Sep 26", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-10-06", dateKey: "2026-10-06", label: "Tue, Oct 6", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-07", dateKey: "2026-10-07", label: "Wed, Oct 7", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-14", dateKey: "2026-10-14", label: "Wed, Oct 14", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-15", dateKey: "2026-10-15", label: "Thu, Oct 15", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-17", dateKey: "2026-10-17", label: "Sat, Oct 17", time: "10:00A - 11:45A", where: "Home court" },
-  { key: "2026-10-18-sf", dateKey: "2026-10-18", label: "Sun, Oct 18", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-10-20", dateKey: "2026-10-20", label: "Tue, Oct 20", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-22", dateKey: "2026-10-22", label: "Thu, Oct 22", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-27", dateKey: "2026-10-27", label: "Tue, Oct 27", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-10-28", dateKey: "2026-10-28", label: "Wed, Oct 28", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-11-01-sf", dateKey: "2026-11-01", label: "Sun, Nov 1", time: "11:15A - 12:45P", where: "SandersFit" },
-  { key: "2026-11-03", dateKey: "2026-11-03", label: "Tue, Nov 3", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-11-04", dateKey: "2026-11-04", label: "Wed, Nov 4", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-11-12", dateKey: "2026-11-12", label: "Thu, Nov 12", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-11-13", dateKey: "2026-11-13", label: "Fri, Nov 13", time: "4:00P - 9:00P", where: "Home court", mm: true },
-  { key: "2026-11-17", dateKey: "2026-11-17", label: "Tue, Nov 17", time: "5:15P - 7:00P", where: "Home court" },
-  { key: "2026-11-19", dateKey: "2026-11-19", label: "Thu, Nov 19", time: "5:15P - 7:00P", where: "Home court" },
+const TUE_THU = "5:15P - 7:00P";
+const SAT = "10:00A - 11:45A";
+const SUN = "12:00P - 1:30P";
+const MM = "4:00P - 9:00P";
+
+export const sessions: Session[] = [
+  { key: "2027-01-10", dateKey: "2027-01-10", label: "Sun, Jan 10", time: SUN, where: "Faith Family" },
+  { key: "2027-01-24", dateKey: "2027-01-24", label: "Sun, Jan 24", time: SUN, where: "Faith Family" },
+  { key: "2027-01-26", dateKey: "2027-01-26", label: "Tue, Jan 26", time: TUE_THU, where: "Home court" },
+  { key: "2027-02-07", dateKey: "2027-02-07", label: "Sun, Feb 7", time: SUN, where: "Faith Family" },
+  { key: "2027-02-16", dateKey: "2027-02-16", label: "Tue, Feb 16", time: TUE_THU, where: "Home court" },
+  { key: "2027-02-18", dateKey: "2027-02-18", label: "Thu, Feb 18", time: TUE_THU, where: "Home court" },
+  { key: "2027-02-20", dateKey: "2027-02-20", label: "Sat, Feb 20", time: SAT, where: "Home court" },
+  { key: "2027-02-23", dateKey: "2027-02-23", label: "Tue, Feb 23", time: TUE_THU, where: "Home court" },
+  { key: "2027-02-25", dateKey: "2027-02-25", label: "Thu, Feb 25", time: TUE_THU, where: "Home court" },
+  { key: "2027-02-27", dateKey: "2027-02-27", label: "Sat, Feb 27", time: SAT, where: "Home court" },
+  { key: "2027-03-02", dateKey: "2027-03-02", label: "Tue, Mar 2", time: TUE_THU, where: "Home court" },
+  { key: "2027-03-05", dateKey: "2027-03-05", label: "Fri, Mar 5", time: MM, where: "Home court", mm: true },
+  { key: "2027-03-09", dateKey: "2027-03-09", label: "Tue, Mar 9", time: TUE_THU, where: "Home court" },
+  { key: "2027-03-23", dateKey: "2027-03-23", label: "Tue, Mar 23", time: TUE_THU, where: "Home court" },
+  { key: "2027-03-30", dateKey: "2027-03-30", label: "Tue, Mar 30", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-01", dateKey: "2027-04-01", label: "Thu, Apr 1", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-03", dateKey: "2027-04-03", label: "Sat, Apr 3", time: SAT, where: "Home court" },
+  { key: "2027-04-06", dateKey: "2027-04-06", label: "Tue, Apr 6", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-09", dateKey: "2027-04-09", label: "Fri, Apr 9", time: MM, where: "Home court", mm: true },
+  { key: "2027-04-13", dateKey: "2027-04-13", label: "Tue, Apr 13", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-15", dateKey: "2027-04-15", label: "Thu, Apr 15", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-20", dateKey: "2027-04-20", label: "Tue, Apr 20", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-27", dateKey: "2027-04-27", label: "Tue, Apr 27", time: TUE_THU, where: "Home court" },
+  { key: "2027-04-29", dateKey: "2027-04-29", label: "Thu, Apr 29", time: TUE_THU, where: "Home court" },
+  { key: "2027-05-01", dateKey: "2027-05-01", label: "Sat, May 1", time: SAT, where: "Home court", partyUntil: "3:30P" },
 ];
 
 export const privateTraining = {
