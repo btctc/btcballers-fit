@@ -331,15 +331,22 @@ html { scroll-behavior: smooth; }
   outline-offset: 3px;
 }
 
-.saying-in {
-  animation: saying-in 0.7s ease both;
+/* Sayings ribbons (home page) */
+.sayings-row {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
 
-@keyframes saying-in {
-  from { opacity: 0; transform: translateY(14px) scale(0.98); }
-  to   { opacity: 1; transform: none; }
+.sayings-track {
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
+/* With motion turned off the ribbons hold still and can be swiped by hand. */
 @media (prefers-reduced-motion: reduce) {
-  .saying-in { animation: none; }
+  .sayings-ribbons { pointer-events: auto; }
+  .sayings-row { overflow-x: auto; scrollbar-width: none; }
+  .sayings-row::-webkit-scrollbar { display: none; }
+  .sayings-track { will-change: auto; }
 }
