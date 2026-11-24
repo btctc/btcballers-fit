@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import PlayDiagram from "@/components/PlayDiagram";
+import ReadCourt from "@/components/ReadCourt";
+import { diagramFor, type DiagramKey } from "@/lib/diagrams";
 import { levels, type Level, type Term } from "@/lib/quiz";
+import type { Read } from "@/lib/reads";
 
 // ---------- saved progress (this device only) ----------
 
@@ -35,12 +39,14 @@ type Choice = {
   tag: string;
   prompt: string;
   focus?: string; // the term or meaning the question is about
+  diagram?: DiagramKey; // an animated play to watch instead of text
   options: string[];
   answer: number;
   why: string;
 };
 type Match = { kind: "match"; pairs: Term[]; order: number[] };
-type Round = Choice | Match;
+type ReadRound = { kind: "read"; read: Read; second: boolean };
+type Round = Choice | Match | ReadRound;
 
 function shuffle<T>(list: T[]): T[] {
   const a = [...list];
@@ -52,6 +58,9 @@ function shuffle<T>(list: T[]): T[] {
 }
 
 function buildRounds(level: Level): Round[] {
+  // Film Room: the reads run in order so each pair stays back to back.
+  if (level.reads) return level.reads.map((read, i) => ({ kind: "read", read, second: i % 2 === 1 }));
+
   const t = shuffle(level.terms);
   const tf = shuffle(level.trueFalse);
   const withThreeOthers = (x: Term) =>
@@ -81,6 +90,28 @@ function buildRounds(level: Level): Round[] {
       why: `${x.term}: ${x.meaning}`,
     };
   };
+  // "Watch the play": show the animation, ask which action it is.
+  // Ball Screen is left out of the choices for plays that start with one, so only one answer fits.
+  const watch = (x: Term): Choice => {
+    const startsWithBallScreen = ["Roll", "Pop", "Slip"].includes(x.term);
+    const pool = level.terms.filter(
+      (y) => y.term !== x.term && !(startsWithBallScreen && y.term === "Ball Screen")
+    );
+    const opts = shuffle([x, ...shuffle(pool).slice(0, 3)]);
+    return {
+      kind: "choice",
+      tag: "Watch the play",
+      prompt: "Which action is this?",
+      diagram: diagramFor(x.term) ?? undefined,
+      options: opts.map((o) => o.term),
+      answer: opts.indexOf(x),
+      why: `${x.term}: ${x.meaning}`,
+    };
+  };
+  // Levels with animated plays swap the two "Name it" rounds for "Watch the play".
+  const watchable = shuffle(level.terms.filter((y) => y.term !== "Ball Screen" && diagramFor(y.term)));
+  const nameOrWatch = (n: number, fallback: Term) => (watchable[n] ? watch(watchable[n]) : nameOf(fallback));
+
   const trueFalse = (n: number): Choice => ({
     kind: "choice",
     tag: "True or false",
@@ -97,11 +128,11 @@ function buildRounds(level: Level): Round[] {
     meaningOf(t[1]),
     match(t.slice(0, 4)),
     trueFalse(1),
-    nameOf(t[2]),
+    nameOrWatch(0, t[2]),
     meaningOf(t[4]),
     trueFalse(2),
     match(t.slice(4, 8)),
-    nameOf(t[5]),
+    nameOrWatch(1, t[5]),
     meaningOf(t[6]),
     trueFalse(3),
   ];
@@ -221,6 +252,7 @@ export default function PlaybookQuiz() {
   const [missed, setMissed] = useState<number[]>([]);
   const [wrongPair, setWrongPair] = useState<{ l: number; r: number } | null>(null);
   const [earnedStars, setEarnedStars] = useState(0);
+  const [readRight, setReadRight] = useState<boolean | null>(null); // Film Room result for this round
 
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const topRef = useRef<HTMLDivElement>(null);
@@ -246,6 +278,7 @@ export default function PlaybookQuiz() {
     setMatched([]);
     setMissed([]);
     setWrongPair(null);
+    setReadRight(null);
   };
 
   const startLevel = (i: number) => {
@@ -321,6 +354,13 @@ export default function PlaybookQuiz() {
     }
   };
 
+  const readDone = (right: boolean) => {
+    const next = score(right, 10);
+    if (right) buzz();
+    setPraise(right ? (next.streak >= 3 ? `${next.streak} in a row.` : "Good read.") : "Not yet. Here is the read.");
+    setReadRight(right);
+  };
+
   const tapRight = (r: number) => {
     if (!round || round.kind !== "match" || left === null || wrongPair) return;
     const pairIndex = round.order[r];
@@ -380,7 +420,7 @@ export default function PlaybookQuiz() {
             const open = unlocked(i);
             const stars = save.stars[l.id] ?? 0;
             return (
-              <li key={l.id}>
+              <li key={l.id} className={l.reads ? "md:col-span-2 lg:col-span-3" : undefined}>
                 <button
                   type="button"
                   disabled={!open}
@@ -392,7 +432,7 @@ export default function PlaybookQuiz() {
                   }`}
                 >
                   <span className="flex items-center justify-between">
-                    <span className="label">Level {i + 1}</span>
+                    <span className={`label ${l.reads && open ? "text-btc-orange" : ""}`}>{l.reads ? "Final level" : `Level ${i + 1}`}</span>
                     {open ? <Stars count={stars} /> : <span className="label">Locked</span>}
                   </span>
                   <span className={`display mt-4 text-3xl ${open ? "group-hover:text-btc-orange" : ""} transition`}>
@@ -528,17 +568,73 @@ export default function PlaybookQuiz() {
           <span key={n} className="h-1 flex-1 bg-white/10">
             <span
               className="block h-full origin-left bg-btc-orange transition-transform duration-500 ease-out"
-              style={{ transform: `scaleX(${n < step || (n === step && (answered || (round.kind === "match" && matched.length === round.pairs.length))) ? 1 : 0})` }}
+              style={{ transform: `scaleX(${n < step || (n === step && (answered || readRight !== null || (round.kind === "match" && matched.length === round.pairs.length))) ? 1 : 0})` }}
             />
           </span>
         ))}
       </div>
 
       <div key={step} className="quiz-in px-5 pb-8 pt-8 sm:px-8 md:pb-10 md:pt-10">
-        {round.kind === "choice" ? (
+        {round.kind === "read" ? (
+          <div className="mx-auto max-w-2xl">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span className="label text-btc-orange">Film Room &middot; {round.read.action}</span>
+              {round.second ? (
+                <span className="quiz-pop bg-white px-2 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-btc-black">
+                  Same play. New player.
+                </span>
+              ) : null}
+            </div>
+            <h3 className="mt-3 text-xl font-semibold leading-snug md:text-2xl">{round.read.ask}</h3>
+
+            <div className="mt-4 flex items-center gap-4 border border-btc-orange/40 bg-btc-black px-4 py-3">
+              <div className="min-w-0">
+                <div className="label">{round.read.star.role}</div>
+                <div className="display mt-1 text-2xl text-btc-orange md:text-3xl">{round.read.star.name}</div>
+                <p className="mt-1 text-sm leading-snug text-btc-white/80">{round.read.star.trait}</p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <ReadCourt read={round.read} onResult={readDone} />
+            </div>
+
+            <div className="mt-5 min-h-[5.5rem]" aria-live="polite">
+              {readRight !== null ? (
+                <div className="quiz-in flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className={`display text-2xl ${readRight ? "text-emerald-400" : "text-btc-orange"}`}>
+                      {praise}
+                      {readRight ? (
+                        <span className="mono ml-3 text-sm text-btc-orange">+{tally.streak >= 3 ? 15 : 10} XP</span>
+                      ) : null}
+                    </div>
+                    <p className="mt-1 text-sm text-btc-white/75">{round.read.why}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => advance(tally)}
+                    className="shrink-0 bg-btc-orange px-6 py-3 font-semibold text-btc-black transition hover:bg-btc-white"
+                  >
+                    {step + 1 >= rounds.length ? "See results" : "Next"}
+                  </button>
+                </div>
+              ) : (
+                <p className="text-sm text-btc-white/50">Tap an arrow on the court, or pick below.</p>
+              )}
+            </div>
+          </div>
+        ) : round.kind === "choice" ? (
           <>
             <div className="label text-btc-orange">{round.tag}</div>
-            {round.focus ? (
+            {round.diagram ? (
+              <>
+                <h3 className="mt-3 text-2xl font-semibold leading-snug md:text-3xl">{round.prompt}</h3>
+                <div className="mt-5 max-w-lg">
+                  <PlayDiagram name={round.diagram} />
+                </div>
+              </>
+            ) : round.focus ? (
               <>
                 <p className="mt-3 text-btc-white/70">{round.prompt}</p>
                 <h3

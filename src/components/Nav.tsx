@@ -12,7 +12,10 @@ export default function Nav() {
 
         <nav className="flex items-center gap-2 sm:gap-3 md:gap-8 text-[11px] sm:text-xs md:text-base">
           <Link href="/programs" className="whitespace-nowrap hover:text-btc-orange transition">Programs</Link>
-          <Link href="/playbook" className="whitespace-nowrap hover:text-btc-orange transition">Playbook</Link>
+          <Link href="/playbook" className="whitespace-nowrap font-semibold text-btc-orange hover:text-btc-white transition">
+            <span className="sm:hidden">IQ Game</span>
+            <span className="hidden sm:inline">Play the IQ Game</span>
+          </Link>
           <Link href="/about" className="whitespace-nowrap hover:text-btc-orange transition">
             <span className="sm:hidden">Coach</span>
             <span className="hidden sm:inline">Coach T</span>

@@ -1,10 +1,12 @@
 import Link from "next/link";
+import GlossaryDiagram from "@/components/GlossaryDiagram";
 import PlaybookQuiz from "@/components/PlaybookQuiz";
+import { diagramFor } from "@/lib/diagrams";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
 import { levels } from "@/lib/quiz";
 
 export const metadata = {
-  title: "Playbook Quiz - BTC Ballers",
+  title: "Basketball IQ Game - BTC Ballers",
   description: "Learn the language of basketball with the BTC Ballers playbook quiz. True or false, multiple choice, and matching, from Rookie to Hall of Fame.",
 };
 
@@ -12,14 +14,19 @@ export default function PlaybookPage() {
   return (
     <div className="max-w-6xl mx-auto px-5 py-20">
       <section>
-        <div className="label text-btc-orange">Basketball IQ</div>
-        <h1 className="display text-6xl md:text-8xl mt-3">Learn the game.</h1>
+        <div className="flex items-center gap-3">
+          <span className="h-2 w-2 rounded-full bg-btc-orange status-pulse" aria-hidden="true" />
+          <span className="label text-btc-orange">The Basketball IQ Game</span>
+        </div>
+        <h1 className="display text-6xl md:text-8xl mt-3">
+          How well do you <span className="text-btc-orange">know the game?</span>
+        </h1>
         <p className="mt-8 max-w-2xl text-lg md:text-xl text-btc-white/85 leading-relaxed">
-          The game slows down when a player can name what they see. Start at Rookie and work your way up to Hall of Fame: {levels.length} levels of true or false, multiple choice, and matching.
+          Play your way from Rookie to Hall of Fame, then step into the Film Room, where the play freezes and you make the read. {levels.length} levels. Earn stars, build a streak, and unlock the next one.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#quiz" className="bg-btc-orange text-btc-black px-5 py-3 font-semibold hover:bg-btc-white transition">
-            Start the quiz
+            Play now
           </a>
           <a href="#glossary" className="border border-white/30 px-5 py-3 font-semibold hover:border-btc-orange hover:text-btc-orange transition">
             Study the terms
@@ -69,12 +76,18 @@ export default function PlaybookPage() {
                 <div className="label">{section.entries.length} terms</div>
               </div>
               <dl className="mt-5 grid md:grid-cols-2 gap-px overflow-hidden border border-white/10 bg-btc-black">
-                {section.entries.map((entry) => (
-                  <div key={entry.term} className="bg-btc-black p-5">
-                    <dt className="mono text-base text-btc-white">{entry.term}</dt>
-                    <dd className="mt-3 text-base leading-relaxed text-btc-white/78">{entry.definition}</dd>
-                  </div>
-                ))}
+                {section.entries.map((entry) => {
+                  const play = diagramFor(entry.term);
+                  return (
+                    <div key={entry.term} className="bg-btc-black p-5">
+                      <dt className="mono text-base text-btc-white">{entry.term}</dt>
+                      <dd className="mt-3 text-base leading-relaxed text-btc-white/78">
+                        {entry.definition}
+                        {play ? <GlossaryDiagram name={play} /> : null}
+                      </dd>
+                    </div>
+                  );
+                })}
               </dl>
             </section>
           ))}

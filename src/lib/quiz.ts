@@ -2,9 +2,12 @@
 // definitions in playbookGlossary.ts. Levels go from easiest to hardest.
 // Keep 8 terms and 4 true/false statements in every level.
 
+import { reads, type Read } from "@/lib/reads";
+
 export type Term = { term: string; meaning: string };
 export type TrueFalse = { statement: string; answer: boolean; why: string };
-export type Level = { id: string; rank: string; theme: string; terms: Term[]; trueFalse: TrueFalse[] };
+// A level is either a term quiz (terms + trueFalse) or a Film Room run (reads).
+export type Level = { id: string; rank: string; theme: string; terms: Term[]; trueFalse: TrueFalse[]; reads?: Read[] };
 
 export const levels: Level[] = [
   {
@@ -132,5 +135,13 @@ export const levels: Level[] = [
       { statement: "On a ghost screen, the screener makes hard contact and holds it.", answer: false, why: "Ghost: fake the ball screen and leave before contact." },
       { statement: "A hedge is an offensive move.", answer: false, why: "A hedge is defense. The screener's defender steps out, then recovers." },
     ],
+  },
+  {
+    id: "film-room",
+    rank: "Film Room",
+    theme: "Read the floor. Same play, different player, different answer.",
+    terms: [],
+    trueFalse: [],
+    reads,
   },
 ];
