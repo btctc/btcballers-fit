@@ -12,9 +12,9 @@ export type Package = {
 export const season = {
   name: "Spring 2027",
   window: "Jan 10 - May 1, 2027",
-  sessionsOffered: 25,
+  sessionsOffered: 24,
   intro:
-    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 25 offered, including both Midnight Madness nights. Every workout counts as one session.",
+    "Every package is the same training. Pick your number of sessions and come to any workout on the calendar - 24 offered, including both Midnight Madness nights. Every workout counts as one session.",
   schedule: [
     { day: "Tuesdays", time: "5:15P - 7:00P", where: "Home court" },
     { day: "Select Thursdays", time: "5:15P - 7:00P", where: "Home court" },
@@ -24,7 +24,7 @@ export const season = {
   noTraining:
     "No training: MLK weekend (Jan 15-18), Feb 12-15, spring break (Mar 12-22), and Easter weekend (Mar 26-29).",
   finale:
-    "Season finale: Sat, May 1. Training 10:00A - 11:45A, then the End of Year Party until 3:30P. The party is free for package families.",
+    "Season finale: Sat, May 1. Workout 11:00A - 12:30P, then the End of Year Party until 3:00P. The party is free for package families.",
   weather:
     "Weather issue? That session gets a makeup day - you never lose a session you paid for.",
   policy: "No refunds - packages may be upgraded at any time by paying the difference.",
@@ -109,10 +109,9 @@ export const sessions: Session[] = [
   { key: "2027-04-09", dateKey: "2027-04-09", label: "Fri, Apr 9", time: MM, where: "Home court", mm: true },
   { key: "2027-04-13", dateKey: "2027-04-13", label: "Tue, Apr 13", time: TUE_THU, where: "Home court" },
   { key: "2027-04-15", dateKey: "2027-04-15", label: "Thu, Apr 15", time: TUE_THU, where: "Home court" },
-  { key: "2027-04-20", dateKey: "2027-04-20", label: "Tue, Apr 20", time: TUE_THU, where: "Home court" },
   { key: "2027-04-27", dateKey: "2027-04-27", label: "Tue, Apr 27", time: TUE_THU, where: "Home court" },
   { key: "2027-04-29", dateKey: "2027-04-29", label: "Thu, Apr 29", time: TUE_THU, where: "Home court" },
-  { key: "2027-05-01", dateKey: "2027-05-01", label: "Sat, May 1", time: SAT, where: "Home court", partyUntil: "3:30P" },
+  { key: "2027-05-01", dateKey: "2027-05-01", label: "Sat, May 1", time: "11:00A - 12:30P", where: "Home court", partyUntil: "3:00P" },
 ];
 
 export const privateTraining = {

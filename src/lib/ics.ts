@@ -26,7 +26,7 @@ export function buildCalendar(list: Session[], name: string): string {
     const desc = s.mm
       ? "Small-group training, dinner, film, books, and competitive play."
       : s.partyUntil
-        ? `Training ${s.time}, then the End of Year Party until ${s.partyUntil}.`
+        ? `Workout ${s.time}, then the End of Year Party until ${s.partyUntil}.`
         : "Believe. Train. Compete.";
     return [
       "BEGIN:VEVENT",
