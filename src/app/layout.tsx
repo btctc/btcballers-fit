@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description: "Believe. Train. Compete. It's bigger than basketball.",
     url: "https://btcballers.fit",
     siteName: "BTC Ballers",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-quiz.png", width: 1200, height: 630, alt: "The BTC Ballers Basketball IQ Game" }],
     locale: "en_US",
     type: "website",
   },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BTC Ballers - Basketball training in Dallas",
     description: "Believe. Train. Compete. It's bigger than basketball.",
-    images: ["/og-image.png"],
+    images: ["/og-quiz.png"],
   },
   icons: { icon: "/favicon.ico" },
 };

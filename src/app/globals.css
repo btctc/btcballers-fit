@@ -396,6 +396,12 @@ body { padding-bottom: var(--ticker-h); }
   .quiz-in, .quiz-pop, .quiz-shake, .quiz-star { animation: none; }
 }
 
+.quiz-countdown { transform-origin: left; animation: quiz-countdown linear both; }
+@keyframes quiz-countdown {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
 /* Film Room court */
 .read-draw { stroke-dashoffset: 1; animation: read-draw 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .read-badge { opacity: 0; animation: read-fade 0.3s ease forwards; }

@@ -255,6 +255,11 @@ export default function PlaybookQuiz() {
   const [readRight, setReadRight] = useState<boolean | null>(null); // Film Room result for this round
 
   const timer = useRef<ReturnType<typeof setTimeout>>();
+  const armedAt = useRef(0); // a new question ignores taps until this time
+  const arm = () => {
+    armedAt.current = Date.now() + 550;
+  };
+  const armed = () => Date.now() >= armedAt.current;
   const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -288,6 +293,7 @@ export default function PlaybookQuiz() {
     setStep(0);
     setTally(ZERO);
     resetRound();
+    arm();
     setView("play");
     scrollToTop();
   };
@@ -315,6 +321,7 @@ export default function PlaybookQuiz() {
       return;
     }
     resetRound();
+    arm();
     setStep((s) => s + 1);
   };
 
@@ -341,14 +348,13 @@ export default function PlaybookQuiz() {
   };
 
   const pick = (i: number) => {
-    if (!round || round.kind !== "choice" || picked !== null) return;
+    if (!round || round.kind !== "choice" || picked !== null || !armed()) return;
     const right = i === round.answer;
     setPicked(i);
     const next = score(right, 10);
     if (right) {
       buzz();
       setPraise(next.streak >= 3 ? `${next.streak} in a row.` : PRAISE[Math.floor(Math.random() * PRAISE.length)]);
-      timer.current = setTimeout(() => advance(next), 1500);
     } else {
       setPraise("Not yet. Here is the read.");
     }
@@ -362,17 +368,16 @@ export default function PlaybookQuiz() {
   };
 
   const tapRight = (r: number) => {
-    if (!round || round.kind !== "match" || left === null || wrongPair) return;
+    if (!round || round.kind !== "match" || left === null || wrongPair || !armed()) return;
     const pairIndex = round.order[r];
     if (matched.includes(pairIndex)) return;
     if (pairIndex === left) {
       const firstTry = !missed.includes(left);
-      const next = score(firstTry, 5);
+      score(firstTry, 5);
       const done = [...matched, left];
       setMatched(done);
       setLeft(null);
       buzz();
-      if (done.length === round.pairs.length) timer.current = setTimeout(() => advance(next), 1000);
     } else {
       if (!missed.includes(left)) setMissed((m) => [...m, left]);
       setTally((t) => ({ ...t, streak: 0 }));
@@ -383,6 +388,38 @@ export default function PlaybookQuiz() {
       }, 520);
     }
   };
+
+  // ---------- moving on ----------
+  // A right answer has no Next button: the quiz shows the result and moves on by itself.
+  // A miss waits for the player to tap Next, so there is time to read why.
+  const current = view === "play" ? rounds[step] : undefined;
+  const finished =
+    !!current &&
+    (current.kind === "choice"
+      ? picked !== null
+      : current.kind === "read"
+        ? readRight !== null
+        : matched.length === current.pairs.length);
+  const gotIt =
+    !!current &&
+    (current.kind === "choice" ? picked === current.answer : current.kind === "read" ? readRight === true : true);
+  const moveOnMs = !current
+    ? 0
+    : gotIt
+      ? current.kind === "match"
+        ? 1200
+        : current.kind === "read"
+          ? 2400
+          : 1700
+      : 0;
+
+  useEffect(() => {
+    if (!finished || !gotIt) return;
+    const id = setTimeout(() => advance(tally), moveOnMs);
+    return () => clearTimeout(id);
+    // advance and tally are read fresh from the render that finished the question
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished, gotIt, step]);
 
   // ---------- views ----------
 
@@ -574,7 +611,16 @@ export default function PlaybookQuiz() {
         ))}
       </div>
 
-      <div key={step} className="quiz-in px-5 pb-8 pt-8 sm:px-8 md:pb-10 md:pt-10">
+      <div className="h-1 bg-transparent" aria-hidden="true">
+        {finished && gotIt ? (
+          <div
+            key={step}
+            className="quiz-countdown h-full bg-emerald-400"
+            style={{ animationDuration: `${moveOnMs}ms` }}
+          />
+        ) : null}
+      </div>
+      <div key={step} className="quiz-in px-5 pb-8 pt-7 sm:px-8 md:pb-10 md:pt-9">
         {round.kind === "read" ? (
           <div className="mx-auto max-w-2xl">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -611,13 +657,6 @@ export default function PlaybookQuiz() {
                     </div>
                     <p className="mt-1 text-sm text-btc-white/75">{round.read.why}</p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => advance(tally)}
-                    className="shrink-0 bg-btc-orange px-6 py-3 font-semibold text-btc-black transition hover:bg-btc-white"
-                  >
-                    {step + 1 >= rounds.length ? "See results" : "Next"}
-                  </button>
                 </div>
               ) : (
                 <p className="text-sm text-btc-white/50">Tap an arrow on the court, or pick below.</p>
@@ -692,13 +731,6 @@ export default function PlaybookQuiz() {
                     </div>
                     <p className="mt-1 max-w-2xl text-sm text-btc-white/75">{round.why}</p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => advance(tally)}
-                    className="shrink-0 bg-btc-orange px-6 py-3 font-semibold text-btc-black transition hover:bg-btc-white"
-                  >
-                    {step + 1 >= rounds.length ? "See results" : "Next"}
-                  </button>
                 </div>
               ) : null}
             </div>
@@ -725,7 +757,7 @@ export default function PlaybookQuiz() {
                       type="button"
                       disabled={done}
                       aria-pressed={left === i}
-                      onClick={() => !wrongPair && setLeft(i)}
+                      onClick={() => !wrongPair && armed() && setLeft(i)}
                       className={`flex min-h-[4.5rem] items-center border px-3 py-3 text-left transition-colors md:px-4 ${state}`}
                     >
                       <span className="display text-xl md:text-2xl">{p.term}</span>
@@ -760,10 +792,12 @@ export default function PlaybookQuiz() {
                 })}
               </div>
             </div>
-            <div className="mt-6 min-h-[2.5rem]" aria-live="polite">
+            <div className="mt-6 min-h-[5.5rem]" aria-live="polite">
               {matched.length === round.pairs.length ? (
-                <div className="quiz-in display text-2xl text-emerald-400">
-                  {missed.length === 0 ? "Clean sweep." : "All matched."}
+                <div className="quiz-in flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="display text-2xl text-emerald-400">
+                    {missed.length === 0 ? "Clean sweep." : "All matched."}
+                  </div>
                 </div>
               ) : (
                 <p className="text-sm text-btc-white/50">
@@ -773,6 +807,18 @@ export default function PlaybookQuiz() {
             </div>
           </>
         )}
+
+        {finished && !gotIt ? (
+          <div className="quiz-in mt-2 flex justify-end">
+            <button
+              type="button"
+              onClick={() => advance(tally)}
+              className="w-full bg-btc-orange px-8 py-3 font-semibold text-btc-black transition hover:bg-btc-white sm:w-auto"
+            >
+              {step + 1 >= rounds.length ? "See results" : "Next"}
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

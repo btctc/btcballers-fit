@@ -5,9 +5,27 @@ import { diagramFor } from "@/lib/diagrams";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
 import { levels } from "@/lib/quiz";
 
+const shareTitle = "How well do you know the game? - BTC Ballers IQ Game";
+const shareText = "Play from Rookie to Hall of Fame, then step into the Film Room and make the read.";
+
 export const metadata = {
   title: "Basketball IQ Game - BTC Ballers",
-  description: "Learn the language of basketball with the BTC Ballers playbook quiz. True or false, multiple choice, and matching, from Rookie to Hall of Fame.",
+  description:
+    "Learn the language of basketball with the BTC Ballers IQ Game. True or false, multiple choice, matching, and animated plays, from Rookie to Hall of Fame.",
+  openGraph: {
+    title: shareTitle,
+    description: shareText,
+    url: "https://btcballers.fit/playbook",
+    siteName: "BTC Ballers",
+    images: [{ url: "/og-quiz.png", width: 1200, height: 630, alt: "The BTC Ballers Basketball IQ Game" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: shareTitle,
+    description: shareText,
+    images: ["/og-quiz.png"],
+  },
 };
 
 export default function PlaybookPage() {
