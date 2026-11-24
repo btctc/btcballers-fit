@@ -16,7 +16,7 @@ export const levels: Level[] = [
       { term: "Corner", meaning: "Where the baseline meets the 3-point line." },
       { term: "Wing", meaning: "The area between the corner and the top of the key." },
       { term: "Elbow", meaning: "Where the free-throw line meets the lane line." },
-      { term: "Pass", meaning: "Move the ball to a teammate." },
+      { term: "Lob", meaning: "A high pass thrown to a teammate near the rim." },
       { term: "Drive", meaning: "Attack the basket with the dribble." },
       { term: "Cut", meaning: "A quick move without the ball to get open." },
       { term: "Screen", meaning: "A legal position set to free a teammate." },
@@ -25,12 +25,12 @@ export const levels: Level[] = [
       { statement: "A drive means attacking the basket with the dribble.", answer: true, why: "Drive: attack the basket with the dribble." },
       { statement: "The corner is at the top of the key.", answer: false, why: "The corner is where the baseline meets the 3-point line." },
       { statement: "You need the ball in your hands to make a cut.", answer: false, why: "A cut is a quick move without the ball." },
-      { statement: "A screen is set to free a teammate.", answer: true, why: "Screen: a legal position set to free a teammate." },
+      { statement: "A lob is a low bounce pass.", answer: false, why: "A lob is a high pass thrown to a teammate near the rim." },
     ],
   },
   {
-    id: "starter",
-    rank: "Starter",
+    id: "sixth-man",
+    rank: "Sixth Man",
     theme: "Moving without the ball",
     terms: [
       { term: "Backcut", meaning: "A cut behind the defender toward the rim when they overplay the pass." },
@@ -50,8 +50,8 @@ export const levels: Level[] = [
     ],
   },
   {
-    id: "sixth-man",
-    rank: "Sixth Man",
+    id: "starter",
+    rank: "Starter",
     theme: "Screens and the two-player game",
     terms: [
       { term: "Ball Screen", meaning: "A screen set for the player who has the ball." },
@@ -93,7 +93,7 @@ export const levels: Level[] = [
   },
   {
     id: "floor-general",
-    rank: "Floor General",
+    rank: "All-Star",
     theme: "Spacing and seeing the floor",
     terms: [
       { term: "Strongside", meaning: "The side of the floor where the ball is." },
@@ -114,7 +114,7 @@ export const levels: Level[] = [
   },
   {
     id: "coach",
-    rank: "Coach",
+    rank: "Hall of Fame",
     theme: "Advanced actions",
     terms: [
       { term: "Stagger", meaning: "Two or more off-ball screens set in a row for one cutter." },

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { sayings, voices } from "@/lib/sayings";
 
 // One slim light gray bar at the bottom of the screen, on every page. It drifts on
-// its own and picks up speed as the page scrolls. The page reserves room for it
+// its own and picks up speed as the page scrolls, always in the same direction. The page reserves room for it
 // (see --ticker-h in globals.css), so it never sits on top of other content.
 
 const DRIFT = 48; // px per second when the page is still
@@ -66,7 +66,7 @@ export default function QuoteTicker() {
 
     const onScroll = () => {
       const y = window.scrollY;
-      pending += y - lastY;
+      pending += Math.abs(y - lastY); // always forward, whichever way the page scrolls
       lastY = y;
     };
     const onVisibility = () => (document.hidden ? stop() : start());
