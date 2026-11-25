@@ -62,7 +62,7 @@ export const glossarySections: GlossarySection[] = [
       { term: "Deep", definition: "Positioning close to the basket, in the post, or near the short corner." },
       { term: "Delay", definition: "An action that slows the pace and lets the offense read the defense before attacking." },
       { term: "Denial", definition: "Defensive positioning that prevents an easy pass to a player or area." },
-      { term: "DHO (Dribble Hand-Off)", definition: "One player hands the ball directly to a teammate moving past them." },
+      { term: "DHO (Dribble Hand-Off)", definition: "A player dribbles at a teammate and hands them the ball as the teammate runs past. The dribble goes to the receiver, not the other way around." },
       { term: "Dig", definition: "A quick help move into the paint or post to bother the ball and recover." },
       { term: "Dive", definition: "A hard cut to the rim, often by a screener after setting a ball screen." },
       { term: "Double Drag", definition: "Two ball screens set one after the other, usually in transition, taking the ballhandler toward the middle. Also called 77." },

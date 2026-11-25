@@ -108,15 +108,15 @@ export const diagrams = {
     ball: [{ until: 0.56, actor: "1" }, { until: 1, actor: "5" }],
   },
   dho: {
-    label: "The big hands the ball to a teammate running past, who turns the corner.",
+    label: "The ballhandler dribbles at a teammate and hands the ball off as the teammate runs past and turns the corner.",
     actors: [
-      o("5", [[250, 160, 0], [250, 160, 1]]),
-      o("2", [[428, 250, 0], [292, 152, 0.52], [196, 186, 0.82], [176, 250, 1]]),
-      x("x2", [[402, 238, 0], [312, 170, 0.55], [262, 178, 0.8], [214, 214, 1]]),
-      x("x5", [[250, 196, 0], [264, 238, 1]]),
+      o("5", [[214, 152, 0], [214, 152, 0.1], [326, 178, 0.46], [326, 178, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 0.16], [354, 190, 0.5], [296, 216, 0.76], [262, 304, 1]]),
+      x("x5", [[222, 184, 0], [222, 184, 0.12], [316, 208, 0.5], [316, 208, 1]]),
+      x("x2", [[402, 264, 0], [402, 264, 0.2], [372, 214, 0.56], [336, 236, 0.8], [300, 276, 1]]),
     ],
-    ball: [{ until: 0.52, actor: "5" }, { until: 1, actor: "2" }],
-    screens: [{ t: 0.56, actor: "5" }],
+    ball: [{ until: 0.44, actor: "5" }, { until: 1, actor: "2" }],
+    screens: [{ t: 0.54, actor: "5" }],
   },
   pindown: {
     label: "A screen set down toward the baseline lets a shooter come up to the perimeter for the pass.",

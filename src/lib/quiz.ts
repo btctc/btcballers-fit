@@ -82,7 +82,7 @@ export const levels: Level[] = [
       { term: "Roll", meaning: "The screener cuts to the basket after a ball screen.", pillar: "offense", like: "roll" },
       { term: "Pop", meaning: "The screener steps out to the perimeter for a catch-and-shoot look.", pillar: "offense" },
       { term: "Slip", meaning: "Fake a screen, then cut to the basket before contact.", pillar: "offense", like: "slip" },
-      { term: "DHO", meaning: "One player hands the ball to a teammate moving past them.", pillar: "offense" },
+      { term: "DHO", meaning: "A player dribbles at a teammate and hands them the ball as they run past.", pillar: "offense" },
       { term: "Pindown", meaning: "An off-ball screen that brings a player up from the baseline.", pillar: "spacing", like: "down" },
       { term: "Flare", meaning: "An off-ball screen that sends a shooter away from the ball.", pillar: "spacing" },
       { term: "Rejection", meaning: "Change direction before using the screen.", pillar: "offense" },

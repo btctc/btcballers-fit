@@ -191,7 +191,7 @@ export const plays: Play[] = [
     steps: [
       { say: "1 passes to 5 at the top.", pass: "5" },
       { say: "4 sets a pindown for 2 in the corner.", go: { "4": [450, 358] }, screen: ["4"] },
-      { say: "2 sprints off the screen straight at 5.", go: { "2": [432, 300, 336, 204], "x2": [444, 318, 374, 238] } },
+      { say: "2 sprints off the screen, and 5 dribbles over to meet 2.", go: { "5": [322, 188], "2": [432, 300, 346, 212], "x2": [444, 318, 374, 238] } },
       { say: "5 hands the ball to 2. A pindown into a handoff is Zoom. Some coaches call it Chicago.", pass: "2" },
       { say: "2 turns the corner and attacks. 5 rolls to the rim.", go: { "2": [262, 232, 212, 342], "5": [300, 372], "x2": [262, 262] } },
     ],
@@ -206,7 +206,7 @@ export const plays: Play[] = [
           see: "The defender on 2 cuts under the handoff",
           open: "Stop behind the handoff and shoot",
           steps: [
-            { say: "2 sprints off the screen. This time the defender cuts under everything to meet 2 on the other side.", go: { "2": [432, 300, 336, 204], "x2": [400, 330, 318, 256] } },
+            { say: "2 sprints off the screen. This time the defender cuts under everything to meet 2 on the other side.", go: { "5": [322, 188], "2": [432, 300, 346, 212], "x2": [400, 330, 318, 256] } },
             { say: "5 hands the ball to 2.", pass: "2" },
             { say: "The defender is under the handoff, so nobody is on the ball. 2 stops behind 5 and shoots.", go: { "2": [322, 192], "x2": [300, 238] } },
           ],
@@ -216,7 +216,7 @@ export const plays: Play[] = [
           see: "The defender on 5 steps up to take 2 on the handoff",
           open: "5 fakes the handoff, keeps it, and drives",
           steps: [
-            { say: "2 sprints off the screen at 5. This time the defender on 5 steps up to take 2 on the handoff.", go: { "2": [432, 300, 336, 204], "x2": [444, 318, 374, 238], "x5": [334, 226] } },
+            { say: "2 sprints off the screen at 5. This time the defender on 5 steps up to take 2 on the handoff.", go: { "5": [322, 188], "2": [432, 300, 346, 212], "x2": [444, 318, 374, 238], "x5": [334, 226] } },
             { say: "5 sees it, fakes the handoff, and keeps the ball. That is a keep." },
             { say: "Nobody is between 5 and the rim. 5 drives for the layup.", go: { "5": [280, 280, 268, 384], "x5": [330, 228] } },
           ],
@@ -791,7 +791,7 @@ export const plays: Play[] = [
       { say: "1 passes to 5 at the top.", pass: "5" },
       { say: "2, the shooter, sets a back screen at the elbow for 3.", go: { "2": [372, 262] }, screen: ["2"] },
       { say: "3 cuts off the screen to the rim and takes the help along.", go: { "3": [372, 318, 292, 394] } },
-      { say: "2 pops straight up to 5 and takes the handoff.", go: { "x2": [354, 264], "2": [305, 196] }, pass: "2" },
+      { say: "2 pops up, 5 dribbles over to meet 2, and 2 takes the handoff.", go: { "x2": [354, 264], "5": [284, 184], "2": [310, 202] }, pass: "2" },
       { say: "The shooter was the screener, so nobody is ready to chase. 2 shoots.", go: { "2": [332, 172] } },
     ],
     shot: "2",
@@ -805,7 +805,7 @@ export const plays: Play[] = [
           see: "The defender on 5 steps out to take 2",
           open: "5 fakes the handoff, keeps it, and drives",
           steps: [
-            { say: "2 pops up to 5. This time the defender on 5 steps out to take 2.", go: { "2": [305, 196], "x2": [354, 264], "x5": [312, 220] } },
+            { say: "2 pops up to 5. This time the defender on 5 steps out to take 2.", go: { "5": [284, 184], "2": [310, 202], "x2": [354, 264], "x5": [312, 220] } },
             { say: "5 fakes the handoff, keeps the ball, and drives for the layup.", go: { "5": [248, 280, 262, 384], "x5": [310, 218] } },
           ],
           shot: "5",
@@ -814,7 +814,7 @@ export const plays: Play[] = [
           see: "The defender on 2 chases hard right behind 2",
           open: "Take the handoff and drive past",
           steps: [
-            { say: "2 pops up to 5 and takes the handoff. This time the defender on 2 is chasing hard, right behind.", go: { "2": [305, 196], "x2": [342, 238, 324, 214] }, pass: "2" },
+            { say: "2 pops up to 5 and takes the handoff. This time the defender on 2 is chasing hard, right behind.", go: { "5": [284, 184], "2": [310, 202], "x2": [342, 238, 324, 214] }, pass: "2" },
             { say: "The defender is behind and moving fast. 2 does not shoot. 2 turns the corner and drives to the rim.", go: { "2": [262, 230, 244, 372], "x2": [300, 262] } },
           ],
           shot: "2",
