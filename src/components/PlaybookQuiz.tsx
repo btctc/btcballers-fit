@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import PlayDiagram from "@/components/PlayDiagram";
 import ReadCourt from "@/components/ReadCourt";
-import { diagramFor, type DiagramKey } from "@/lib/diagrams";
-import { allTerms, levels, MASTERED, pillarNames, TERMS_PER_RUN, type Level, type Pillar, type Term } from "@/lib/quiz";
+import { diagramFor, diagrams, type Diagram, type DiagramKey } from "@/lib/diagrams";
+import { allTerms, levels, MASTERED, sideNames, sideOf, TERMS_PER_RUN, type Level, type Side, type Term } from "@/lib/quiz";
 import type { Read } from "@/lib/reads";
 
 // ---------- saved progress (this device only) ----------
@@ -79,9 +79,16 @@ function pickRunTerms(level: Level, save: Save): Term[] {
     const n = save.terms[x.term];
     return n === -1 ? 0 : n === undefined ? 1 : n >= MASTERED ? 3 : 2;
   };
-  return shuffle(level.terms)
-    .sort((a, b) => order(a) - order(b))
-    .slice(0, TERMS_PER_RUN);
+  const picks: Term[] = [];
+  const families = new Set<string>();
+  for (const x of shuffle(level.terms).sort((a, b) => order(a) - order(b))) {
+    if (picks.length === TERMS_PER_RUN) break;
+    // two terms that mean nearly the same thing never share a run
+    if (x.like && families.has(x.like)) continue;
+    if (x.like) families.add(x.like);
+    picks.push(x);
+  }
+  return picks;
 }
 
 const canWatch = (x: Term) => x.term !== "Ball Screen" && !!diagramFor(x.term);
@@ -126,7 +133,14 @@ function makeChoice(format: Format, x: Term, run: Term[]): Choice {
     return { ...named, tag: "Read the play", prompt: "Which word fills the blank?", focus: x.situation };
   }
   if (format === "watch") {
-    return { ...named, tag: "Watch the play", prompt: "Which action is this?", diagram: diagramFor(x.term) ?? undefined };
+    const key = diagramFor(x.term) ?? undefined;
+    const isSpot = !!key && !!(diagrams[key] as Diagram).spot;
+    return {
+      ...named,
+      tag: isSpot ? "Know the floor" : "Watch the play",
+      prompt: isSpot ? "Which spot is lit up?" : "Which action is this?",
+      diagram: key,
+    };
   }
   return { ...named, tag: "Name it", prompt: "Which word fits?", focus: x.meaning };
 }
@@ -264,8 +278,9 @@ function Confetti() {
 
 // ---------- the quiz ----------
 
-type Tally = { correct: number; total: number; xp: number; streak: number; best: number };
-const ZERO: Tally = { correct: 0, total: 0, xp: 0, streak: 0, best: 0 };
+// bySide: [right, asked] for each side of the ball, shown after the run
+type Tally = { correct: number; total: number; xp: number; streak: number; best: number; bySide: Record<Side, [number, number]> };
+const ZERO: Tally = { correct: 0, total: 0, xp: 0, streak: 0, best: 0, bySide: { offense: [0, 0], defense: [0, 0] } };
 
 export default function PlaybookQuiz() {
   const [save, setSave] = useState<Save>(EMPTY);
@@ -363,10 +378,12 @@ export default function PlaybookQuiz() {
     setStep((s) => s + 1);
   };
 
-  const score = (right: boolean, points: number): Tally => {
+  const score = (right: boolean, points: number, side: Side): Tally => {
     const streak = right ? tally.streak + 1 : 0;
     const bonus = right && streak >= 3 ? 5 : 0;
+    const [had, asked] = tally.bySide[side];
     const next: Tally = {
+      bySide: { ...tally.bySide, [side]: [had + (right ? 1 : 0), asked + 1] },
       correct: tally.correct + (right ? 1 : 0),
       total: tally.total + 1,
       xp: tally.xp + (right ? points + bonus : 0),
@@ -400,7 +417,7 @@ export default function PlaybookQuiz() {
     const right = i === round.answer;
     setPicked(i);
     credit(round.term.term, right);
-    const next = score(right, 10);
+    const next = score(right, 10, sideOf(round.term));
     if (right) {
       buzz();
       setPraise(next.streak >= 3 ? `${next.streak} in a row.` : PRAISE[Math.floor(Math.random() * PRAISE.length)]);
@@ -410,7 +427,7 @@ export default function PlaybookQuiz() {
   };
 
   const readDone = (right: boolean) => {
-    const next = score(right, 10);
+    const next = score(right, 10, round && round.kind === "read" ? round.read.side : "offense");
     if (right) buzz();
     setPraise(right ? (next.streak >= 3 ? `${next.streak} in a row.` : "Good read.") : "Not yet. Here is the read.");
     setReadRight(right);
@@ -423,7 +440,7 @@ export default function PlaybookQuiz() {
     if (pairIndex === left) {
       const firstTry = !missed.includes(left);
       if (firstTry) credit(round.pairs[left].term, true);
-      score(firstTry, 5);
+      score(firstTry, 5, sideOf(round.pairs[left]));
       const done = [...matched, left];
       setMatched(done);
       setLeft(null);
@@ -433,7 +450,7 @@ export default function PlaybookQuiz() {
         credit(round.pairs[left].term, false);
         setMissed((m) => [...m, left]);
       }
-      setTally((t) => ({ ...t, streak: 0 }));
+      setTally((prev) => ({ ...prev, streak: 0 }));
       setWrongPair({ l: left, r });
       timer.current = setTimeout(() => {
         setWrongPair(null);
@@ -481,9 +498,9 @@ export default function PlaybookQuiz() {
   if (view === "levels") {
     const cleared = levels.filter((l) => (save.stars[l.id] ?? 0) >= 2).length;
     const totalMastered = masteredIn(save, allTerms);
-    const pillars = (Object.keys(pillarNames) as Pillar[]).map((key) => {
-      const list = allTerms.filter((x) => x.pillar === key);
-      return { key, name: pillarNames[key], done: masteredIn(save, list), of: list.length };
+    const pillars = (Object.keys(sideNames) as Side[]).map((key) => {
+      const list = allTerms.filter((x) => sideOf(x) === key);
+      return { key, name: sideNames[key], done: masteredIn(save, list), of: list.length };
     });
     return (
       <div ref={topRef} className={`${shell} scroll-mt-24 p-5 sm:p-8 md:p-10`}>
@@ -528,9 +545,9 @@ export default function PlaybookQuiz() {
               Get a term right twice and it is yours. Every run brings new words until you have them all.
             </p>
           </div>
-          <dl className="grid gap-3">
+          <dl className="grid content-center gap-4">
             {pillars.map((s) => (
-              <div key={s.key} className="grid grid-cols-[10.5rem_1fr_auto] items-center gap-3">
+              <div key={s.key} className="grid grid-cols-[5rem_1fr_auto] items-center gap-3">
                 <dt className="text-sm text-btc-white/80">{s.name}</dt>
                 <dd className="h-1.5 bg-white/10" aria-hidden="true">
                   <div
@@ -665,6 +682,28 @@ export default function PlaybookQuiz() {
               </p>
             </div>
           ) : null}
+          <div className="mx-auto mt-6 max-w-md border border-white/10 bg-btc-black px-4 py-4 text-left">
+            <div className="label text-btc-orange">How you did on each side</div>
+            <div className="mt-3 grid gap-3">
+              {(Object.keys(sideNames) as Side[]).map((side) => {
+                const [got, asked] = tally.bySide[side];
+                return (
+                  <div key={side} className="grid grid-cols-[5rem_1fr_auto] items-center gap-3">
+                    <span className="text-sm text-btc-white/85">{sideNames[side]}</span>
+                    <span className="h-2 bg-white/10" aria-hidden="true">
+                      <span
+                        className={`block h-full origin-left transition-transform duration-700 ease-out ${
+                          asked && got / asked >= 0.7 ? "bg-emerald-400" : "bg-btc-orange"
+                        }`}
+                        style={{ transform: `scaleX(${asked ? got / asked : 0})` }}
+                      />
+                    </span>
+                    <span className="mono text-sm text-btc-white/80">{asked ? `${got}/${asked}` : "none"}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
           <dl className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-px border border-white/10 bg-white/10">
             {[
               { k: "Correct", v: `${pct}%` },
@@ -887,6 +926,11 @@ export default function PlaybookQuiz() {
                       ) : null}
                     </div>
                     <p className="mt-1 max-w-2xl text-sm text-btc-white/75">{round.why}</p>
+                    {!wasRight && round.format !== "watch" && diagramFor(round.term.term) ? (
+                      <div className="mt-4 w-full max-w-sm">
+                        <PlayDiagram name={diagramFor(round.term.term)!} />
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               ) : null}

@@ -5,8 +5,11 @@ import { at, type Point, type Stop } from "@/lib/courtMath";
 // and move the pieces by writing to the refs, so React never re-renders mid-animation.
 
 export type StageActor = { id: string; team: "offense" | "defense"; path: Stop[] };
+// A highlighted area of the floor: a circle (cx, cy, r) or a rectangle (x, y, w, h).
+export type Zone = { cx: number; cy: number; r: number } | { x: number; y: number; w: number; h: number };
 export type StagePlay = {
   actors: StageActor[];
+  zones?: Zone[];
   ball: { until: number; actor: string }[];
   screens?: { t: number; actor: string }[];
 };
@@ -118,6 +121,15 @@ export default function CourtStage({ play, refs, label, names = {}, you, labelSi
       <line x1="220" y1="424" x2="280" y2="424" stroke="rgba(255,255,255,0.55)" strokeWidth="3.5" strokeLinecap="round" />
       <line x1="250" y1="424" x2="250" y2="421" stroke="#F4942A" strokeWidth="3" />
       <circle cx="250" cy="413" r="8" fill="none" stroke="#F4942A" strokeWidth="3" />
+
+      {/* highlighted floor spots */}
+      {(play.zones ?? []).map((z, i) =>
+        "r" in z ? (
+          <circle key={i} className="court-zone" cx={z.cx} cy={z.cy} r={z.r} fill="rgba(244,148,42,0.35)" stroke="#F4942A" strokeWidth="3" />
+        ) : (
+          <rect key={i} className="court-zone" x={z.x} y={z.y} width={z.w} height={z.h} fill="rgba(244,148,42,0.22)" stroke="#F4942A" strokeWidth="3" />
+        )
+      )}
 
       {/* routes */}
       {play.actors.map((a) => (

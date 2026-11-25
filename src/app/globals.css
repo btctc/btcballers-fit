@@ -402,6 +402,15 @@ body { padding-bottom: var(--ticker-h); }
   to   { transform: scaleX(0); }
 }
 
+.court-zone { animation: court-zone 1.6s ease-in-out infinite; }
+@keyframes court-zone {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .court-zone { animation: none; }
+}
+
 /* Film Room court */
 .read-draw { stroke-dashoffset: 1; animation: read-draw 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .read-badge { opacity: 0; animation: read-fade 0.3s ease forwards; }

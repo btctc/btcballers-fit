@@ -4,6 +4,7 @@
 // A path is a list of [x, y, time] stops, with time running 0 to 1.
 
 import type { Stop } from "@/lib/courtMath";
+import type { Zone } from "@/components/CourtStage";
 
 export type { Stop };
 export type DiagramActor = { id: string; team: "offense" | "defense"; path: Stop[] };
@@ -12,6 +13,8 @@ export type Diagram = {
   actors: DiagramActor[];
   ball: { until: number; actor: string }[]; // who has the ball, in order
   screens?: { t: number; actor: string }[]; // moments a screen makes contact
+  zones?: Zone[]; // highlighted floor spots
+  spot?: boolean; // this diagram shows a place on the floor, not an action
 };
 
 const o = (id: string, path: Stop[]): DiagramActor => ({ id, team: "offense", path });
@@ -263,6 +266,270 @@ export const diagrams = {
     ball: [{ until: 0.74, actor: "1" }, { until: 1, actor: "2" }],
     screens: [{ t: 0.3, actor: "5" }],
   },
+  // ---------- spots on the floor ----------
+  corner: {
+    label: "Highlighted: the two corners, where the baseline meets the 3-point line.",
+    spot: true,
+    zones: [{ cx: 16, cy: 420, r: 30 }, { cx: 484, cy: 420, r: 30 }],
+    actors: [o("1", [[250, 150, 0], [250, 150, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  wing: {
+    label: "Highlighted: the two wings, between the corner and the top of the key.",
+    spot: true,
+    zones: [{ cx: 72, cy: 250, r: 32 }, { cx: 428, cy: 250, r: 32 }],
+    actors: [o("1", [[250, 150, 0], [250, 150, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  elbow: {
+    label: "Highlighted: the two elbows, where the free-throw line meets the lane line.",
+    spot: true,
+    zones: [{ cx: 170, cy: 272, r: 24 }, { cx: 330, cy: 272, r: 24 }],
+    actors: [o("1", [[250, 150, 0], [250, 150, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  slot: {
+    label: "Highlighted: the two slots, above the wings and in line with the edges of the lane.",
+    spot: true,
+    zones: [{ cx: 165, cy: 168, r: 30 }, { cx: 335, cy: 168, r: 30 }],
+    actors: [o("1", [[428, 250, 0], [428, 250, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  block: {
+    label: "Highlighted: the two blocks, the low post spots on the edge of the lane next to the basket.",
+    spot: true,
+    zones: [{ cx: 170, cy: 396, r: 22 }, { cx: 330, cy: 396, r: 22 }],
+    actors: [o("1", [[250, 150, 0], [250, 150, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  dunkerSpot: {
+    label: "Highlighted: the two dunker spots, along the baseline just outside the lane.",
+    spot: true,
+    zones: [{ cx: 132, cy: 440, r: 22 }, { cx: 368, cy: 440, r: 22 }],
+    actors: [o("1", [[250, 150, 0], [250, 150, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  nail: {
+    label: "Highlighted: the nail, the middle of the free-throw line.",
+    spot: true,
+    zones: [{ cx: 250, cy: 272, r: 22 }],
+    actors: [o("1", [[428, 250, 0], [428, 250, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  strongside: {
+    label: "Highlighted: the half of the floor where the ball is.",
+    spot: true,
+    zones: [{ x: 250, y: 98, w: 248, h: 362 }],
+    actors: [o("1", [[428, 250, 0], [428, 250, 1]]), o("2", [[72, 250, 0], [72, 250, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  weakside: {
+    label: "Highlighted: the half of the floor away from the ball.",
+    spot: true,
+    zones: [{ x: 2, y: 98, w: 248, h: 362 }],
+    actors: [o("1", [[428, 250, 0], [428, 250, 1]]), o("2", [[72, 250, 0], [72, 250, 1]])],
+    ball: [{ until: 1, actor: "1" }],
+  },
+
+  // ---------- basics ----------
+  drive: {
+    label: "The ballhandler beats the defender off the dribble and attacks the basket.",
+    actors: [
+      o("1", [[335, 168, 0], [335, 168, 0.2], [322, 300, 0.7], [292, 386, 1]]),
+      x("x1", [[330, 198, 0], [330, 198, 0.2], [352, 280, 0.6], [330, 350, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  cut: {
+    label: "A player without the ball makes a quick move into open space and catches the pass.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 0.2], [322, 322, 0.75], [322, 322, 1]]),
+      x("x1", [[250, 182, 0], [250, 182, 1]]),
+      x("x2", [[402, 262, 0], [402, 262, 0.32], [362, 292, 1]]),
+    ],
+    ball: [{ until: 0.66, actor: "1" }, { until: 1, actor: "2" }],
+  },
+  lob: {
+    label: "A high pass is thrown over the defense to a teammate at the rim.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("5", [[338, 300, 0], [338, 300, 0.25], [276, 392, 0.8], [276, 392, 1]]),
+      x("x1", [[250, 182, 0], [250, 182, 1]]),
+      x("x5", [[326, 278, 0], [326, 278, 0.3], [318, 318, 1]]),
+    ],
+    ball: [{ until: 0.56, actor: "1" }, { until: 1, actor: "5" }],
+  },
+  screen: {
+    label: "A teammate stands in the defender's way so the cutter can get open for the pass.",
+    actors: [
+      o("1", [[165, 168, 0], [165, 168, 1]]),
+      o("4", [[330, 300, 0], [394, 264, 0.34], [394, 264, 1]]),
+      o("2", [[436, 262, 0], [436, 262, 0.38], [344, 180, 0.84], [344, 180, 1]]),
+      x("x2", [[412, 276, 0], [412, 276, 0.42], [402, 252, 0.62], [380, 226, 1]]),
+    ],
+    ball: [{ until: 0.78, actor: "1" }, { until: 1, actor: "2" }],
+    screens: [{ t: 0.42, actor: "4" }],
+  },
+  post: {
+    label: "A big gets position near the basket with the defender behind and catches the entry pass.",
+    actors: [
+      o("3", [[428, 250, 0], [428, 250, 1]]),
+      o("5", [[338, 318, 0], [322, 374, 0.42], [322, 374, 1]]),
+      x("x3", [[404, 264, 0], [404, 264, 1]]),
+      x("x5", [[322, 340, 0], [304, 398, 0.5], [304, 398, 1]]),
+    ],
+    ball: [{ until: 0.6, actor: "3" }, { until: 1, actor: "5" }],
+  },
+
+  // ---------- passing and spacing ----------
+  skipPass: {
+    label: "A long pass is thrown over the defense from one side of the floor to the other.",
+    actors: [
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("3", [[16, 420, 0], [16, 420, 1]]),
+      x("x2", [[404, 262, 0], [404, 262, 1]]),
+      x("x1", [[286, 196, 0], [286, 196, 1]]),
+      x("x3", [[212, 372, 0], [212, 372, 0.5], [70, 404, 1]]),
+    ],
+    ball: [{ until: 0.4, actor: "2" }, { until: 1, actor: "3" }],
+  },
+  extraPass: {
+    label: "The drive is kicked out to the wing, who makes one more pass to the open corner.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.1], [282, 300, 0.42], [282, 300, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      o("3", [[484, 420, 0], [484, 420, 1]]),
+      x("x1", [[250, 182, 0], [286, 240, 0.4], [300, 280, 1]]),
+      x("x2", [[402, 262, 0], [340, 290, 0.42], [408, 262, 0.72], [408, 262, 1]]),
+      x("x3", [[452, 398, 0], [452, 398, 0.42], [420, 300, 0.7], [452, 380, 1]]),
+    ],
+    ball: [{ until: 0.44, actor: "1" }, { until: 0.74, actor: "2" }, { until: 1, actor: "3" }],
+  },
+  fiveOut: {
+    label: "All five offensive players are spaced on the perimeter, leaving the lane empty.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      o("3", [[72, 250, 0], [72, 250, 1]]),
+      o("4", [[484, 420, 0], [484, 420, 1]]),
+      o("5", [[16, 420, 0], [16, 420, 1]]),
+    ],
+    ball: [{ until: 0.3, actor: "1" }, { until: 0.65, actor: "2" }, { until: 1, actor: "1" }],
+  },
+  ballReversal: {
+    label: "The ball moves from one side of the floor to the other and the defense has to shift.",
+    actors: [
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("3", [[72, 250, 0], [72, 250, 1]]),
+      x("x2", [[404, 262, 0], [404, 262, 0.3], [380, 270, 1]]),
+      x("x1", [[286, 196, 0], [262, 184, 0.4], [226, 196, 1]]),
+      x("x3", [[180, 300, 0], [180, 300, 0.4], [100, 262, 1]]),
+    ],
+    ball: [{ until: 0.3, actor: "2" }, { until: 0.62, actor: "1" }, { until: 1, actor: "3" }],
+  },
+  isolation: {
+    label: "Teammates clear out to the corners so one player can attack a defender 1-on-1.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.6], [228, 262, 1]]),
+      o("2", [[335, 168, 0], [484, 420, 0.6], [484, 420, 1]]),
+      o("3", [[165, 168, 0], [16, 420, 0.6], [16, 420, 1]]),
+      x("x1", [[250, 182, 0], [250, 182, 0.6], [240, 290, 1]]),
+      x("x2", [[330, 198, 0], [452, 398, 0.62], [452, 398, 1]]),
+      x("x3", [[170, 198, 0], [48, 398, 0.62], [48, 398, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  horns: {
+    label: "Two players set up at the elbows with the ballhandler up top and shooters in the corners.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("4", [[176, 392, 0], [182, 270, 0.6], [182, 270, 1]]),
+      o("5", [[324, 392, 0], [318, 270, 0.6], [318, 270, 1]]),
+      o("2", [[484, 420, 0], [484, 420, 1]]),
+      o("3", [[16, 420, 0], [16, 420, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  drift: {
+    label: "As the ball is driven baseline, a teammate slides to the opposite corner for the pass.",
+    actors: [
+      o("1", [[428, 250, 0], [428, 250, 0.12], [424, 398, 0.62], [424, 398, 1]]),
+      o("3", [[72, 250, 0], [72, 250, 0.25], [20, 418, 0.7], [20, 418, 1]]),
+      x("x1", [[404, 268, 0], [400, 330, 0.4], [398, 392, 0.7], [398, 392, 1]]),
+      x("x3", [[120, 296, 0], [120, 296, 0.2], [236, 392, 0.62], [236, 392, 1]]),
+    ],
+    ball: [{ until: 0.68, actor: "1" }, { until: 1, actor: "3" }],
+  },
+
+  // ---------- defense ----------
+  help: {
+    label: "The ballhandler beats the defender, and a teammate slides over to stop the drive.",
+    actors: [
+      o("1", [[335, 168, 0], [335, 168, 0.15], [326, 310, 0.7], [326, 310, 1]]),
+      o("5", [[196, 396, 0], [196, 396, 1]]),
+      x("x1", [[330, 198, 0], [356, 232, 0.4], [352, 290, 1]]),
+      x("x5", [[222, 380, 0], [222, 380, 0.3], [304, 352, 0.72], [304, 352, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  ice: {
+    label: "On a side ball screen, the defender jumps to the high side and pushes the ballhandler toward the sideline.",
+    actors: [
+      o("1", [[404, 218, 0], [404, 218, 0.45], [436, 330, 1]]),
+      o("5", [[330, 290, 0], [368, 196, 0.4], [368, 196, 1]]),
+      x("x1", [[392, 244, 0], [382, 200, 0.4], [410, 300, 1]]),
+      x("x5", [[334, 318, 0], [384, 322, 0.5], [398, 352, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  stunt: {
+    label: "A defender lunges at the ballhandler to slow the drive, then jumps back to their own player.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.15], [300, 250, 0.6], [300, 250, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      x("x1", [[250, 182, 0], [272, 220, 0.4], [290, 280, 1]]),
+      x("x2", [[402, 262, 0], [402, 262, 0.25], [346, 258, 0.56], [404, 258, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  lowDrop: {
+    label: "On the ball screen, the big defender sinks all the way back to the rim.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.28], [322, 190, 0.62], [326, 250, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.26], [288, 168, 0.5], [286, 300, 1]]),
+      x("x1", [[250, 182, 0], [262, 172, 0.4], [300, 186, 0.7], [318, 224, 1]]),
+      x("x5", [[304, 300, 0], [286, 372, 0.6], [270, 394, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+    screens: [{ t: 0.27, actor: "5" }],
+  },
+  shortRoll: {
+    label: "With two defenders on the ball, the screener stops near the free-throw line and catches the pass.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.28], [322, 150, 0.6], [352, 140, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.26], [288, 168, 0.46], [262, 266, 0.8], [262, 266, 1]]),
+      x("x1", [[250, 182, 0], [266, 182, 0.45], [328, 168, 1]]),
+      x("x5", [[306, 236, 0], [302, 196, 0.28], [344, 172, 0.6], [364, 166, 1]]),
+    ],
+    ball: [{ until: 0.8, actor: "1" }, { until: 1, actor: "5" }],
+    screens: [{ t: 0.27, actor: "5" }],
+  },
+  shake: {
+    label: "As the screener rolls, the corner player lifts to the wing and catches the pass when the helper sinks in.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.26], [300, 182, 0.56], [300, 182, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.24], [288, 168, 0.44], [272, 366, 1]]),
+      o("3", [[484, 420, 0], [484, 420, 0.4], [428, 250, 0.82], [428, 250, 1]]),
+      x("x1", [[250, 182, 0], [262, 184, 0.3], [286, 210, 1]]),
+      x("x5", [[308, 236, 0], [316, 216, 0.5], [318, 214, 1]]),
+      x("x3", [[452, 398, 0], [452, 398, 0.36], [316, 360, 0.76], [316, 360, 1]]),
+    ],
+    ball: [{ until: 0.82, actor: "1" }, { until: 1, actor: "3" }],
+    screens: [{ t: 0.25, actor: "5" }],
+  },
 } satisfies Record<string, Diagram>;
 
 export type DiagramKey = keyof typeof diagrams;
@@ -270,6 +537,33 @@ export type DiagramKey = keyof typeof diagrams;
 // Which diagram goes with which term. Terms are matched without anything in parentheses,
 // so "Backcut (Backdoor)" in the glossary finds "Backcut" here.
 const byTerm: Record<string, DiagramKey> = {
+  Corner: "corner",
+  Wing: "wing",
+  Elbow: "elbow",
+  Slot: "slot",
+  Block: "block",
+  "Dunker Spot": "dunkerSpot",
+  Nail: "nail",
+  Strongside: "strongside",
+  Weakside: "weakside",
+  Drive: "drive",
+  Cut: "cut",
+  Lob: "lob",
+  Screen: "screen",
+  Post: "post",
+  "Skip Pass": "skipPass",
+  "Extra Pass": "extraPass",
+  "Five-Out": "fiveOut",
+  "Ball Reversal": "ballReversal",
+  Isolation: "isolation",
+  Horns: "horns",
+  Drift: "drift",
+  Help: "help",
+  Ice: "ice",
+  Stunt: "stunt",
+  "Low Drop": "lowDrop",
+  "Short Roll": "shortRoll",
+  Shake: "shake",
   Backcut: "backcut",
   "Give-and-Go": "giveAndGo",
   Curl: "curl",
