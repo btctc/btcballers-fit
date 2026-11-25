@@ -4,21 +4,27 @@ import { useEffect, useRef, useState } from "react";
 import PlayDiagram from "@/components/PlayDiagram";
 import ReadCourt from "@/components/ReadCourt";
 import { diagramFor, type DiagramKey } from "@/lib/diagrams";
-import { levels, type Level, type Term } from "@/lib/quiz";
+import { allTerms, levels, MASTERED, pillarNames, TERMS_PER_RUN, type Level, type Pillar, type Term } from "@/lib/quiz";
 import type { Read } from "@/lib/reads";
 
 // ---------- saved progress (this device only) ----------
 
 const STORE = "btc-playbook-quiz-v1";
-type Save = { stars: Record<string, number>; xp: number; bestStreak: number };
-const EMPTY: Save = { stars: {}, xp: 0, bestStreak: 0 };
+// terms: right answers per term. MASTERED or more = mastered, -1 = missed last time, absent = never seen.
+type Save = { stars: Record<string, number>; xp: number; bestStreak: number; terms: Record<string, number> };
+const EMPTY: Save = { stars: {}, xp: 0, bestStreak: 0, terms: {} };
 
 function loadSave(): Save {
   try {
     const raw = window.localStorage.getItem(STORE);
     if (!raw) return EMPTY;
     const p = JSON.parse(raw);
-    return { stars: p.stars ?? {}, xp: Number(p.xp) || 0, bestStreak: Number(p.bestStreak) || 0 };
+    return {
+      stars: p.stars ?? {},
+      xp: Number(p.xp) || 0,
+      bestStreak: Number(p.bestStreak) || 0,
+      terms: p.terms ?? {},
+    };
   } catch {
     return EMPTY;
   }
@@ -32,10 +38,19 @@ function writeSave(s: Save) {
   }
 }
 
+const isMastered = (save: Save, term: string) => (save.terms[term] ?? 0) >= MASTERED;
+const masteredIn = (save: Save, list: Term[]) => list.filter((x) => isMastered(save, x.term)).length;
+
 // ---------- building a level ----------
+
+// From easiest to hardest: true or false, pick the meaning, then name it from a meaning,
+// a game situation, or an animated play.
+type Format = "tf" | "meaning" | "name" | "situation" | "watch";
 
 type Choice = {
   kind: "choice";
+  format: Format;
+  term: Term; // the term this question gives credit for
   tag: string;
   prompt: string;
   focus?: string; // the term or meaning the question is about
@@ -57,85 +72,100 @@ function shuffle<T>(list: T[]): T[] {
   return a;
 }
 
-function buildRounds(level: Level): Round[] {
-  // Film Room: the reads run in order so each pair stays back to back.
-  if (level.reads) return level.reads.map((read, i) => ({ kind: "read", read, second: i % 2 === 1 }));
+// The terms for one run. Missed terms come back first, then terms never seen,
+// then terms still being learned. Mastered terms only fill leftover spots.
+function pickRunTerms(level: Level, save: Save): Term[] {
+  const order = (x: Term) => {
+    const n = save.terms[x.term];
+    return n === -1 ? 0 : n === undefined ? 1 : n >= MASTERED ? 3 : 2;
+  };
+  return shuffle(level.terms)
+    .sort((a, b) => order(a) - order(b))
+    .slice(0, TERMS_PER_RUN);
+}
 
-  const t = shuffle(level.terms);
-  const tf = shuffle(level.trueFalse);
-  const withThreeOthers = (x: Term) =>
-    shuffle([x, ...shuffle(level.terms.filter((y) => y.term !== x.term)).slice(0, 3)]);
+const canWatch = (x: Term) => x.term !== "Ball Screen" && !!diagramFor(x.term);
 
-  const meaningOf = (x: Term): Choice => {
-    const opts = withThreeOthers(x);
+// The hardest kind of question this term supports.
+function hardFormat(x: Term, levelIndex: number): Format {
+  if (x.situation && levelIndex >= 3) return "situation";
+  return canWatch(x) ? "watch" : "name";
+}
+
+function makeChoice(format: Format, x: Term, run: Term[]): Choice {
+  // Ball Screen is left out of the choices for plays that start with one, so only one answer fits.
+  const startsWithBallScreen = format === "watch" && ["Roll", "Pop", "Slip"].includes(x.term);
+  const others = shuffle(run.filter((y) => y.term !== x.term && !(startsWithBallScreen && y.term === "Ball Screen")));
+  const opts = shuffle([x, ...others.slice(0, 3)]);
+  const why = `${x.term}: ${x.meaning}`;
+  const base = { kind: "choice" as const, format, term: x, why };
+
+  if (format === "tf") {
+    const truth = Math.random() < 0.5;
     return {
-      kind: "choice",
+      ...base,
+      tag: "True or false",
+      prompt: truth ? x.meaning : others[0].meaning,
+      focus: x.term,
+      options: ["True", "False"],
+      answer: truth ? 0 : 1,
+    };
+  }
+  if (format === "meaning") {
+    return {
+      ...base,
       tag: "Multiple choice",
       prompt: "What does this mean?",
       focus: x.term,
       options: opts.map((o) => o.meaning),
       answer: opts.indexOf(x),
-      why: `${x.term}: ${x.meaning}`,
     };
-  };
-  const nameOf = (x: Term): Choice => {
-    const opts = withThreeOthers(x);
-    return {
-      kind: "choice",
-      tag: "Name it",
-      prompt: "Which word fits?",
-      focus: x.meaning,
-      options: opts.map((o) => o.term),
-      answer: opts.indexOf(x),
-      why: `${x.term}: ${x.meaning}`,
-    };
-  };
-  // "Watch the play": show the animation, ask which action it is.
-  // Ball Screen is left out of the choices for plays that start with one, so only one answer fits.
-  const watch = (x: Term): Choice => {
-    const startsWithBallScreen = ["Roll", "Pop", "Slip"].includes(x.term);
-    const pool = level.terms.filter(
-      (y) => y.term !== x.term && !(startsWithBallScreen && y.term === "Ball Screen")
-    );
-    const opts = shuffle([x, ...shuffle(pool).slice(0, 3)]);
-    return {
-      kind: "choice",
-      tag: "Watch the play",
-      prompt: "Which action is this?",
-      diagram: diagramFor(x.term) ?? undefined,
-      options: opts.map((o) => o.term),
-      answer: opts.indexOf(x),
-      why: `${x.term}: ${x.meaning}`,
-    };
-  };
-  // Levels with animated plays swap the two "Name it" rounds for "Watch the play".
-  const watchable = shuffle(level.terms.filter((y) => y.term !== "Ball Screen" && diagramFor(y.term)));
-  const nameOrWatch = (n: number, fallback: Term) => (watchable[n] ? watch(watchable[n]) : nameOf(fallback));
+  }
+  const named = { ...base, options: opts.map((o) => o.term), answer: opts.indexOf(x) };
+  if (format === "situation") {
+    return { ...named, tag: "Read the play", prompt: "Which word fills the blank?", focus: x.situation };
+  }
+  if (format === "watch") {
+    return { ...named, tag: "Watch the play", prompt: "Which action is this?", diagram: diagramFor(x.term) ?? undefined };
+  }
+  return { ...named, tag: "Name it", prompt: "Which word fits?", focus: x.meaning };
+}
 
-  const trueFalse = (n: number): Choice => ({
-    kind: "choice",
-    tag: "True or false",
-    prompt: tf[n].statement,
-    options: ["True", "False"],
-    answer: tf[n].answer ? 0 : 1,
-    why: tf[n].why,
-  });
+function buildRounds(level: Level, levelIndex: number, run: Term[]): Round[] {
+  // Film Room: the reads run in order so each pair stays back to back.
+  if (level.reads) return level.reads.map((read, i) => ({ kind: "read", read, second: i % 2 === 1 }));
+
+  const t = shuffle(run);
+  const watchable = shuffle(t.filter(canWatch));
+  const make = (format: Format, x: Term) => makeChoice(format, x, run);
+  // Ranks with animated plays use them for the two hardest questions.
+  const hard = (n: number, fallback: Term) =>
+    watchable[n] ? make("watch", watchable[n]) : make(hardFormat(fallback, levelIndex), fallback);
   const match = (pairs: Term[]): Match => ({ kind: "match", pairs, order: shuffle(pairs.map((_, i) => i)) });
 
   return [
-    meaningOf(t[0]),
-    trueFalse(0),
-    meaningOf(t[1]),
+    make("meaning", t[0]),
+    make("tf", t[1]),
+    make("meaning", t[2]),
     match(t.slice(0, 4)),
-    trueFalse(1),
-    nameOrWatch(0, t[2]),
-    meaningOf(t[4]),
-    trueFalse(2),
+    make("tf", t[3]),
+    hard(0, t[1]),
+    make("meaning", t[4]),
+    make("tf", t[5]),
     match(t.slice(4, 8)),
-    nameOrWatch(1, t[5]),
-    meaningOf(t[6]),
-    trueFalse(3),
+    hard(1, t[5]),
+    make("meaning", t[6]),
+    make(hardFormat(t[7], levelIndex), t[7]),
   ];
+}
+
+// Adjust the next question to how the player is doing, the way the AOS quiz engine does:
+// on a hot streak an easy question becomes a hard one, and right after a miss a hard one becomes easy.
+function adapt(next: Round, streak: number, levelIndex: number, run: Term[]): Round | null {
+  if (next.kind !== "choice") return null;
+  if (streak >= 3 && next.format === "tf") return makeChoice(hardFormat(next.term, levelIndex), next.term, run);
+  if (streak === 0 && (next.format === "name" || next.format === "situation")) return makeChoice("tf", next.term, run);
+  return null;
 }
 
 const starsFor = (correct: number, total: number) => {
@@ -253,6 +283,8 @@ export default function PlaybookQuiz() {
   const [wrongPair, setWrongPair] = useState<{ l: number; r: number } | null>(null);
   const [earnedStars, setEarnedStars] = useState(0);
   const [readRight, setReadRight] = useState<boolean | null>(null); // Film Room result for this round
+  const [run, setRun] = useState<Term[]>([]); // the terms in this run
+  const [masteredAtStart, setMasteredAtStart] = useState(0);
 
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const armedAt = useRef(0); // a new question ignores taps until this time
@@ -288,8 +320,11 @@ export default function PlaybookQuiz() {
 
   const startLevel = (i: number) => {
     clearTimeout(timer.current);
+    const picks = pickRunTerms(levels[i], save);
     setLevelIndex(i);
-    setRounds(buildRounds(levels[i]));
+    setRun(picks);
+    setMasteredAtStart(masteredIn(save, levels[i].terms));
+    setRounds(buildRounds(levels[i], i, picks));
     setStep(0);
     setTally(ZERO);
     resetRound();
@@ -303,6 +338,7 @@ export default function PlaybookQuiz() {
     setEarnedStars(stars);
     setSave((prev) => {
       const next: Save = {
+        ...prev,
         stars: { ...prev.stars, [level.id]: Math.max(prev.stars[level.id] ?? 0, stars) },
         xp: prev.xp + final.xp,
         bestStreak: Math.max(prev.bestStreak, final.best),
@@ -320,6 +356,8 @@ export default function PlaybookQuiz() {
       finish(current);
       return;
     }
+    const swapped = adapt(rounds[step + 1], current.streak, levelIndex, run);
+    if (swapped) setRounds((list) => list.map((r, n) => (n === step + 1 ? swapped : r)));
     resetRound();
     arm();
     setStep((s) => s + 1);
@@ -339,6 +377,16 @@ export default function PlaybookQuiz() {
     return next;
   };
 
+  // Remember how the player did on a term. Saved right away so quitting mid-run keeps it.
+  const credit = (term: string, right: boolean) => {
+    setSave((prev) => {
+      const had = Math.max(prev.terms[term] ?? 0, 0);
+      const next: Save = { ...prev, terms: { ...prev.terms, [term]: right ? Math.min(MASTERED, had + 1) : -1 } };
+      writeSave(next);
+      return next;
+    });
+  };
+
   const buzz = () => {
     try {
       window.navigator.vibrate?.(12);
@@ -351,6 +399,7 @@ export default function PlaybookQuiz() {
     if (!round || round.kind !== "choice" || picked !== null || !armed()) return;
     const right = i === round.answer;
     setPicked(i);
+    credit(round.term.term, right);
     const next = score(right, 10);
     if (right) {
       buzz();
@@ -373,13 +422,17 @@ export default function PlaybookQuiz() {
     if (matched.includes(pairIndex)) return;
     if (pairIndex === left) {
       const firstTry = !missed.includes(left);
+      if (firstTry) credit(round.pairs[left].term, true);
       score(firstTry, 5);
       const done = [...matched, left];
       setMatched(done);
       setLeft(null);
       buzz();
     } else {
-      if (!missed.includes(left)) setMissed((m) => [...m, left]);
+      if (!missed.includes(left)) {
+        credit(round.pairs[left].term, false);
+        setMissed((m) => [...m, left]);
+      }
       setTally((t) => ({ ...t, streak: 0 }));
       setWrongPair({ l: left, r });
       timer.current = setTimeout(() => {
@@ -427,6 +480,11 @@ export default function PlaybookQuiz() {
 
   if (view === "levels") {
     const cleared = levels.filter((l) => (save.stars[l.id] ?? 0) >= 2).length;
+    const totalMastered = masteredIn(save, allTerms);
+    const pillars = (Object.keys(pillarNames) as Pillar[]).map((key) => {
+      const list = allTerms.filter((x) => x.pillar === key);
+      return { key, name: pillarNames[key], done: masteredIn(save, list), of: list.length };
+    });
     return (
       <div ref={topRef} className={`${shell} scroll-mt-24 p-5 sm:p-8 md:p-10`}>
         <div className="flex flex-wrap items-end justify-between gap-4">
@@ -452,10 +510,48 @@ export default function PlaybookQuiz() {
           </div>
         </div>
 
-        <ol className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 border border-white/10 bg-btc-black p-5 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="label text-btc-orange">Terms mastered</span>
+              <span className="mono text-sm text-btc-white/80">
+                <span className="text-2xl text-btc-orange">{totalMastered}</span> of {allTerms.length}
+              </span>
+            </div>
+            <div className="mt-3 h-2 bg-white/10" aria-hidden="true">
+              <div
+                className="h-full origin-left bg-btc-orange transition-transform duration-700 ease-out"
+                style={{ transform: `scaleX(${totalMastered / allTerms.length})` }}
+              />
+            </div>
+            <p className="mt-3 text-sm text-btc-white/60">
+              Get a term right twice and it is yours. Every run brings new words until you have them all.
+            </p>
+          </div>
+          <dl className="grid gap-3">
+            {pillars.map((s) => (
+              <div key={s.key} className="grid grid-cols-[10.5rem_1fr_auto] items-center gap-3">
+                <dt className="text-sm text-btc-white/80">{s.name}</dt>
+                <dd className="h-1.5 bg-white/10" aria-hidden="true">
+                  <div
+                    className="h-full origin-left bg-emerald-400 transition-transform duration-700 ease-out"
+                    style={{ transform: `scaleX(${s.of ? s.done / s.of : 0})` }}
+                  />
+                </dd>
+                <dd className="mono text-xs text-btc-white/60">
+                  {s.done}/{s.of}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <ol className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {levels.map((l, i) => {
             const open = unlocked(i);
             const stars = save.stars[l.id] ?? 0;
+            const have = masteredIn(save, l.terms);
+            const allDone = l.terms.length > 0 && have === l.terms.length;
             return (
               <li key={l.id} className={l.reads ? "md:col-span-2 lg:col-span-3" : undefined}>
                 <button
@@ -476,11 +572,37 @@ export default function PlaybookQuiz() {
                     {l.rank}
                   </span>
                   <span className={`mt-2 text-sm ${open ? "text-btc-white/70" : ""}`}>{l.theme}</span>
+                  {l.terms.length ? (
+                    <span className="mt-4 block">
+                      <span className="flex items-baseline justify-between">
+                        <span className={`label ${allDone ? "text-emerald-400" : ""}`}>
+                          {allDone ? "Mastered" : "Terms mastered"}
+                        </span>
+                        <span className="mono text-xs">
+                          {have}/{l.terms.length}
+                        </span>
+                      </span>
+                      <span className="mt-2 block h-1 bg-white/10" aria-hidden="true">
+                        <span
+                          className={`block h-full origin-left transition-transform duration-700 ease-out ${
+                            allDone ? "bg-emerald-400" : open ? "bg-btc-orange" : "bg-white/20"
+                          }`}
+                          style={{ transform: `scaleX(${have / l.terms.length})` }}
+                        />
+                      </span>
+                    </span>
+                  ) : null}
                   <span className={`mt-5 text-sm font-semibold ${open ? "text-btc-orange" : ""}`}>
                     {open
-                      ? stars
-                        ? "Play again"
-                        : "Start"
+                      ? l.reads
+                        ? stars
+                          ? "Play again"
+                          : "Start"
+                        : allDone
+                          ? "Play again"
+                          : stars || have
+                            ? "Play new terms"
+                            : "Start"
                       : `Earn 2 stars on ${levels[i - 1].rank} to unlock`}
                   </span>
                 </button>
@@ -496,6 +618,9 @@ export default function PlaybookQuiz() {
     const passed = earnedStars >= 2;
     const hasNext = levelIndex + 1 < levels.length;
     const pct = tally.total ? Math.round((tally.correct / tally.total) * 100) : 0;
+    const rankHas = masteredIn(save, level.terms);
+    const gained = Math.max(0, rankHas - masteredAtStart);
+    const moreToLearn = level.terms.length > 0 && rankHas < level.terms.length;
     return (
       <div ref={topRef} className={`${shell} scroll-mt-24 px-5 py-12 text-center sm:px-8 md:py-16`}>
         {passed ? <Confetti /> : null}
@@ -516,7 +641,31 @@ export default function PlaybookQuiz() {
                 : "You finished every level. Go use it on the court."
               : "Two stars unlocks the next level. A missed read is information. Rep it again."}
           </p>
-          <dl className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-px border border-white/10 bg-white/10">
+          {level.terms.length ? (
+            <div className="mx-auto mt-8 max-w-md border border-white/10 bg-btc-black px-4 py-4 text-left">
+              <div className="flex items-baseline justify-between gap-4">
+                <span className="label text-btc-orange">
+                  {rankHas === level.terms.length ? `${level.rank} mastered` : `${level.rank} terms mastered`}
+                </span>
+                <span className="mono text-sm">
+                  {gained ? <span className="mr-2 text-emerald-400">+{gained}</span> : null}
+                  {rankHas}/{level.terms.length}
+                </span>
+              </div>
+              <div className="mt-3 h-2 bg-white/10" aria-hidden="true">
+                <div
+                  className="h-full origin-left bg-btc-orange transition-transform duration-700 ease-out"
+                  style={{ transform: `scaleX(${rankHas / level.terms.length})` }}
+                />
+              </div>
+              <p className="mt-3 text-sm text-btc-white/60">
+                {moreToLearn
+                  ? `${level.terms.length - rankHas} more to go. Play again and you will get new words.`
+                  : "You know every word in this rank."}
+              </p>
+            </div>
+          ) : null}
+          <dl className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-px border border-white/10 bg-white/10">
             {[
               { k: "Correct", v: `${pct}%` },
               { k: "XP earned", v: `+${tally.xp}` },
@@ -547,7 +696,7 @@ export default function PlaybookQuiz() {
                   : "bg-btc-orange px-6 py-3 font-semibold text-btc-black transition hover:bg-btc-white"
               }
             >
-              {passed ? "Play again" : "Try again"}
+              {moreToLearn ? "Play new terms" : passed ? "Play again" : "Try again"}
             </button>
             <button
               type="button"
@@ -666,7 +815,15 @@ export default function PlaybookQuiz() {
         ) : round.kind === "choice" ? (
           <>
             <div className="label text-btc-orange">{round.tag}</div>
-            {round.diagram ? (
+            {round.format === "tf" ? (
+              <>
+                <h3 className="display mt-3 text-5xl md:text-7xl">{round.focus}</h3>
+                <p className="mt-4 max-w-3xl text-xl font-semibold leading-snug text-btc-white/90 md:text-2xl">
+                  <span className="text-btc-white/50">means: </span>
+                  {round.prompt}
+                </p>
+              </>
+            ) : round.diagram ? (
               <>
                 <h3 className="mt-3 text-2xl font-semibold leading-snug md:text-3xl">{round.prompt}</h3>
                 <div className="mt-5 max-w-lg">

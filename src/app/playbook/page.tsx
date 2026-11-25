@@ -3,7 +3,7 @@ import GlossaryDiagram from "@/components/GlossaryDiagram";
 import PlaybookQuiz from "@/components/PlaybookQuiz";
 import { diagramFor } from "@/lib/diagrams";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
-import { levels } from "@/lib/quiz";
+import { allTerms, levels } from "@/lib/quiz";
 
 const shareTitle = "How well do you know the game? - BTC Ballers IQ Game";
 const shareText = "Play from Rookie to Hall of Fame, then step into the Film Room and make the read.";
@@ -40,7 +40,7 @@ export default function PlaybookPage() {
           How well do you <span className="text-btc-orange">know the game?</span>
         </h1>
         <p className="mt-8 max-w-2xl text-lg md:text-xl text-btc-white/85 leading-relaxed">
-          Play your way from Rookie to Hall of Fame, then step into the Film Room, where the play freezes and you make the read. {levels.length} levels. Earn stars, build a streak, and unlock the next one.
+          Play your way from Rookie to Hall of Fame, then step into the Film Room, where the play freezes and you make the read. {levels.length} levels and {allTerms.length} terms to master. Every run brings new words.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#quiz" className="bg-btc-orange text-btc-black px-5 py-3 font-semibold hover:bg-btc-white transition">
