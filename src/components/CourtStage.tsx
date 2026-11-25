@@ -90,21 +90,22 @@ type Props = {
   labelSide?: Record<string, LabelSide>; // where a player's name sits
   under?: ReactNode; // drawn below the players
   over?: ReactNode; // drawn above the players
+  extra?: number; // extra room under the baseline, for an inbounder
 };
 
-export default function CourtStage({ play, refs, label, names = {}, you, labelSide = {}, under, over }: Props) {
+export default function CourtStage({ play, refs, label, names = {}, you, labelSide = {}, under, over, extra = 0 }: Props) {
   return (
     <svg
       ref={(el) => {
         refs.svg = el;
       }}
-      viewBox="-16 96 532 384"
+      viewBox={`-16 96 532 ${384 + extra}`}
       role="img"
       aria-label={label}
       className="block h-auto w-full"
     >
       {/* floor */}
-      <rect x="-16" y="96" width="532" height="384" fill="#0D1016" />
+      <rect x="-16" y="96" width="532" height={384 + extra} fill="#0D1016" />
       <rect x="0" y="96" width="500" height="366" fill="#141922" />
       <rect x="170" y="272" width="160" height="190" fill="rgba(244,148,42,0.12)" />
 

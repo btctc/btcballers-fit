@@ -411,6 +411,16 @@ body { padding-bottom: var(--ticker-h); }
   .court-zone { animation: none; }
 }
 
+/* The question box pulses while it waits for an answer */
+.answer-pulse { animation: answer-pulse 1.4s ease-in-out infinite; }
+@keyframes answer-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 148, 42, 0.55); }
+  50%      { box-shadow: 0 0 0 12px rgba(244, 148, 42, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .answer-pulse { animation: none; box-shadow: 0 0 0 4px rgba(244, 148, 42, 0.45); }
+}
+
 /* Film Room court */
 .read-draw { stroke-dashoffset: 1; animation: read-draw 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .read-badge { opacity: 0; animation: read-fade 0.3s ease forwards; }

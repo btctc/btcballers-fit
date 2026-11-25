@@ -5,7 +5,7 @@ import PlayDiagram from "@/components/PlayDiagram";
 import type { DiagramKey } from "@/lib/diagrams";
 
 // "Watch it" button under a glossary term. The diagram only loads when opened.
-export default function GlossaryDiagram({ name }: { name: DiagramKey }) {
+export default function GlossaryDiagram({ name, playId }: { name?: DiagramKey; playId?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="mt-4">
@@ -20,7 +20,7 @@ export default function GlossaryDiagram({ name }: { name: DiagramKey }) {
       </button>
       {open ? (
         <div className="quiz-in mt-3 max-w-md">
-          <PlayDiagram name={name} />
+          <PlayDiagram name={name} playId={playId} />
         </div>
       ) : null}
     </div>

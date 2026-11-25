@@ -1,8 +1,10 @@
 import Link from "next/link";
 import GlossaryDiagram from "@/components/GlossaryDiagram";
+import PlayBoard from "@/components/PlayBoard";
 import PlaybookQuiz from "@/components/PlaybookQuiz";
-import { diagramFor } from "@/lib/diagrams";
+import { studyDiagramFor } from "@/lib/diagrams";
 import { glossaryEntryCount, glossarySections } from "@/lib/playbookGlossary";
+import { playIdFor } from "@/lib/plays";
 import { allTerms, levels } from "@/lib/quiz";
 
 const shareTitle = "How well do you know the game? - BTC Ballers IQ Game";
@@ -46,6 +48,9 @@ export default function PlaybookPage() {
           <a href="#quiz" className="bg-btc-orange text-btc-black px-5 py-3 font-semibold hover:bg-btc-white transition">
             Play now
           </a>
+          <a href="#plays" className="border border-white/30 px-5 py-3 font-semibold hover:border-btc-orange hover:text-btc-orange transition">
+            Learn 5 on 5 plays
+          </a>
           <a href="#glossary" className="border border-white/30 px-5 py-3 font-semibold hover:border-btc-orange hover:text-btc-orange transition">
             Study the terms
           </a>
@@ -54,6 +59,10 @@ export default function PlaybookPage() {
 
       <section id="quiz" className="mt-14 scroll-mt-28">
         <PlaybookQuiz />
+      </section>
+
+      <section id="plays" className="mt-14 scroll-mt-28">
+        <PlayBoard />
       </section>
 
       <div className="mt-24 border-t border-white/10 pt-16">
@@ -95,13 +104,14 @@ export default function PlaybookPage() {
               </div>
               <dl className="mt-5 grid md:grid-cols-2 gap-px overflow-hidden border border-white/10 bg-btc-black">
                 {section.entries.map((entry) => {
-                  const play = diagramFor(entry.term);
+                  const play = studyDiagramFor(entry.term);
+                  const full = playIdFor(entry.term);
                   return (
                     <div key={entry.term} className="bg-btc-black p-5">
                       <dt className="mono text-base text-btc-white">{entry.term}</dt>
                       <dd className="mt-3 text-base leading-relaxed text-btc-white/78">
                         {entry.definition}
-                        {play ? <GlossaryDiagram name={play} /> : null}
+                        {full ? <GlossaryDiagram playId={full} /> : play ? <GlossaryDiagram name={play} /> : null}
                       </dd>
                     </div>
                   );

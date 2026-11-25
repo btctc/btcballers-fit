@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import PlayDiagram from "@/components/PlayDiagram";
 import ReadCourt from "@/components/ReadCourt";
-import { diagramFor, diagrams, type Diagram, type DiagramKey } from "@/lib/diagrams";
+import { diagramFor, diagrams, studyDiagramFor, type Diagram, type DiagramKey } from "@/lib/diagrams";
 import { allTerms, levels, MASTERED, sideNames, sideOf, TERMS_PER_RUN, type Level, type Side, type Term } from "@/lib/quiz";
 import type { Read } from "@/lib/reads";
 
@@ -926,9 +926,9 @@ export default function PlaybookQuiz() {
                       ) : null}
                     </div>
                     <p className="mt-1 max-w-2xl text-sm text-btc-white/75">{round.why}</p>
-                    {!wasRight && round.format !== "watch" && diagramFor(round.term.term) ? (
+                    {!wasRight && round.format !== "watch" && studyDiagramFor(round.term.term) ? (
                       <div className="mt-4 w-full max-w-sm">
-                        <PlayDiagram name={diagramFor(round.term.term)!} />
+                        <PlayDiagram name={studyDiagramFor(round.term.term)!} />
                       </div>
                     ) : null}
                   </div>

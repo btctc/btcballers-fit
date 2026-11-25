@@ -443,11 +443,11 @@ export const diagrams = {
     ball: [{ until: 1, actor: "1" }],
   },
   horns: {
-    label: "Two players set up at the elbows with the ballhandler up top and shooters in the corners.",
+    label: "Two bigs set up high, just above the elbows, with the ballhandler up top and shooters in the corners.",
     actors: [
       o("1", [[250, 150, 0], [250, 150, 1]]),
-      o("4", [[176, 392, 0], [182, 270, 0.6], [182, 270, 1]]),
-      o("5", [[324, 392, 0], [318, 270, 0.6], [318, 270, 1]]),
+      o("4", [[176, 392, 0], [188, 226, 0.6], [188, 226, 1]]),
+      o("5", [[324, 392, 0], [312, 226, 0.6], [312, 226, 1]]),
       o("2", [[484, 420, 0], [484, 420, 1]]),
       o("3", [[16, 420, 0], [16, 420, 1]]),
     ],
@@ -530,6 +530,105 @@ export const diagrams = {
     ball: [{ until: 0.82, actor: "1" }, { until: 1, actor: "3" }],
     screens: [{ t: 0.25, actor: "5" }],
   },
+  // ---------- shown in Study hall and after a miss, not used for "Which action is this?" ----------
+  blitz: {
+    label: "On the ball screen, the big defender comes up above the screen and both defenders trap the ballhandler.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.28], [330, 164, 0.62], [330, 164, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.26], [288, 168, 1]]),
+      x("x1", [[250, 182, 0], [262, 178, 0.34], [306, 186, 0.7], [308, 186, 1]]),
+      x("x5", [[306, 236, 0], [300, 198, 0.28], [354, 188, 0.64], [354, 188, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+    screens: [{ t: 0.27, actor: "5" }],
+  },
+  atTheLevel: {
+    label: "On the ball screen, the big defender comes up even with the screen and meets the ballhandler there.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.3], [340, 178, 0.7], [340, 178, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.26], [288, 168, 1]]),
+      x("x1", [[250, 182, 0], [262, 178, 0.36], [312, 196, 0.8], [312, 196, 1]]),
+      x("x5", [[306, 236, 0], [314, 172, 0.28], [348, 208, 0.72], [348, 208, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+    screens: [{ t: 0.27, actor: "5" }],
+  },
+  tag: {
+    label: "As the screener rolls, a help defender bumps the roller for a moment, then sprints back out to their own player.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.26], [322, 190, 0.58], [326, 226, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.24], [288, 168, 0.42], [270, 366, 1]]),
+      o("3", [[72, 250, 0], [72, 250, 1]]),
+      x("x1", [[250, 182, 0], [262, 180, 0.32], [300, 188, 0.66], [314, 204, 1]]),
+      x("x5", [[306, 236, 0], [318, 212, 0.5], [330, 252, 1]]),
+      x("x3", [[168, 300, 0], [168, 300, 0.42], [250, 330, 0.72], [112, 264, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+    screens: [{ t: 0.25, actor: "5" }],
+  },
+  pocketPass: {
+    label: "The ballhandler slips a bounce pass through the gap between the two defenders to the roller.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.26], [326, 188, 0.62], [326, 188, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.24], [288, 168, 0.44], [284, 304, 0.9], [284, 304, 1]]),
+      x("x1", [[250, 182, 0], [262, 180, 0.32], [298, 184, 0.7], [298, 184, 1]]),
+      x("x5", [[306, 236, 0], [342, 216, 0.6], [342, 216, 1]]),
+    ],
+    ball: [{ until: 0.72, actor: "1" }, { until: 1, actor: "5" }],
+    screens: [{ t: 0.25, actor: "5" }],
+  },
+  boomerang: {
+    label: "The ballhandler passes to a teammate and gets it right back, now with a live dribble to attack.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.56], [296, 330, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 1]]),
+      x("x1", [[250, 182, 0], [272, 190, 0.3], [262, 188, 0.56], [284, 286, 1]]),
+      x("x2", [[402, 262, 0], [402, 262, 1]]),
+    ],
+    ball: [{ until: 0.1, actor: "1" }, { until: 0.38, actor: "2" }, { until: 1, actor: "1" }],
+  },
+  topLock: {
+    label: "The defender stands between the shooter and the screen so the shooter cannot use it. The shooter cuts backdoor instead.",
+    actors: [
+      o("1", [[165, 168, 0], [165, 168, 1]]),
+      o("4", [[420, 270, 0], [448, 352, 0.3], [448, 352, 1]]),
+      o("2", [[480, 420, 0], [480, 420, 0.42], [304, 396, 0.88], [304, 396, 1]]),
+      x("x2", [[450, 408, 0], [464, 386, 0.3], [464, 386, 0.46], [390, 400, 1]]),
+      x("x4", [[396, 292, 0], [420, 356, 0.34], [420, 356, 1]]),
+    ],
+    ball: [{ until: 0.6, actor: "1" }, { until: 1, actor: "2" }],
+  },
+  cut45: {
+    label: "The wing cuts on a 45-degree angle from the wing straight to the basket and catches the pass.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("2", [[428, 250, 0], [428, 250, 0.22], [298, 382, 0.8], [298, 382, 1]]),
+      x("x1", [[250, 182, 0], [250, 182, 1]]),
+      x("x2", [[400, 264, 0], [400, 264, 0.34], [344, 330, 1]]),
+    ],
+    ball: [{ until: 0.5, actor: "1" }, { until: 1, actor: "2" }],
+  },
+  denial: {
+    label: "The defender stays in the passing lane between the ball and their player, so the pass cannot be made.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 1]]),
+      o("2", [[428, 250, 0], [414, 198, 0.45], [432, 252, 1]]),
+      x("x1", [[250, 182, 0], [250, 182, 1]]),
+      x("x2", [[390, 222, 0], [374, 180, 0.48], [392, 224, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+  },
+  gortat: {
+    label: "Against drop coverage, the roller stops in the paint and seals their own defender, so the ballhandler has a clear lane to the rim.",
+    actors: [
+      o("1", [[250, 150, 0], [250, 150, 0.25], [322, 190, 0.5], [300, 300, 0.8], [266, 392, 1]]),
+      o("5", [[315, 275, 0], [288, 168, 0.24], [288, 168, 0.4], [294, 330, 0.72], [298, 346, 1]]),
+      x("x1", [[250, 182, 0], [266, 180, 0.34], [320, 216, 0.6], [318, 300, 1]]),
+      x("x5", [[306, 236, 0], [302, 300, 0.5], [310, 360, 0.76], [314, 368, 1]]),
+    ],
+    ball: [{ until: 1, actor: "1" }],
+    screens: [{ t: 0.25, actor: "5" }, { t: 0.74, actor: "5" }],
+  },
 } satisfies Record<string, Diagram>;
 
 export type DiagramKey = keyof typeof diagrams;
@@ -596,4 +695,22 @@ const byTerm: Record<string, DiagramKey> = {
 
 export function diagramFor(term: string): DiagramKey | null {
   return byTerm[term.replace(/\s*\(.*\)\s*$/, "")] ?? null;
+}
+
+// Diagrams that teach a term but look too much like another one to be a fair
+// "Which action is this?" question. Study hall and the after-a-miss replay use them.
+const studyOnly: Record<string, DiagramKey> = {
+  Blitz: "blitz",
+  "At the Level": "atTheLevel",
+  Tag: "tag",
+  "Pocket Pass": "pocketPass",
+  Boomerang: "boomerang",
+  "Top Lock": "topLock",
+  "45 Cut": "cut45",
+  "Forty-Five Cut": "cut45",
+  Denial: "denial",
+  "Gortat Screen": "gortat",
+};
+export function studyDiagramFor(term: string): DiagramKey | null {
+  return diagramFor(term) ?? studyOnly[term.replace(/\s*\(.*\)\s*$/, "")] ?? null;
 }
