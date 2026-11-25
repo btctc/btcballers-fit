@@ -30,7 +30,7 @@ export default function Nav() {
           <Link href="/contact" className="whitespace-nowrap hover:text-btc-orange transition">Contact</Link>
         </nav>
 
-        <Link href="/programs" className="site-nav-status hidden md:flex items-center gap-2 hover:text-btc-orange transition" aria-label="Spring 2027 registration">
+        <Link href="/programs" className="site-nav-status hidden xl:flex shrink-0 items-center gap-2 whitespace-nowrap hover:text-btc-orange transition" aria-label="Spring 2027 registration">
           <div className="w-2 h-2 bg-emerald-400 rounded-full status-pulse" aria-hidden="true"></div>
           <span className="label">Spring 2027 - Registering</span>
         </Link>

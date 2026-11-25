@@ -218,10 +218,12 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
   const main = "bg-btc-orange px-5 py-2.5 text-sm font-semibold text-btc-black transition hover:bg-btc-white disabled:opacity-40 disabled:hover:bg-btc-orange";
 
   return (
-    <div ref={board} className="grid min-w-0 scroll-mt-24 gap-x-6 gap-y-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-      <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+    <div ref={board} className="grid min-w-0 scroll-mt-16 gap-x-6 gap-y-3 lg:scroll-mt-[5.5rem] lg:gap-y-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      {/* The buttons, the court and the controls are sized to fit one screen together.
+          The court shrinks on a short window so nothing is pushed below the fold. */}
+      <div className={`board-col min-w-0 lg:sticky lg:top-[5.5rem] lg:self-start ${quiz ? "is-test" : ""}`}>
         {quiz ? null : (
-          <div className={`mb-3 grid gap-2 ${reads ? "sm:grid-cols-2" : ""}`}>
+          <div className={`mb-2 grid gap-2 ${reads ? "grid-cols-2" : ""}`}>
           {!started ? (
             <button
               type="button"
@@ -229,16 +231,16 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
                 toBoard();
                 goTo(0);
               }}
-              className={`${main} w-full py-3.5 text-base`}
+              className={`${main} w-full py-3 text-sm sm:text-base`}
             >
               {reads ? "Step 1: Run the play" : "Run the play"}
             </button>
           ) : done ? (
-            <button type="button" onClick={() => show(option)} className={`${main} w-full py-3.5 text-base`}>
+            <button type="button" onClick={() => show(option)} className={`${main} w-full py-3 text-sm sm:text-base`}>
               {reads ? "Step 1: Run it again" : "Run it again"}
             </button>
           ) : (
-            <button type="button" onClick={() => setPlaying((p) => !p)} className={`${main} w-full py-3.5 text-base`}>
+            <button type="button" onClick={() => setPlaying((p) => !p)} className={`${main} w-full py-3 text-sm sm:text-base`}>
               {playing ? "Pause" : "Keep going"}
             </button>
           )}
@@ -246,17 +248,17 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
               <button
                 type="button"
                 onClick={test}
-                className={`w-full border-2 border-btc-orange bg-btc-orange/10 px-4 py-3 text-left transition hover:bg-btc-orange hover:text-btc-black ${done ? "answer-pulse" : ""}`}
+                className={`w-full border-2 border-btc-orange bg-btc-orange/10 px-3 py-1.5 text-left transition hover:bg-btc-orange hover:text-btc-black ${done ? "answer-pulse" : ""}`}
               >
-                <span className="block text-base font-semibold leading-tight">Step 2: Test me →</span>
-                <span className="block text-xs opacity-75">It freezes. You pick what is open.</span>
+                <span className="block text-sm font-semibold leading-tight sm:text-base">Step 2: Test me →</span>
+                <span className="block text-[0.7rem] leading-tight opacity-75">It freezes. You pick what is open.</span>
               </button>
             ) : null}
           </div>
         )}
         <figure className={`overflow-hidden border bg-[#0D1016] transition-colors ${quiz?.frozen && testing ? "border-btc-orange" : "border-white/10"}`}>
           <CourtStage play={stage} refs={refs} label={`${play.name}. ${steps.map((s) => s.say).join(" ")}`} extra={play.category === "blob" ? 30 : 0} />
-          <figcaption className={`grid grid-cols-[auto_1fr] items-start gap-3 border-t border-white/10 px-4 py-3 ${quiz ? "" : "min-h-[4.5rem]"}`}>
+          <figcaption className={`grid grid-cols-[auto_1fr] items-start gap-3 border-t border-white/10 px-4 py-3 ${quiz ? "hidden" : "min-h-[4.5rem] lg:hidden"}`}>
             <span className="mono text-sm text-btc-orange">
               {started ? step + 1 : 0}/{n}
             </span>
@@ -265,7 +267,7 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
             </span>
           </figcaption>
         </figure>
-        <div className={`mt-3 flex-wrap items-center gap-2 ${quiz ? "hidden" : "flex"}`}>
+        <div className={`mt-2 flex-wrap items-center gap-2 ${quiz ? "hidden" : "flex"}`}>
           <button type="button" onClick={() => goTo(step - 1)} disabled={!started || step === 0 || testing} className={button}>
             Back a step
           </button>
@@ -282,7 +284,7 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
           </button>
         </div>
         {reads && !quiz ? (
-          <p className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-btc-white/60">
+          <p className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-btc-white/60 lg:hidden">
             <span className="inline-flex items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-btc-orange" aria-hidden="true" /> Offense
             </span>
@@ -295,7 +297,7 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
 
       <div className="min-w-0">
         {quiz && reads ? (
-          <div className={`border-2 border-btc-orange bg-btc-black px-5 py-5 ${quiz.frozen && quiz.pick === null ? "answer-pulse" : ""}`} aria-live="polite">
+          <div className={`border-2 border-btc-orange bg-btc-black px-4 py-3 sm:px-5 sm:py-5 [@media(max-height:640px)]:!py-3 ${quiz.frozen && quiz.pick === null ? "answer-pulse" : ""}`} aria-live="polite">
             <div className="flex items-center justify-between gap-3">
               <div className="label text-btc-orange">Your turn · {play.name}</div>
               <button type="button" onClick={leaveTest} className="mono text-xs text-btc-white/60 underline-offset-4 transition hover:text-btc-orange hover:underline">
@@ -304,14 +306,14 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
             </div>
             {!quiz.frozen && quiz.pick === null ? (
               <>
-                <p className="display mt-3 text-3xl leading-tight md:text-4xl">Watch the defense.</p>
+                <p className="display mt-2 text-3xl leading-tight md:text-4xl">Watch the defense.</p>
                 <p className="mt-2 text-base text-btc-white/70">The play will freeze. Then you make the read.</p>
               </>
             ) : (
               <>
-                <p key="ask" className="quiz-pop display mt-3 text-4xl leading-tight text-btc-orange md:text-5xl">What is open?</p>
-                {quiz.pick === null ? <p className="mt-2 text-base text-btc-white/80">Look at where the defenders are. Tap your answer.</p> : null}
-                <div className="mt-4 grid gap-3">
+                <p key="ask" className="quiz-pop display mt-1 text-3xl leading-tight text-btc-orange sm:mt-3 sm:text-4xl md:text-5xl [@media(max-height:640px)]:!mt-1 [@media(max-height:640px)]:!text-3xl">What is open?</p>
+                {quiz.pick === null ? <p className="mt-2 hidden text-base text-btc-white/80 sm:block [@media(max-height:640px)]:!hidden">Look at where the defenders are. Tap your answer.</p> : null}
+                <div className="mt-2 grid gap-2 sm:mt-4 sm:gap-3 [@media(max-height:640px)]:!mt-2 [@media(max-height:640px)]:!gap-2">
                   {quiz.order.map((i, n) => {
                     const right = quiz.pick !== null && i === option;
                     const wrong = quiz.pick === i && i !== option;
@@ -321,7 +323,7 @@ function Board({ play, solved, onSolved }: { play: Play; solved: boolean; onSolv
                         type="button"
                         onClick={() => answer(i)}
                         disabled={quiz.pick !== null}
-                        className={`grid grid-cols-[2rem_1fr] items-center gap-3 border-2 px-4 py-3 text-left text-base font-semibold transition md:py-4 md:text-lg ${
+                        className={`grid grid-cols-[2rem_1fr] items-center gap-3 border-2 px-3 py-2.5 text-left text-[0.95rem] font-semibold leading-snug transition sm:px-4 sm:py-3 sm:text-base md:py-4 md:text-lg [@media(max-height:640px)]:!py-2 [@media(max-height:640px)]:!text-[0.95rem] ${
                           right
                             ? "border-emerald-400 bg-emerald-400/15 text-emerald-300"
                             : wrong

@@ -421,6 +421,15 @@ body { padding-bottom: var(--ticker-h); }
   .court-zone { animation: none; }
 }
 
+/* Chalkboard: the court is sized so the buttons, the court and the controls fit one screen.
+   On a short window the court gets smaller instead of pushing things below the fold. */
+.board-col { max-width: max(17rem, calc((100dvh - 14rem - var(--ticker-h, 0px)) * 1.385)); }
+@media (max-width: 1023px) {
+  .board-col { margin-inline: auto; width: 100%; }
+  /* during a test on a phone the question sits under the court, so the court gives up more room */
+  .board-col.is-test { max-width: max(13rem, calc((100dvh - 27rem - var(--ticker-h, 0px)) * 1.385)); }
+}
+
 /* The question box pulses while it waits for an answer */
 .answer-pulse { animation: answer-pulse 1.4s ease-in-out infinite; }
 @keyframes answer-pulse {
