@@ -201,6 +201,16 @@ html { scroll-behavior: smooth; }
 }
 .status-pulse { animation: statusPulse 2s ease-in-out infinite; }
 
+/* Orange pulsing light next to the two game links in the menu */
+@keyframes gamePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244,148,42,0.7); }
+  50%      { box-shadow: 0 0 0 6px rgba(244,148,42,0); }
+}
+.game-pulse { animation: gamePulse 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .game-pulse { animation: none; box-shadow: 0 0 0 3px rgba(244,148,42,0.35); }
+}
+
 .ticker-viewport {
   width: 100%;
   overflow-x: auto;

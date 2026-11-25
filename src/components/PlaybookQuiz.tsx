@@ -865,9 +865,6 @@ export default function PlaybookQuiz() {
             ) : round.diagram ? (
               <>
                 <h3 className="mt-3 text-2xl font-semibold leading-snug md:text-3xl">{round.prompt}</h3>
-                <div className="mt-5 max-w-lg">
-                  <PlayDiagram name={round.diagram} />
-                </div>
               </>
             ) : round.focus ? (
               <>
@@ -886,7 +883,14 @@ export default function PlaybookQuiz() {
               <h3 className="mt-4 max-w-3xl text-2xl font-semibold leading-snug md:text-4xl">{round.prompt}</h3>
             )}
 
-            <div className={`mt-8 grid gap-3 ${round.options.length === 2 ? "grid-cols-2 max-w-xl" : "md:grid-cols-2"}`}>
+            {/* With a diagram, the answers sit beside the court so both are on screen together. */}
+            <div className={round.diagram ? "mt-5 grid gap-5 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:items-start" : ""}>
+            {round.diagram ? (
+              <div className="min-w-0">
+                <PlayDiagram name={round.diagram} />
+              </div>
+            ) : null}
+            <div className={round.diagram ? "grid content-start gap-3" : `mt-8 grid gap-3 ${round.options.length === 2 ? "grid-cols-2 max-w-xl" : "md:grid-cols-2"}`}>
               {round.options.map((opt, i) => {
                 const isAnswer = i === round.answer;
                 const isPicked = i === picked;
@@ -913,6 +917,7 @@ export default function PlaybookQuiz() {
                   </button>
                 );
               })}
+            </div>
             </div>
 
             <div className="mt-6 min-h-[5.5rem]" aria-live="polite">
